@@ -1,0 +1,11 @@
+@startuml classes_SRP__S
+set namespaceSeparator none
+class "Empleado" as SRP_S.Empleado {
+  nombre
+  salario
+  calcular_salario_anual()
+}
+class "ReporteEmpleado" as SRP_S.ReporteEmpleado {
+  generar_reporte(empleado)
+}
+@enduml

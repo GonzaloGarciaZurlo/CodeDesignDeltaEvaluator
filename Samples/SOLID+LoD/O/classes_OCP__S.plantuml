@@ -1,0 +1,19 @@
+@startuml classes_OCP__S
+set namespaceSeparator none
+class "Empleado" as OCP_S.Empleado {
+  nombre
+  salario
+  {abstract}calcular_bonificacion()
+}
+class "EmpleadoPorContrato" as OCP_S.EmpleadoPorContrato {
+  calcular_bonificacion()
+}
+class "EmpleadoTiempoCompleto" as OCP_S.EmpleadoTiempoCompleto {
+  calcular_bonificacion()
+}
+class "SistemaBonificaciones" as OCP_S.SistemaBonificaciones {
+  calcular_bonificacion(empleado)
+}
+OCP_S.EmpleadoPorContrato --|> OCP_S.Empleado
+OCP_S.EmpleadoTiempoCompleto --|> OCP_S.Empleado
+@enduml
