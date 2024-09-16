@@ -1,0 +1,19 @@
+@startuml classes_after
+set namespaceSeparator none
+class "Auto" as after.Auto {
+  puertas
+  mostrar_info()
+}
+class "Motor" as after.Motor {
+  tipo_motor
+  apagar_motor()
+  encender_motor()
+}
+class "Vehiculo" as after.Vehiculo {
+  marca
+  modelo
+  arrancar()
+  detener()
+}
+after.Auto --|> after.Motor
+@enduml

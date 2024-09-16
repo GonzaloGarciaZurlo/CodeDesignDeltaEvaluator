@@ -1,0 +1,19 @@
+@startuml classes_before
+set namespaceSeparator none
+class "Auto" as before.Auto {
+  puertas
+  mostrar_info()
+}
+class "Motor" as before.Motor {
+  tipo_motor
+  apagar_motor()
+  encender_motor()
+}
+class "Vehiculo" as before.Vehiculo {
+  marca
+  modelo
+  arrancar()
+  detener()
+}
+before.Auto --|> before.Vehiculo
+@enduml

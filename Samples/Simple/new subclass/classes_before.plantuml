@@ -1,0 +1,9 @@
+@startuml classes_before
+set namespaceSeparator none
+class "Vehiculo" as before.Vehiculo {
+  marca
+  modelo
+  arrancar()
+  detener()
+}
+@enduml
