@@ -1,5 +1,6 @@
 import re
 import networkx as nx
+import pyreverse_util
 
 class PlantUMLParser:
     def __init__(self, filename):
@@ -61,10 +62,14 @@ class PlantUMLParser:
     def get_graph(self):
         return self.graph
 
-parser = PlantUMLParser('../SOLID+LoD/O/classes_OCP__S.plantuml')  # Archivo .plantuml
+plantUML = pyreverse_util.generate_plantuml_python('../Samples/SOLID+LoD/I/ISP_P.py')
+
+parser = PlantUMLParser(plantUML)  # Archivo .plantuml
 parser.parse()
 
 graph = parser.get_graph()
 
 print("Clases:", list(parser.classes))
 print("Relaciones:", parser.relations)
+
+pyreverse_util.delete_plantuml(plantUML)
