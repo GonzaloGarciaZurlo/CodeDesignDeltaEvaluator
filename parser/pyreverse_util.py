@@ -21,13 +21,13 @@ def generate_plantuml_python(file_path: str) -> str:
         return "Error: Failed to generate .plantuml file."
 
 
-def delete_plantuml(file_path: str) -> None:
+def delete_plantuml(uml_path: str) -> None:
 
-    if not os.path.isfile(file_path):
+    if not os.path.isfile(uml_path):
         return "Error: The specified file does not exist."
 
     try:
-        subprocess.run(['rm', '-rf', file_path], check=True)
+        subprocess.run(['rm', '-rf', uml_path], check=True)
 
     except subprocess.CalledProcessError:
 

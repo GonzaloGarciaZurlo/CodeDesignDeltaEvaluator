@@ -1,2 +1,4 @@
 # Ignorar todos los archivos .pdf
 *.pdf
+# Ignorar todas las carpetas __pycache__
+__pycache__/
