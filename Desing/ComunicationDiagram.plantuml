@@ -1,0 +1,26 @@
+@startuml ComunicationDiagram
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam backgroundColor #F9F9F9
+skinparam packageBackgroundColor #DDDDDD
+skinparam packageBorderColor #000000
+skinparam arrowColor #000000
+skinparam arrowThickness 2
+
+package "GraphDB" <<Database>> {
+}
+
+package "MetricsDB" <<Database>> {
+
+}
+
+[Src] -> [.puml] : RE-Tool
+[.puml] -> [Parser]
+[Parser] -> [Obs Graph]
+[Obs Graph] --> [GraphDB]
+[Metrcis Collecter] --> [GraphDB] : queries
+[Metrcis Collecter] -> [MetricsDB]
+[MetricsDB] --> [Metrics Evaluator]
+[Metrics Evaluator] --> [Veredict]
+
+@enduml
