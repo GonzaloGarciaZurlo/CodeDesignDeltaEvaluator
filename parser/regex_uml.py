@@ -1,19 +1,21 @@
 import puml_parser
+import puml_observer
 import re
-import time 
+import time
+
 
 class Regex(puml_parser.PUML_Parser):
-    def __init__(self, observer):
+    def __init__(self, observer: puml_observer.Observer) -> None:
         super().__init__(observer)
 
-    def parse(self, filename):
+    def parse(self, filename: str) -> None:
         with open(filename, 'r') as filename:
             for line in filename:
                 line = line.strip()
                 self._parse_class(line)    # Buscar declaraciones de clases
                 self._parse_relation(line)  # Buscar relaciones entre clases
 
-    def _parse_class(self, line):
+    def _parse_class(self, line: str) -> None:
         # Identificar declaraciones de clases con o sin alias
         class_pattern = r'class\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|class\s+([\w.]+)'
         match = re.search(class_pattern, line)
@@ -27,7 +29,7 @@ class Regex(puml_parser.PUML_Parser):
                 self.observer.on_class_found(class_name)
                 time.sleep(1)
 
-    def _parse_relation(self, line):
+    def _parse_relation(self, line: str) -> None:
         # Identificar relaciones entre clases con diferentes tipos de conectores
         relation_pattern = r'(\w+[\w.]+)\s*([-\*<>|]+)\s*(\w+[\w.]+)'
         match = re.search(relation_pattern, line)
