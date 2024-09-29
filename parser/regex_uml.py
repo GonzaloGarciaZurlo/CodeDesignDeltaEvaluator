@@ -9,7 +9,6 @@ class Regex(PUML_Parser):
     def __init__(self, observer: Observer) -> None:
         super().__init__(observer)
 
-    @override
     def parse(self, filename: str) -> None:
         with open(filename, 'r') as filename:
             for line in filename:
