@@ -2,12 +2,14 @@ import re
 import time
 from parser.puml_observer import Observer
 from parser.puml_parser import PUML_Parser
+from overrides import override
 
 
 class Regex(PUML_Parser):
     def __init__(self, observer: Observer) -> None:
         super().__init__(observer)
 
+    @override
     def parse(self, filename: str) -> None:
         with open(filename, 'r') as filename:
             for line in filename:
@@ -23,11 +25,11 @@ class Regex(PUML_Parser):
             if match.group(2):  # Caso con alias
                 alias_name = match.group(2)
                 self.observer.on_class_found(alias_name)
-                #time.sleep(1)
+                # time.sleep(1)
             else:  # Caso sin alias
                 class_name = match.group(3)
                 self.observer.on_class_found(class_name)
-                #time.sleep(1)
+                # time.sleep(1)
 
     def _parse_relation(self, line: str) -> None:
         # Identificar relaciones entre clases con diferentes tipos de conectores
@@ -50,4 +52,4 @@ class Regex(PUML_Parser):
                 relation = 'association'
             # Guardar la relación
             self.observer.on_relation_found(class_a, class_b, relation)
-            #time.sleep(1)
+            # time.sleep(1)
