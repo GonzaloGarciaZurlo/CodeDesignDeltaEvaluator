@@ -1,11 +1,11 @@
-import puml_parser
-import puml_observer
 import re
 import time
+from parser.puml_observer import Observer
+from parser.puml_parser import PUML_Parser
 
 
-class Regex(puml_parser.PUML_Parser):
-    def __init__(self, observer: puml_observer.Observer) -> None:
+class Regex(PUML_Parser):
+    def __init__(self, observer: Observer) -> None:
         super().__init__(observer)
 
     def parse(self, filename: str) -> None:

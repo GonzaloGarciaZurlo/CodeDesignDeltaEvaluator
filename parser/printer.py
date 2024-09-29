@@ -1,7 +1,7 @@
-import puml_observer
+from parser.puml_observer import Observer
 
 
-class Printer(puml_observer.Observer):
+class Printer(Observer):
     def on_class_found(self, class_name: str) -> None:
         print(f"Class found: {class_name}")
 

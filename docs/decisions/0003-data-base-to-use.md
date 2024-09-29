@@ -14,18 +14,18 @@ What tool is most convenient for my project to save graphs in a database?
 
 ## Considered Options
 
-* neo4j
-* memgraph
+* Neo4j
+* Memgraph
+* Amazon Neptune
 
 ## Decision Outcome
 
+Choosing **Memgraph** offers high-performance graph processing with **Cypher** in real-time scenarios, but lacks **Gremlin** support. **Neo4j** is the best option for **Cypher** queries, with some experimental **Gremlin** support, but it prioritizes Cypher, making Gremlin less reliable. **Amazon Neptune** provides native **Gremlin** support and limited **Cypher** via openCypher, making it a versatile choice if you need both languages, but it might not offer the same performance and ease of use as Neo4j for Cypher-based projects.
+
+---
 Chosen option: "{title of option 1}", because
 {justification. e.g., only option, which meets k.o. criterion decision driver | which resolves force {force} | … | comes out best (see below)}.
 
-<!-- This is an optional element. Feel free to remove. -->
 ### Consequences
 
-* Good, because {positive consequence, e.g., improvement of one or more desired qualities, …}
-* Bad, because {negative consequence, e.g., compromising one or more desired qualities, …}
-* … <!-- numbers of consequences can vary -->
 
