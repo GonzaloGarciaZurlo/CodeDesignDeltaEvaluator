@@ -3,12 +3,13 @@ import time
 from parser.puml_observer import Observer
 from parser.puml_parser import PUML_Parser
 from overrides import override
-
+from parser.constants import CLASS_PATTERN, RELATION_PATTERN, ABS_CLASS_PATTERN, ABS_PATTERN
 
 class Regex(PUML_Parser):
     def __init__(self, observer: Observer) -> None:
         super().__init__(observer)
 
+#   @override
     def parse(self, filename: str) -> None:
         with open(filename, 'r') as filename:
             for line in filename:
@@ -18,8 +19,7 @@ class Regex(PUML_Parser):
 
     def _parse_class(self, line: str) -> None:
         # Identificar declaraciones de clases con o sin alias
-        class_pattern = r'class\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|class\s+([\w.]+)'
-        match = re.search(class_pattern, line)
+        match = re.search(CLASS_PATTERN, line)
         if match:
             if match.group(2):  # Caso con alias
                 alias_name = match.group(2)
@@ -32,8 +32,7 @@ class Regex(PUML_Parser):
 
     def _parse_relation(self, line: str) -> None:
         # Identificar relaciones entre clases con diferentes tipos de conectores
-        relation_pattern = r'(\w+[\w.]+)\s*([-\*<>|]+)\s*(\w+[\w.]+)'
-        match = re.search(relation_pattern, line)
+        match = re.search(RELATION_PATTERN, line)
 
         if match:
             class_a, relation, class_b = match.groups()
