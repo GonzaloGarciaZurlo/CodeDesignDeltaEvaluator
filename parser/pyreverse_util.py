@@ -1,6 +1,7 @@
 import subprocess
 import os
 
+
 def generate_plantuml_python(file_path: str) -> str:
 
     if not os.path.isfile(file_path):
@@ -10,11 +11,19 @@ def generate_plantuml_python(file_path: str) -> str:
     directory = os.path.dirname(file_path)
     # Obtener el nombre del archivo .py
     name = os.path.basename(file_path)
+    leng = name[-3:]
 
     try:
-        subprocess.run(['pyreverse', '-o', 'plantuml', '-p', name.replace('.py', ''), '-d', directory, file_path], check=True)
+        if leng == '.py':
+            subprocess.run(['pyreverse', '-o', 'plantuml', '-p',
+                           name.replace('.py', ''), '-d', directory, file_path], check=True)
 
-        return directory + "/classes_" + name.replace('.py', '.plantuml') # Devolver la ruta del archivo .plantuml
+            # Devolver la ruta del archivo .plantuml
+            return directory + "/classes_" + name.replace(leng, '.plantuml')
+        #elif leng == '.go':
+        #    subprocess.run(['go-plantuml', 'generate', '-f',  file_path,
+        #                   '-o', file_path.replace(leng, '.plantuml')], check=True)
+        #    return file_path.replace(leng, '.plantuml')
 
     except subprocess.CalledProcessError:
 
