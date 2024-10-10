@@ -1,3 +1,7 @@
+"""
+This file contains the constants used in the parser module.
+"""
+
 # Regex parser constants :
 CLASS_PATTERN = r'class\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|class\s+([\w.]+)'
 RELATION_PATTERN = r'(\w+[\w.]+)\s*([-\*<>|]+)\s*(\w+[\w.]+)'

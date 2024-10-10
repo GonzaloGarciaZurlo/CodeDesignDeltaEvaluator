@@ -1,7 +1,13 @@
+"""
+This module contains functions for handling database queries.
+"""
 from neo4j import GraphDatabase
 
 
 class Neo4jCoupling:
+    """
+    This class is responsible for calculating the coupling of a class.
+    """
 
     def __init__(self):
         self.uri = "bolt://localhost:7687"

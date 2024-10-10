@@ -1,9 +1,15 @@
+"""
+This module handles the creation of a Neo4j database.
+"""
 from parser.puml_observer import Observer
 from neo4j import GraphDatabase
 from overrides import override
 
 
 class Neoj4(Observer):
+    """
+    Class responsible for creating and initializing a Neo4j database.
+    """
     def __init__(self) -> None:
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(
@@ -13,7 +19,11 @@ class Neoj4(Observer):
         tx.run("CREATE (p:Class {name: $name})", name=name)
 
     def _create_relation(self, tx, class1: str, class2: str, relation: str) -> None:
-        query = f"MATCH(a: Class), (b: Class) WHERE a.name = $class1 AND b.name = $class2 CREATE(a)-[r:{relation}] -> (b)"
+        query = (
+            f"MATCH (a:Class), (b:Class) "
+            f"WHERE a.name = $class1 AND b.name = $class2 "
+            f"CREATE (a)-[r:{relation}] -> (b)"
+        )
         tx.run(query, class1=class1, class2=class2)
 
     def delete_all(self) -> None:

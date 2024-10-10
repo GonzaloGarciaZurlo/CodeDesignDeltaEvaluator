@@ -1,17 +1,21 @@
+"""
+module parser with regex implementation
+"""
 import re
-import time
 from parser.puml_observer import Observer
-from parser.puml_parser import PUML_Parser
-from overrides import override
-from parser.constants import CLASS_PATTERN, RELATION_PATTERN, ABS_CLASS_PATTERN, ABS_PATTERN
+from parser.puml_parser import PumlParser
+from parser.constants import CLASS_PATTERN, RELATION_PATTERN
 
-class Regex(PUML_Parser):
+
+class Regex(PumlParser):
+    """
+    Class that implements parser with regex to parse the plantuml file
+    """
     def __init__(self, observer: Observer) -> None:
-        super().__init__(observer)
-
-#   @override
+        self.observer = observer
+        
     def parse(self, filename: str) -> None:
-        with open(filename, 'r') as filename:
+        with open(filename, 'r', encoding='utf-8'):
             for line in filename:
                 line = line.strip()
                 self._parse_class(line)    # Buscar declaraciones de clases
@@ -24,11 +28,10 @@ class Regex(PUML_Parser):
             if match.group(2):  # Caso con alias
                 alias_name = match.group(2)
                 self.observer.on_class_found(alias_name)
-                # time.sleep(1)
+
             else:  # Caso sin alias
                 class_name = match.group(3)
                 self.observer.on_class_found(class_name)
-                # time.sleep(1)
 
     def _parse_relation(self, line: str) -> None:
         # Identificar relaciones entre clases con diferentes tipos de conectores
@@ -50,4 +53,3 @@ class Regex(PUML_Parser):
                 relation = 'association'
             # Guardar la relación
             self.observer.on_relation_found(class_a, class_b, relation)
-            # time.sleep(1)
