@@ -23,7 +23,7 @@ class Main:
         #archivo_go = "Samples/Simple/double derivative/before.go"
         archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
 
-        archivo_plantuml = pyreverse_util.generate_plantuml_python(
+        archivo_plantuml = pyreverse_util.generate_plantuml(
             archivo_py)  # Generar el archivo .plantuml
         parser.parse(archivo_plantuml)
 

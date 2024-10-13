@@ -4,7 +4,7 @@ module parser with regex implementation
 import re
 from parser.puml_observer import Observer
 from parser.puml_parser import PumlParser
-from parser.constants import CLASS_PATTERN, RELATION_PATTERN
+from parser.constants import CLASS_PATTERN, RELATION_PATTERN, convert_relation
 
 
 class Regex(PumlParser):
@@ -15,7 +15,7 @@ class Regex(PumlParser):
         self.observer = observer
         
     def parse(self, filename: str) -> None:
-        with open(filename, 'r', encoding='utf-8'):
+        with open(filename, 'r', encoding='utf-8') as filename:
             for line in filename:
                 line = line.strip()
                 self._parse_class(line)    # Buscar declaraciones de clases
@@ -39,17 +39,7 @@ class Regex(PumlParser):
 
         if match:
             class_a, relation, class_b = match.groups()
-            if relation == '--|>':  # Herencia
-                relation = 'inheritance'
-            elif relation == '..|>':  # Implementación
-                relation = 'implementation'
-            elif relation == '-->':  # Dependencia
-                relation = 'dependency'
-            elif relation == '*--':  # Composición
-                relation = 'composition'
-            elif relation == 'o--':  # Agregación
-                relation = 'aggregation'
-            elif relation == '--':  # Asociación
-                relation = 'association'
+            # Cambiar simbolo a nombre
+            relation = convert_relation(relation)
             # Guardar la relación
             self.observer.on_relation_found(class_a, class_b, relation)
