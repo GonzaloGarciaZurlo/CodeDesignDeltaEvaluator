@@ -1,9 +1,9 @@
 """
 This module handles the main execution flow of the application.
 """
-from parser_puml import regex_uml, pyreverse_util
+from parser_puml import regex_uml, pyreverse_util, composable_observer, printer
 from relationship_db import create_db_neo4j
-from metricsCollecter import queries
+from db_storer import queries
 
 
 class Main:
@@ -15,19 +15,22 @@ class Main:
         """
         Executes the main logic of the program.
         """
-        observer = create_db_neo4j.Neo4j()
+
+        console = printer.Printer()
+        db_neo4j = create_db_neo4j.Neo4j()
+        observer = composable_observer.Composable([console, db_neo4j])
         parser = regex_uml.Regex(observer)
 
-        observer.delete_all()  # Eliminar la base de datos
+        db_neo4j.delete_all()  # Eliminar la base de datos
 
-        #archivo_go = "Samples/Simple/double derivative/before.go"
+        # archivo_go = "Samples/Simple/double derivative/before.go"
         archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
 
         archivo_plantuml = pyreverse_util.generate_plantuml(
             archivo_py)  # Generar el archivo .plantuml
         parser.parse(archivo_plantuml)
 
-        #Consultar el acoplamiento de una clase
+        # Consultar el acoplamiento de una clase
         acoplamiento = queries.Neo4jCoupling().get_class_coupling('ISP_P.Trabajador')
         print(acoplamiento)
 
