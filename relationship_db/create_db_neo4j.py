@@ -1,15 +1,16 @@
 """
 This module handles the creation of a Neo4j database.
 """
-from parser.puml_observer import Observer
-from neo4j import GraphDatabase
 from overrides import override
+from neo4j import GraphDatabase
+from parser_puml.puml_observer import Observer
 
 
-class Neoj4(Observer):
+class Neo4j(Observer):
     """
     Class responsible for creating and initializing a Neo4j database.
     """
+
     def __init__(self) -> None:
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(

@@ -2,8 +2,8 @@
 This module contains the Printer class, 
 which is an Observer that prints the information it receives.
 """
-from parser.puml_observer import Observer
 from overrides import override
+from parser_puml.puml_observer import Observer
 
 
 class Printer(Observer):

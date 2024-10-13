@@ -1,8 +1,8 @@
 """
 This module handles the main execution flow of the application.
 """
-from parser import regex_uml, pyreverse_util
-from graph_db import create_db_neo4j
+from parser_puml import regex_uml, pyreverse_util
+from relationship_db import create_db_neo4j
 from metricsCollecter import queries
 
 
@@ -15,7 +15,7 @@ class Main:
         """
         Executes the main logic of the program.
         """
-        observer = create_db_neo4j.Neoj4()
+        observer = create_db_neo4j.Neo4j()
         parser = regex_uml.Regex(observer)
 
         observer.delete_all()  # Eliminar la base de datos

@@ -2,7 +2,7 @@
 module that contains the PUML_Parser abstract class
 """
 from abc import ABC, abstractmethod
-from parser.puml_observer import Observer
+from parser_puml.puml_observer import Observer
 
 
 class PumlParser(ABC):
@@ -13,6 +13,5 @@ class PumlParser(ABC):
         self.observer = observer
 
     @abstractmethod
-    def parse(self, file: str, puml_obs: Observer) -> None:
+    def parse(self, file: str) -> None:
         "Método abstracto que debe implementar cada parser"
-        

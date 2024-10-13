@@ -2,18 +2,16 @@
 module parser with regex implementation
 """
 import re
-from parser.puml_observer import Observer
-from parser.puml_parser import PumlParser
-from parser.constants import CLASS_PATTERN, RELATION_PATTERN, convert_relation
+#from overrides import override
+from parser_puml.puml_parser import PumlParser
+from parser_puml.constants import CLASS_PATTERN, RELATION_PATTERN, convert_relation
 
 
 class Regex(PumlParser):
     """
     Class that implements parser with regex to parse the plantuml file
     """
-    def __init__(self, observer: Observer) -> None:
-        self.observer = observer
-        
+    #@override
     def parse(self, filename: str) -> None:
         with open(filename, 'r', encoding='utf-8') as filename:
             for line in filename:
