@@ -2,7 +2,7 @@
 module parser with regex implementation
 """
 import re
-#from overrides import override
+# from overrides import override
 from parser_puml.puml_parser import PumlParser
 from parser_puml.constants import CLASS_PATTERN, RELATION_PATTERN, convert_relation
 
@@ -11,7 +11,8 @@ class Regex(PumlParser):
     """
     Class that implements parser with regex to parse the plantuml file
     """
-    #@override
+    # @override
+
     def parse(self, filename: str) -> None:
         with open(filename, 'r', encoding='utf-8') as filename:
             for line in filename:
@@ -40,4 +41,7 @@ class Regex(PumlParser):
             # Cambiar simbolo a nombre
             relation = convert_relation(relation)
             # Guardar la relación
-            self.observer.on_relation_found(class_a, class_b, relation)
+            if relation == "inheritance2":
+                self.observer.on_relation_found(class_b, class_a, relation)
+            else:
+                self.observer.on_relation_found(class_a, class_b, relation)

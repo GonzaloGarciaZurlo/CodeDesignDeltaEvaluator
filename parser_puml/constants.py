@@ -10,6 +10,7 @@ ABS_PATTERN = r'abstract\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|abstract\s+([\w.]+)'
 
 # Relation type constants
 INHERITANCE = '--|>'
+INHERITANCE2 = '<|--'
 IMPLEMENTATION = '..|>'
 DEPENDENCY = '-->'
 COMPOSITION = '*--'
@@ -19,6 +20,7 @@ ASSOCIATION = '--'
 # Mapping relation symbols to names
 RELATION_MAP = {
     INHERITANCE: 'inheritance',
+    INHERITANCE2: 'inheritance2',
     IMPLEMENTATION: 'implementation',
     DEPENDENCY: 'dependency',
     COMPOSITION: 'composition',

@@ -23,16 +23,20 @@ class Main:
 
         db_neo4j.delete_all()  # Eliminar la base de datos
 
-        #archivo_cpp = "Samples/Simple/derivative to composition/before.cpp"
+        archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
         #archivo_go = "Samples/Simple/double derivative/before.go"
-        archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
+        #archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
 
         archivo_plantuml = pyreverse_util.generate_plantuml(
-            archivo_py)  # Generar el archivo .plantuml
+            archivo_cpp)  # Generar el archivo .plantuml
         parser.parse(archivo_plantuml)
 
+
+        clasePy = "ISP_P.Trabajador"
+        claseGo = "Vehiculo"
+        claseCpp = "Auto"
         # Consultar el acoplamiento de una clase
-        acoplamiento = queries.Neo4jCoupling().get_class_coupling('ISP_P.Trabajador')
+        acoplamiento = queries.Neo4jCoupling().get_class_coupling(claseCpp)
         print(acoplamiento)
 
         # Eliminar el archivo .plantuml

@@ -13,7 +13,7 @@ def _pyreverse(directory, name, file_path):
     subprocess.run(['pyreverse', '-o', 'plantuml', '-p',
                     name.replace('.py', ''), '-d', directory, file_path], check=True)
 
-    return directory + "/classes_" + name.replace(name[-3:], '.plantuml')
+    return directory + "/classes_" + name.replace('.py', '.plantuml')
 
 
 def _goplantuml(directory, name, file_path):
@@ -21,10 +21,10 @@ def _goplantuml(directory, name, file_path):
     run goplantuml
     """
     subprocess.Popen(["mkdir", "-p", "temp_dir"])
-    subprocess.run(['cp', file_path, 'temp_dir'])
+    subprocess.run(['cp', file_path, 'temp_dir'], check=True)
     with open(directory + '/' + name.replace('.go', '.plantuml'), 'w') as output_file:
-        subprocess.run(['goplantuml', 'temp_dir'], stdout=output_file)
-    subprocess.run(['rm', '-rf', './temp_dir'])
+        subprocess.run(['goplantuml', 'temp_dir'], stdout=output_file, check=True)
+    subprocess.run(['rm', '-rf', './temp_dir'], check=True)
 
     return directory + '/' + name.replace('.go', '.plantuml')
 
@@ -33,7 +33,10 @@ def _hpp2plantuml(directory, name, file_path):
     """
     run hpp2plantuml
     """
-    pass
+    subprocess.run(['hpp2plantuml', '-i', file_path, '-o', directory +
+                   '/' + name.replace('.c++', '.plantuml')], check=True)
+
+    return directory + '/' + name.replace('.c++', '.plantuml')
 
 
 def _scheduler_plantuml(extension, directory, name, file_path):
