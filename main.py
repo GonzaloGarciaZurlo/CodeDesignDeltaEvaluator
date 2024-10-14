@@ -1,7 +1,7 @@
 """
 This module handles the main execution flow of the application.
 """
-from parser_puml import regex_uml, pyreverse_util, composable_observer, printer
+from parser_puml import regex_uml, pyreverse_util, composable_observer, printer, tatsu_parser
 from relationship_db import create_db_neo4j
 from db_storer import queries
 
@@ -19,24 +19,24 @@ class Main:
         console = printer.Printer()
         db_neo4j = create_db_neo4j.Neo4j()
         observer = composable_observer.Composable([console, db_neo4j])
-        parser = regex_uml.Regex(observer)
+        parser = tatsu_parser.Tatsu(observer)
 
         db_neo4j.delete_all()  # Eliminar la base de datos
 
-        archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
+        #archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
         #archivo_go = "Samples/Simple/double derivative/before.go"
-        #archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
+        archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
 
         archivo_plantuml = pyreverse_util.generate_plantuml(
-            archivo_cpp)  # Generar el archivo .plantuml
-        parser.parse(archivo_plantuml)
+            archivo_py)  # Generar el archivo .plantuml
+        parser.parse_uml(archivo_plantuml)
 
 
         clasePy = "ISP_P.Trabajador"
-        claseGo = "Vehiculo"
-        claseCpp = "Auto"
+        #claseGo = "Vehiculo"
+        #claseCpp = "Auto"
         # Consultar el acoplamiento de una clase
-        acoplamiento = queries.Neo4jCoupling().get_class_coupling(claseCpp)
+        acoplamiento = queries.Neo4jCoupling().get_class_coupling(clasePy)
         print(acoplamiento)
 
         # Eliminar el archivo .plantuml

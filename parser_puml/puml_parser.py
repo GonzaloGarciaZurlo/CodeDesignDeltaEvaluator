@@ -13,5 +13,5 @@ class PumlParser(ABC):
         self.observer = observer
 
     @abstractmethod
-    def parse(self, file: str) -> None:
+    def parse_uml(self, file: str) -> None:
         "Método abstracto que debe implementar cada parser"

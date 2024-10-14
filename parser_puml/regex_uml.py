@@ -13,7 +13,7 @@ class Regex(PumlParser):
     """
     # @override
 
-    def parse(self, filename: str) -> None:
+    def parse_uml(self, filename: str) -> None:
         with open(filename, 'r', encoding='utf-8') as filename:
             for line in filename:
                 line = line.strip()
