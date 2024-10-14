@@ -23,7 +23,8 @@ class Main:
 
         db_neo4j.delete_all()  # Eliminar la base de datos
 
-        # archivo_go = "Samples/Simple/double derivative/before.go"
+        #archivo_cpp = "Samples/Simple/derivative to composition/before.cpp"
+        #archivo_go = "Samples/Simple/double derivative/before.go"
         archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
 
         archivo_plantuml = pyreverse_util.generate_plantuml(

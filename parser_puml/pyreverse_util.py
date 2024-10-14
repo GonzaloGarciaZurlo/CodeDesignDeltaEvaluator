@@ -21,12 +21,12 @@ def _goplantuml(directory, name, file_path):
     run goplantuml
     """
     subprocess.Popen(["mkdir", "-p", "temp_dir"])
-    subprocess.run(['cp', file_path, 'temp_dir'],check=True)
-    subprocess.run('goplantuml', './temp_dir', '>', directory +
-                   '/' + name.replace('.go', '.plantuml'),check=True)
-    subprocess.run(['rm', '-rf', 'temp_dir'],check=True)
+    subprocess.run(['cp', file_path, 'temp_dir'])
+    with open(directory + '/' + name.replace('.go', '.plantuml'), 'w') as output_file:
+        subprocess.run(['goplantuml', 'temp_dir'], stdout=output_file)
+    subprocess.run(['rm', '-rf', './temp_dir'])
 
-    return directory + name.replace(name[-3:], '.plantuml')
+    return directory + '/' + name.replace('.go', '.plantuml')
 
 
 def _hpp2plantuml(directory, name, file_path):
