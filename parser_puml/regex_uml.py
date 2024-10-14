@@ -41,7 +41,7 @@ class Regex(PumlParser):
             # Cambiar simbolo a nombre
             relation = convert_relation(relation)
             # Guardar la relación
-            if relation == "inheritance2":
+            if "2" in relation:  # Invertir la relación
                 self.observer.on_relation_found(class_b, class_a, relation)
             else:
                 self.observer.on_relation_found(class_a, class_b, relation)
