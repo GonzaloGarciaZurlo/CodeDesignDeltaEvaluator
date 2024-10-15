@@ -7,7 +7,7 @@ on:
 
 jobs:
   render-diagrams:
-    # Previene que la acción se ejecute en sus propios commits para evitar bucles infinitos
+    # Prevenir bucles infinitos
     if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
 
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: false  # Configuramos nuestras propias credenciales
+          persist-credentials: false  # Evitar conflictos con credenciales
 
       - name: Set Up Git User
         run: |
@@ -51,3 +51,4 @@ jobs:
       - name: Push Changes
         run: |
           git push origin HEAD:${{ github.ref }}
+        continue-on-error: true  # Esto evita que falle si ya no puede hacer push de los cambios
