@@ -7,7 +7,7 @@ on:
 
 jobs:
   render-diagrams:
-    # Prevents the action from running on its own commits to avoid infinite loops
+    # Previene que la acción se ejecute en sus propios commits para evitar bucles infinitos
     if: ${{ github.actor != 'github-actions[bot]' }}
     runs-on: ubuntu-latest
 
@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
         with:
-          persist-credentials: false  # We'll set up our own credentials
+          persist-credentials: false  # Configuramos nuestras propias credenciales
 
       - name: Set Up Git User
         run: |
@@ -41,7 +41,7 @@ jobs:
 
       - name: Generate Diagrams
         run: |
-          find . -name "*.puml" -print0 | xargs -0 -I{} plantuml {}
+          find . \( -name "*.puml" -o -name "*.plantuml" \) -print0 | xargs -0 -I{} plantuml {}
 
       - name: Commit Diagrams
         run: |
