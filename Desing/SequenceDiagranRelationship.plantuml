@@ -1,0 +1,25 @@
+@startuml
+participant main
+participant "ParserFactory" as PF
+main -> PF: create_parser(parser_name)
+create "Parser" as Parser
+PF --> Parser: create()
+
+PF --> main: parser
+
+ObserverFactory --> main: composable_observer
+
+main -> ObserverFactory: create_observer(observer_name)
+ObserverFactory --> main: observer
+
+main -> Parser: set_observer(observer)
+main -> Parser: parse(file)
+activate Parser
+
+loop
+    Parser -> observer: relationship
+    observer -> relationshipsDB: store\nrelationship
+end
+deactivate Parser
+@enduml
+

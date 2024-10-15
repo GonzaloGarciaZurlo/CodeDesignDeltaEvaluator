@@ -18,7 +18,7 @@ class regex
 class pyparsing
 class cypherGraphDB
 class gremlinGraphDB
-class print 
+class printObserver
 class composableObserver
 class main {
     parser = PumlParserFactory(ParserName) 
@@ -33,7 +33,7 @@ PUML_Parser <|-- pyparsing
 
 PUML_Parser_Obs <|-- cypherGraphDB
 PUML_Parser_Obs <|-- gremlinGraphDB
-PUML_Parser_Obs <|-- print
+PUML_Parser_Obs <|-- printObserver
 PUML_Parser_Obs <|-- composableObserver
 
 PUML_Parser -> PUML_Parser_Obs : (coupling)
