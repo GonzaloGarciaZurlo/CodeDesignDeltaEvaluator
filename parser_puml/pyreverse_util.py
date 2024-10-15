@@ -22,8 +22,10 @@ def _goplantuml(directory, name, file_path):
     """
     subprocess.Popen(["mkdir", "-p", "temp_dir"])
     subprocess.run(['cp', file_path, 'temp_dir'], check=True)
-    with open(directory + '/' + name.replace('.go', '.plantuml'), 'w') as output_file:
-        subprocess.run(['goplantuml', 'temp_dir'], stdout=output_file, check=True)
+    with open(directory + '/' + name.replace('.go', '.plantuml'),
+              'w', encoding="utf-8") as output_file:
+        subprocess.run(['goplantuml', 'temp_dir'],
+                       stdout=output_file, check=True)
     subprocess.run(['rm', '-rf', './temp_dir'], check=True)
 
     return directory + '/' + name.replace('.go', '.plantuml')
@@ -43,9 +45,9 @@ def _scheduler_plantuml(extension, directory, name, file_path):
     try:
         if extension == '.py':
             return _pyreverse(directory, name, file_path)
-        elif extension == '.go':
+        if extension == '.go':
             return _goplantuml(directory, name, file_path)
-        elif extension == '.c++':
+        if extension == '.c++':
             return _hpp2plantuml(directory, name, file_path)
         return "Error: The file extension is not supported."
     except subprocess.CalledProcessError:

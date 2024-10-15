@@ -38,4 +38,7 @@ RELATION_MAP = {
 
 # Function to convert relation symbols to names
 def convert_relation(relation):
+    """
+    function to convert relation symbols to names
+    """
     return RELATION_MAP.get(relation, relation)

@@ -14,12 +14,13 @@ class Main:
         """
         Executes the main logic of the program.
         """
+
     # crear observers
     console = observer_factory.ObserverFactory.create_observer("printer")
     db_neo4j = observer_factory.ObserverFactory.create_observer("neo4j")
     composable = observer_factory.ObserverFactory.create_observer(
         "composable", [console, db_neo4j])
-    
+
     # Crear parser
     parser = parser_factory.ParserFactory.create_parser("regex", composable)
 

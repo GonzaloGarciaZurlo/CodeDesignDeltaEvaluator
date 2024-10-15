@@ -25,9 +25,10 @@ def console():
                 observer_factory.ObserverFactory.create_observer(observer))
         composable = observer_factory.ObserverFactory.create_observer(
             "composable", obs_list)
+        o = composable
 
     # Creacion de parser
     print("Select which parser you want to use:")
     print("regex")
     p = input()
-    return parser_factory.ParserFactory.create_parser(p, composable)
+    return parser_factory.ParserFactory.create_parser(p, o)

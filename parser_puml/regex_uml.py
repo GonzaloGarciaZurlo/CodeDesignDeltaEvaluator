@@ -12,12 +12,9 @@ class Regex(PumlParser):
     Class that implements parser with regex to parse the plantuml file
     """
 
-    def __init__(self, observer):
-        self.observer = observer
-
     # @override
-    def parse_uml(self, filename: str) -> None:
-        with open(filename, 'r', encoding='utf-8') as filename:
+    def parse_uml(self, file: str) -> None:
+        with open(file, 'r', encoding='utf-8') as filename:
             for line in filename:
                 line = line.strip()
                 self._parse_class(line)    # Buscar declaraciones de clases
