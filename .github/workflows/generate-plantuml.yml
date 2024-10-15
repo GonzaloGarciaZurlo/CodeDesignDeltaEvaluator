@@ -1,0 +1,28 @@
+name: Generate PlantUML Diagrams
+
+on:
+  push:
+    paths:
+      - '**.puml'
+      - '**.plantuml'
+
+jobs:
+  generate-plantuml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source
+        uses: actions/checkout@v2
+
+      - name: Generate SVG Diagrams
+        uses: grassedge/generate-plantuml-action@v1.5
+        with:
+          path: .
+          message: "Render PlantUML files"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Generate SVG files for PlantUML diagrams"
+          file_pattern: "**/*.svg"
