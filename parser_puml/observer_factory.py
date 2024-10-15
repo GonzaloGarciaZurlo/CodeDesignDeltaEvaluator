@@ -7,7 +7,7 @@ class ObserverFactory():
     """
 
     @staticmethod
-    def create_observer(name: puml_observer.Observer):
+    def create_observer(name: puml_observer.Observer) -> puml_observer.Observer:
         """
         Creates the parser object based on the selected implementation.
         """
