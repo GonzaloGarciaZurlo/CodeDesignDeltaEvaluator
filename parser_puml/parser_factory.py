@@ -1,5 +1,7 @@
-from parser_puml import puml_parser
+from parser_puml import puml_parser, regex_uml, puml_observer
 
+# list of parsers
+REGEX = "regex"
 
 class ParserFactory():
     """
@@ -7,8 +9,11 @@ class ParserFactory():
     """
 
     @staticmethod
-    def create_parser(name: puml_parser.PumlParser) -> puml_parser.PumlParser:
+    def create_parser(name: str, obserber: puml_observer.Observer) -> puml_parser.PumlParser:
         """
         Creates the parser object based on the selected implementation.
         """
-        return name
+        if name == REGEX:
+            return regex_uml.Regex(obserber)
+        else:   
+            print("Invalid parser")
