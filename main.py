@@ -17,15 +17,15 @@ class Main:
 
     # crear observers
     console = observer_factory.ObserverFactory.create_observer("printer")
-    db_neo4j = observer_factory.ObserverFactory.create_observer("neo4j")
-    composable = observer_factory.ObserverFactory.create_observer(
-        "composable", [console, db_neo4j])
+    #db_neo4j = observer_factory.ObserverFactory.create_observer("neo4j")
+    #composable = observer_factory.ObserverFactory.create_observer(
+    #    "composable", [console, db_neo4j])
 
     # Crear parser
-    parser = parser_factory.ParserFactory.create_parser("regex", composable)
+    parser = parser_factory.ParserFactory.create_parser("regex", console)
 
     # Eliminar la base de datos
-    db_neo4j.delete_all()
+    #db_neo4j.delete_all()
 
     # archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
     # archivo_go = "Samples/Simple/double derivative/before.go"
@@ -40,8 +40,8 @@ class Main:
     # claseCpp = "Auto"
 
     # Consultar el acoplamiento de una clase
-    acoplamiento = queries.Neo4jCoupling().get_class_coupling(clasePy)
-    print(acoplamiento)
+    #acoplamiento = queries.Neo4jCoupling().get_class_coupling(clasePy)
+    #print(acoplamiento)
 
     # Eliminar el archivo .plantuml
     pyreverse_util.delete_plantuml(archivo_plantuml)

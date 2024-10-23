@@ -2,10 +2,11 @@
  Factory class that creates the parser object based on the selected implementation.
 
 """
-from parser_puml import puml_parser, regex_uml, puml_observer
+from parser_puml import puml_parser, regex_uml, puml_observer, parsimonius_parser
 
 # list of parsers
 REGEX = "regex"
+PARSIMONIUS = "parsimonius"
 
 
 class ParserFactory():
@@ -20,5 +21,7 @@ class ParserFactory():
         """
         if name == REGEX:
             return regex_uml.Regex(obserber)
+        if name == PARSIMONIUS:
+            return parsimonius_parser.Parsimonius(obserber)
         print("Invalid parser")
         return None
