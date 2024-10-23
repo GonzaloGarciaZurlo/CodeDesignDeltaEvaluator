@@ -3,26 +3,27 @@ This file contains the constants used in the parser module.
 """
 
 # Regex parser constants :
+NAME_SPACE_PATTERN = r'namespace\s+([\w.]+)'
 CLASS_PATTERN = r'class\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|class\s+([\w.]+)'
-RELATION_PATTERN = r'(\w+[\w.]+)\s*([-\*<>|]+)\s*(\w+[\w.]+)'
-ABS_CLASS_PATTERN = r'abstract\s+class\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|abstract\s+class\s+([\w.]+)'
-ABS_PATTERN = r'abstract\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|abstract\s+([\w.]+)'
+RELATION_PATTERN = r'''(["']?[\w.]+["']?)\s*(--\|>|<\|--|\.\.\|>|<\|\.{2}|-->|<--|\*--|--\*|o--|--o|--)\s*(["']?[\w.]+["']?)'''
+ABS_CLASS_PATTERN= r'abstract\s+class\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|abstract\s+class\s+([\w.]+)'
+ABS_PATTERN= r'abstract\s+"?([\w\s]+)"?\s+as\s+([\w.]+)|abstract\s+([\w.]+)'
 
 # Relation type constants
-INHERITANCE = '--|>'
-INHERITANCE2 = '<|--'
-IMPLEMENTATION = '..|>'
-IMPLEMENTATION2 = '<|..'
-DEPENDENCY = '-->'
-DEPENDENCY2 = '<--'
-COMPOSITION = '*--'
-COMPOSITION2 = '--*'
-AGGREGATION = 'o--'
-AGGREGATION2 = '--o'
-ASSOCIATION = '--'
+INHERITANCE= '--|>'
+INHERITANCE2= '<|--'
+IMPLEMENTATION= '..|>'
+IMPLEMENTATION2= '<|..'
+DEPENDENCY= '-->'
+DEPENDENCY2= '<--'
+COMPOSITION= '*--'
+COMPOSITION2= '--*'
+AGGREGATION= 'o--'
+AGGREGATION2= '--o'
+ASSOCIATION= '--'
 
 # Mapping relation symbols to names
-RELATION_MAP = {
+RELATION_MAP= {
     INHERITANCE: 'inheritance',
     INHERITANCE2: 'inheritance2',
     IMPLEMENTATION: 'implementation',

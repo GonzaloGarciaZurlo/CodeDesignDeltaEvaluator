@@ -22,7 +22,7 @@ class Main:
         "composable", [console, db_neo4j])
 
     # Crear parser
-    parser = parser_factory.ParserFactory.create_parser("parsimonius", composable)
+    parser = parser_factory.ParserFactory.create_parser("regex", composable)
 
     # Eliminar la base de datos
     db_neo4j.delete_all()
