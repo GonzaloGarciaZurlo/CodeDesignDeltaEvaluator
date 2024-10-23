@@ -5,9 +5,11 @@ from parser_puml import constants
 
 grammar = Grammar(
     r"""
-    start               = (class_definition / comment / directive / relationship / other)*
+    start               = ( name_space / class_definition / comment / directive / relationship / other)*
 
-    class_definition    = "class" ws class_name ws? alias? ws? "{"? ws?
+    name_space           = ws? "namespace" ws? class_name ws? "{"? ws?
+
+    class_definition    = ws? "class" ws class_name ws? alias? ws? "{"? ws?
 
     class_name          = ~r'"?[A-Za-z_][A-Za-z0-9_.]*"?'   # Captura nombres con o sin comillas
 
@@ -30,6 +32,7 @@ grammar = Grammar(
 
 class Parsimonius(NodeVisitor):
     def __init__(self, observer: Observer):
+        self.namespace = ""
         self.observer = observer
 
     def parse_uml(self, file: str) -> None:
@@ -38,10 +41,14 @@ class Parsimonius(NodeVisitor):
             tree = grammar.parse(content)
             self.visit(tree)
 
+    def visit_name_space(self, node, visited_children):
+        self.namespace = visited_children[3]
+        print(f"Namespace found: {self.namespace}")
+
     def visit_class_definition(self, node, visited_children):
-        class_name = visited_children[2][0]
-        alias = visited_children[4][0]
-        if alias is not None:
+        class_name = visited_children[3]
+        if len(visited_children[5]) > 0:
+            alias = visited_children[5][0]
             self.observer.on_class_found(alias)
         else:
             self.observer.on_class_found(class_name)
@@ -63,10 +70,16 @@ class Parsimonius(NodeVisitor):
         rel_type = str(visited_children[2])
         class_b = str(visited_children[4])
 
+        if self.namespace != "" and self.namespace in class_a:
+            class_a = class_a.replace(self.namespace + ".", "")
+        if self.namespace != "" and self.namespace in class_b:
+            class_b = class_b.replace(self.namespace + ".", "")
+
         rel_type = constants.convert_relation(rel_type)
         if "2" in rel_type:
             self.observer.on_relation_found(class_b, class_a, rel_type)
-        self.observer.on_relation_found(class_a, class_b, rel_type)
+        else:
+            self.observer.on_relation_found(class_a, class_b, rel_type)
 
     def generic_visit(self, node, visited_children):
         # Fallback for any other nodes not explicitly visited
