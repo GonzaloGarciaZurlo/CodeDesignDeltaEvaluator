@@ -12,7 +12,7 @@ setup(
     description="A system for evaluating implicit design changes in code during agile reviews",
     url="https://github.com/GonzaloGarciaZurlo/CodeDesignDeltaEvaluator",
     packages=find_packages(),
-    python_requires='>=3.7',
+    python_requires='>=3.12',
     install_requires=[
         "networkx",
         "pyparsing",

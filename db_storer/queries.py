@@ -14,7 +14,10 @@ class Neo4jCoupling:
         self.driver = GraphDatabase.driver(
             self.uri, auth=("neo4j", "holacomoestas"))
 
-    def get_class_coupling(self, class_name):
+    def get_class_coupling(self, class_name: str) -> dict:
+        """
+        Gets the coupling of a class.
+        """
         with self.driver.session() as session:
             # Llama a las funciones de acoplamiento aferente y deferente
             acoplamiento = session.read_transaction(
@@ -22,8 +25,10 @@ class Neo4jCoupling:
             return acoplamiento
 
     @staticmethod
-    def _calculate_coupling(tx, class_name):
-        # Consulta Cypher para obtener el acoplamiento deferente y aferente
+    def _calculate_coupling(tx, class_name: str) -> dict:
+        """
+        Calculates the efferent and afferent coupling of a class.
+        """
         query = """
         MATCH (c:Class {name: $class_name})
         OPTIONAL MATCH (external:Class)-[r1]->(c)

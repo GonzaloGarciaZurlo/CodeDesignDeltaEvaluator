@@ -6,7 +6,7 @@ import subprocess
 import os
 
 
-def _pyreverse(directory, name, file_path):
+def _pyreverse(directory: str, name: str, file_path: str) -> str:
     """
     run pyreverse
     """
@@ -17,7 +17,7 @@ def _pyreverse(directory, name, file_path):
     return file_path
 
 
-def _goplantuml(directory, name, file_path):
+def _goplantuml(directory: str, name: str, file_path: str) -> str:
     """
     run goplantuml
     """
@@ -33,7 +33,7 @@ def _goplantuml(directory, name, file_path):
     return file_path
 
 
-def _hpp2plantuml(directory, name, file_path):
+def _hpp2plantuml(directory: str, name: str, file_path: str) -> str:
     """
     run hpp2plantuml
     """
@@ -43,15 +43,20 @@ def _hpp2plantuml(directory, name, file_path):
     return file_path
 
 
-def _scheduler_plantuml(extension, directory, name, file_path):
+def _deaspacher_plantuml(extension: str, directory: str, name: str, file_path: str) -> str:
+    """
+    Deaspacher for the plantuml generation
+    """
     try:
-        if extension == '.py':
-            return _pyreverse(directory, name, file_path)
-        if extension == '.go':
-            return _goplantuml(directory, name, file_path)
-        if extension == '.c++':
-            return _hpp2plantuml(directory, name, file_path)
-        return "Error: The file extension is not supported."
+        match extension:
+            case '.py':
+                return _pyreverse(directory, name, file_path)
+            case '.go':
+                return _goplantuml(directory, name, file_path)
+            case '.c++':
+                return _hpp2plantuml(directory, name, file_path)
+            case _:
+                return "Error: The file extension is not supported."
     except subprocess.CalledProcessError:
         return "Error: Failed to generate .plantuml file."
 
@@ -68,7 +73,7 @@ def generate_plantuml(file_path: str) -> str:
     name = os.path.basename(file_path)
     extension = os.path.splitext(name)[1]
 
-    return _scheduler_plantuml(extension, directory, name, file_path)
+    return _deaspacher_plantuml(extension, directory, name, file_path)
 
 
 def delete_plantuml(uml_path: str) -> None:
