@@ -47,7 +47,7 @@ class Neo4j(Observer):
         self.driver.close()
 
     @override
-    def on_class_found(self, class_name: str) -> None:
+    def on_class_found(self, class_name: str, type: str) -> None:
         """
         Create a node with the class name.
         """

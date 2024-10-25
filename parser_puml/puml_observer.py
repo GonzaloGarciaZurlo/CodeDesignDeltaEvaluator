@@ -9,7 +9,7 @@ class Observer(ABC):
     Abstract class that represents an observer.
     """
     @abstractmethod
-    def on_class_found(self, class_name: str) -> None:
+    def on_class_found(self, class_name: str, type: str) -> None:
         """Evento que se dispara cuando se encuentra una clase."""
 
     @abstractmethod

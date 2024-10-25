@@ -11,8 +11,8 @@ class Printer(Observer):
     Observer that prints the information it receives
     """
     @override
-    def on_class_found(self, class_name: str) -> None:
-        print(f"Class found: {class_name}")
+    def on_class_found(self, class_name: str, type) -> None:
+        print(f"{type} found: {class_name}")
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: str) -> None:

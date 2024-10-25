@@ -22,26 +22,29 @@ class Main:
         "composable", [console, db_neo4j])
 
     # Crear parser
-    parser = parser_factory.ParserFactory.create_parser("parsimonius", composable)
+    parser = parser_factory.ParserFactory.create_parser(
+        "parsimonius", composable)
 
     # Eliminar la base de datos
     db_neo4j.delete_all()
 
-    #archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
-    #archivo_go = "Samples/Simple/double derivative/before.go"
-    archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
+    # archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
+    # archivo_go = "Samples/Simple/double derivative/before.go"
+    #archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
+    #complex_example_py = "Samples/Complex/complete_example.py"
+    complex_example_cpp = "Samples/Complex/complete_example.c++"
 
     # Generar el archivo .plantuml
-    archivo_plantuml = pyreverse_util.generate_plantuml(archivo_py)
+    archivo_plantuml = pyreverse_util.generate_plantuml(complex_example_cpp)
     parser.parse_uml(archivo_plantuml)
 
     clasePy = "ISP_P.Trabajador"
-    #claseGo = "Dog"
-    #claseCpp = "Auto"
+    # claseGo = "Dog"
+    # claseCpp = "Auto"
 
     # Consultar el acoplamiento de una clase
-    acoplamiento = queries.Neo4jCoupling().get_class_coupling(clasePy)
-    print(acoplamiento)
+    #acoplamiento = queries.Neo4jCoupling().get_class_coupling(clasePy)
+    #print(acoplamiento)
 
     # Eliminar el archivo .plantuml
     pyreverse_util.delete_plantuml(archivo_plantuml)

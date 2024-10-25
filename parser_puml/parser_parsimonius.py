@@ -8,11 +8,15 @@ from parser_puml import constants
 
 grammar = Grammar(
     r"""
-    start               = ( name_space / class_definition / comment / directive / relationship / other)*
+    start               = ( name_space / class_definition / abstract_definition /comment / directive / relationship / other)*
 
     name_space           = ws? "namespace" ws? class_name ws? "{"? ws?
 
     class_definition    = ws? "class" ws class_name ws? alias? ws? "{"? ws?
+
+    abstract_definition = ws? abstract_class ws class_name ws? alias? ws? "{"? ws?
+
+    abstract_class      = "abstract class"/ "abstract" 
 
     class_name          = ~r'"?[A-Za-z_][A-Za-z0-9_.]*"?'  
 
@@ -63,9 +67,9 @@ class Parsimonius(NodeVisitor):
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
             alias = visited_children[5][0]
-            self.observer.on_class_found(alias)
+            self.observer.on_class_found(alias, "Class")
         else:
-            self.observer.on_class_found(class_name)
+            self.observer.on_class_found(class_name, "Class")
 
     def visit_class_name(self, node: Node, visited_children: list) -> str:
         """
@@ -84,6 +88,17 @@ class Parsimonius(NodeVisitor):
         Extract alias name without quotes
         """
         return node.text.strip('"')
+    
+    def visit_abstract_definition(self, node: Node, visited_children: list) -> None:
+        """
+        Identify abstract class declarations with or without aliases
+        """
+        class_name = visited_children[3]
+        if len(visited_children[5]) > 0:
+            alias = visited_children[5][0]
+            self.observer.on_class_found(alias, "Abstract")
+        else:
+            self.observer.on_class_found(class_name, "Abstract")
 
     def visit_relationship_type(self, node: Node, visited_children: list) -> str:
         """

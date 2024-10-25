@@ -16,9 +16,9 @@ class Composable(Observer):
         self.observers = observers
 
     @override
-    def on_class_found(self, class_name: str) -> None:
+    def on_class_found(self, class_name: str, type: str) -> None:
         for observer in self.observers:
-            observer.on_class_found(class_name)
+            observer.on_class_found(class_name, type)
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
