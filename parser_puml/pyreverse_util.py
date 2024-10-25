@@ -80,10 +80,6 @@ def delete_plantuml(uml_path: str) -> None:
     """
     delete the plantuml file
     """
-
-    if not os.path.isfile(uml_path):
-        print("Error: The specified file does not exist.")
-
     try:
         subprocess.run(['rm', '-rf', uml_path], check=True)
 

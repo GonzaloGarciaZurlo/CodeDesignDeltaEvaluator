@@ -19,6 +19,8 @@ Which library to use considering the performance and efficiency of the project?
 * Pyparsing
 * tree-sitter
 * ply
+* Parsimonius
+* Tatsu
 
 ## Decision Outcome
 

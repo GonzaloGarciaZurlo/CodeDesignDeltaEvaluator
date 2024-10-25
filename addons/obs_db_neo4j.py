@@ -3,8 +3,8 @@ This module handles the creation of a Neo4j database.
 """
 from overrides import override
 from neo4j import GraphDatabase
-from parser_puml.puml_observer import Observer
-
+from CodeDesignDeltaEvaluator.factories.puml_observer import Observer
+from CddeAPI import CddeAPI
 
 class Neo4j(Observer):
     """
@@ -62,3 +62,7 @@ class Neo4j(Observer):
         with self.driver.session() as session:
             session.execute_write(self._create_relation,
                                   class1, class2, relation)
+
+
+def init_module(api: CddeAPI) -> None:
+    api.register_puml_observer('neo4j', Neo4j())

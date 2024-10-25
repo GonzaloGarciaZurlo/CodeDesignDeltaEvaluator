@@ -3,8 +3,10 @@ Module parser with parsimonius implementation
 """
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
-from parser_puml.puml_observer import Observer
-from parser_puml import constants
+from CodeDesignDeltaEvaluator.factories.puml_observer import Observer
+from CodeDesignDeltaEvaluator.factories.puml_parser import PumlParser
+from CodeDesignDeltaEvaluator.addons import constants
+from CddeAPI import CddeAPI
 
 grammar = Grammar(
     r"""
@@ -50,7 +52,7 @@ class Parsimonius(NodeVisitor):
             tree = grammar.parse(content)
             self.visit(tree)
 
-    def visit_name_space(self, node: Node , visited_children: list) -> None:
+    def visit_name_space(self, node: Node, visited_children: list) -> None:
         """
         Set namespace name
         """
@@ -124,3 +126,7 @@ class Parsimonius(NodeVisitor):
             class_name = class_name.replace(self.namespace + ".", "")
             class_name = class_name.replace('"', "")
         return class_name
+
+
+def init_module(api: CddeAPI) -> None:
+    api.register_puml_parser('parsimonious', Parsimonius())

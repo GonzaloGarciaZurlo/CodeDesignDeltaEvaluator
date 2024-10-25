@@ -3,10 +3,11 @@ module parser with regex implementation
 """
 import re
 # from overrides import override
-from parser_puml.puml_observer import Observer
-from parser_puml.puml_parser import PumlParser
-from parser_puml.constants import CLASS_PATTERN, RELATION_PATTERN, NAME_SPACE_PATTERN
-from parser_puml.constants import convert_relation
+from CddeAPI import CddeAPI
+from CodeDesignDeltaEvaluator.factories.puml_observer import Observer
+from CodeDesignDeltaEvaluator.factories.puml_parser import PumlParser
+from CodeDesignDeltaEvaluator.addons.constants import CLASS_PATTERN, RELATION_PATTERN, NAME_SPACE_PATTERN
+from CodeDesignDeltaEvaluator.addons.constants import convert_relation
 
 class Regex(PumlParser):
     """
@@ -79,3 +80,7 @@ class Regex(PumlParser):
             class_name = class_name.replace(self.namespace + ".", "")
             class_name = class_name.replace('"', "")
         return class_name
+
+
+def init_module(api: CddeAPI) -> None:
+    api.register_puml_parser('regex', Regex())

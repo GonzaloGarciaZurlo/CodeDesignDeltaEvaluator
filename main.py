@@ -1,7 +1,8 @@
 """
 This module handles the main execution flow of the application.
 """
-from parser_puml import pyreverse_util, parser_factory, observer_factory
+from CodeDesignDeltaEvaluator.parser_puml import pyreverse_util
+from parser_puml import parser_factory, observer_factory
 from db_storer import queries
 
 

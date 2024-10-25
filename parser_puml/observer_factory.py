@@ -1,8 +1,10 @@
 """
 Factory class that creates the observer object based on the selected implementation.
 """
-from relationship_db import create_db_neo4j
-from parser_puml import puml_observer, printer, composable_observer
+from CodeDesignDeltaEvaluator.addons import obs_composable
+from CodeDesignDeltaEvaluator.factories import puml_observer
+from CodeDesignDeltaEvaluator.addons import obs_db_neo4j
+from CodeDesignDeltaEvaluator.addons import obs_printer
 
 # list of observers
 PRINTER = "printer"
@@ -21,10 +23,10 @@ class ObserverFactory():
         Creates the observer object based on the selected implementation.
         """
         if name == PRINTER:
-            return printer.Printer()
+            return obs_printer.Printer()
         if name == NEO4J:
-            return create_db_neo4j.Neo4j()
+            return obs_db_neo4j.Neo4j()
         if name == COMPOSABLE:
-            return composable_observer.Composable(observers)
+            return obs_composable.Composable(observers)
         print("Invalid observer")
         return None

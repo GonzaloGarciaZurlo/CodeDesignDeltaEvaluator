@@ -1,8 +1,9 @@
 """
  Factory class that creates the parser object based on the selected implementation.
-
 """
-from parser_puml import puml_parser, regex_uml, puml_observer, parsimonius_parser
+from CodeDesignDeltaEvaluator.addons import parsimonius_parser
+from CodeDesignDeltaEvaluator.factories import puml_observer, puml_parser
+from CodeDesignDeltaEvaluator.addons import regex_uml
 
 # list of parsers
 REGEX = "regex"

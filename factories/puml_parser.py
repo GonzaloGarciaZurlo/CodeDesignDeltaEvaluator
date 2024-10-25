@@ -2,7 +2,7 @@
 module that contains the PUML_Parser abstract class
 """
 from abc import ABC, abstractmethod
-from parser_puml.puml_observer import Observer
+from CodeDesignDeltaEvaluator.factories.puml_observer import Observer
 
 
 class PumlParser(ABC):
