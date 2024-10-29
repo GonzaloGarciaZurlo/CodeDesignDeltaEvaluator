@@ -1,10 +1,11 @@
 """
 Module parser with parsimonius implementation
 """
+from api import CddeAPI
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
-from parser_puml.puml_observer import Observer
-from parser_puml import constants
+from puml_observer import Observer
+import constants
 
 grammar = Grammar(
     r"""
@@ -139,3 +140,7 @@ class Parsimonius(NodeVisitor):
             class_name = class_name.replace(self.namespace + ".", "")
             class_name = class_name.replace('"', "")
         return class_name
+
+
+def init_module(api: CddeAPI) -> None:
+    api.register_puml_parser('parsimonius', Parsimonius)

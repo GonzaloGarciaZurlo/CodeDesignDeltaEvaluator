@@ -25,15 +25,15 @@ ASSOCIATION= '--'
 # Mapping relation symbols to names
 RELATION_MAP= {
     INHERITANCE: 'inheritance',
-    INHERITANCE2: 'inheritance2',
+    INHERITANCE2: 'inheritance',
     IMPLEMENTATION: 'implementation',
-    IMPLEMENTATION2: 'implementation2',
+    IMPLEMENTATION2: 'implementation',
     DEPENDENCY: 'dependency',
-    DEPENDENCY2: 'dependency2',
+    DEPENDENCY2: 'dependency',
     COMPOSITION: 'composition',
-    COMPOSITION2: 'composition2',
+    COMPOSITION2: 'composition',
     AGGREGATION: 'aggregation',
-    AGGREGATION2: 'aggregation2',
+    AGGREGATION2: 'aggregation',
     ASSOCIATION: 'association'
 }
 

@@ -3,10 +3,11 @@ module parser with regex implementation
 """
 import re
 # from overrides import override
-from parser_puml.puml_observer import Observer
-from parser_puml.puml_parser import PumlParser
-from parser_puml.constants import CLASS_PATTERN, RELATION_PATTERN, NAME_SPACE_PATTERN
-from parser_puml.constants import convert_relation
+from api import CddeAPI
+from puml_observer import Observer
+from puml_parser import PumlParser
+from constants import CLASS_PATTERN, RELATION_PATTERN, NAME_SPACE_PATTERN
+from constants import convert_relation
 
 class Regex(PumlParser):
     """
@@ -40,11 +41,11 @@ class Regex(PumlParser):
         if match:
             if match.group(2):  # Case with alias
                 alias_name = match.group(2)
-                self.observer.on_class_found(alias_name)
+                self.observer.on_class_found(alias_name, "class")
 
             else:  # Case without alias
                 class_name = match.group(3)
-                self.observer.on_class_found(class_name)
+                self.observer.on_class_found(class_name, "class")
 
     def _parse_relation(self, line: str) -> None:
         """
@@ -79,3 +80,7 @@ class Regex(PumlParser):
             class_name = class_name.replace(self.namespace + ".", "")
             class_name = class_name.replace('"', "")
         return class_name
+
+
+def init_module(api: CddeAPI) -> None:
+    api.register_puml_parser('regex', Regex)

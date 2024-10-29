@@ -1,8 +1,8 @@
 """
 This module handles the main execution flow of the application.
 """
-from parser_puml import pyreverse_util, parser_factory, observer_factory
 from db_storer import queries
+from api import CddeAPI
 
 
 class Main:
@@ -15,39 +15,49 @@ class Main:
         Executes the main logic of the program.
         """
 
-    # crear observers
-    console = observer_factory.ObserverFactory.create_observer("printer")
-    db_neo4j = observer_factory.ObserverFactory.create_observer("neo4j")
-    composable = observer_factory.ObserverFactory.create_observer(
-        "composable", [console, db_neo4j])
+    api = CddeAPI()
+    api.load_modules_from_directory("addons")
 
-    # Crear parser
-    parser = parser_factory.ParserFactory.create_parser(
-        "parsimonius", composable)
+    # get the generators
+    cpp_generator = api.generators['.cpp']()
+    py_generator = api.generators['.py']()
+    go_generator = api.generators['.go']()
+
+    # get observers
+    printer = api.observers['printer']()
+    db_neo4j = api.observers['neo4j']()
+    composable = api.observers['composable']([printer, db_neo4j])
+
+    # get parsers
+    regex = api.parsers['regex'](composable)
+    parsimonious = api.parsers['parsimonius'](composable)
 
     # Eliminar la base de datos
     db_neo4j.delete_all()
 
-    # archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
-    # archivo_go = "Samples/Simple/double derivative/before.go"
-    #archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
-    #complex_example_py = "Samples/Complex/complete_example.py"
+    archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
+    archivo_go = "Samples/Simple/double derivative/before.go"
+    archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
+    complex_example_py = "Samples/Complex/complete_example.py"
     complex_example_cpp = "Samples/Complex/complete_example.c++"
 
     # Generar el archivo .plantuml
-    archivo_plantuml = pyreverse_util.generate_plantuml(complex_example_cpp)
-    parser.parse_uml(archivo_plantuml)
+    archivo_plantuml = cpp_generator.generate_plantuml(complex_example_cpp)
+
+    # Parse the plantuml file
+    parsimonious.parse_uml(archivo_plantuml)
 
     clasePy = "ISP_P.Trabajador"
-    # claseGo = "Dog"
-    # claseCpp = "Auto"
+    claseGo = "Dog"
+    claseCpp = "Auto"
+    clase_complex_cpp = "User"
 
     # Consultar el acoplamiento de una clase
-    #acoplamiento = queries.Neo4jCoupling().get_class_coupling(clasePy)
-    #print(acoplamiento)
+    acoplamiento = queries.Neo4jCoupling().get_class_coupling(clase_complex_cpp)
+    print(acoplamiento)
 
     # Eliminar el archivo .plantuml
-    pyreverse_util.delete_plantuml(archivo_plantuml)
+    cpp_generator.delete_plantuml(archivo_plantuml)
 
 
 # Ejecución del ejemplo

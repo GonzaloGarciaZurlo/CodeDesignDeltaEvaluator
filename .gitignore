@@ -3,4 +3,5 @@
 # Ignorar todas las carpetas __pycache__
 __pycache__/
 
-tatsu_parser.py
+parser_tatsu.py 
+parser_pyparsing.py
