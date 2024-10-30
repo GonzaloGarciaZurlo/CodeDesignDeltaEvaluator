@@ -2,8 +2,8 @@
 This module handles the creation of a Neo4j database.
 """
 from overrides import override
-from api import CddeAPI
 from neo4j import GraphDatabase
+from api import CddeAPI
 from puml_observer import Observer
 
 
@@ -48,7 +48,7 @@ class Neo4j(Observer):
         self.driver.close()
 
     @override
-    def on_class_found(self, class_name: str, type: str) -> None:
+    def on_class_found(self, class_name: str, kind: str) -> None:
         """
         Create a node with the class name.
         """
@@ -66,4 +66,7 @@ class Neo4j(Observer):
 
 
 def init_module(api: CddeAPI) -> None:
+    """
+    Initialize the module on the API.
+    """
     api.register_puml_observer('neo4j', Neo4j)

@@ -1,13 +1,16 @@
+"""
+Support for Python files to generate PlantUML files.
+"""
+import subprocess
+import os
 from overrides import override
 from api import CddeAPI
 from puml_generator import PumlGenerator
-import subprocess
-import os
 
 
 class PyPumlGenerator(PumlGenerator):
     """
-    PlantUML generator for C++ files.
+    PlantUML generator for Python files.
     """
     @override
     def generate_plantuml(self, file_path: str) -> str:
@@ -34,4 +37,7 @@ def _pyreverse(directory: str, name: str, file_path: str) -> str:
 
 
 def init_module(api: CddeAPI) -> None:
+    """
+    Initialize the module of the API
+    """
     api.register_puml_generator('.py', PyPumlGenerator)

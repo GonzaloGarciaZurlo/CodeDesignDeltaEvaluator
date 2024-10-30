@@ -1,9 +1,9 @@
 """
 Module parser with parsimonius implementation
 """
-from api import CddeAPI
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
+from api import CddeAPI
 from puml_observer import Observer
 import constants
 
@@ -89,7 +89,7 @@ class Parsimonius(NodeVisitor):
         Extract alias name without quotes
         """
         return node.text.strip('"')
-    
+
     def visit_abstract_definition(self, node: Node, visited_children: list) -> None:
         """
         Identify abstract class declarations with or without aliases
@@ -143,4 +143,7 @@ class Parsimonius(NodeVisitor):
 
 
 def init_module(api: CddeAPI) -> None:
+    """
+    Initialize the module on the API
+    """
     api.register_puml_parser('parsimonius', Parsimonius)

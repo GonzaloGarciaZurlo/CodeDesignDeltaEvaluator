@@ -15,7 +15,7 @@ class Regex(PumlParser):
     """
 
     def __init__(self, observer: Observer) -> None:
-        self.observer = observer
+        super().__init__(observer)
         self.namespace = ""
 
     # @override
@@ -83,4 +83,7 @@ class Regex(PumlParser):
 
 
 def init_module(api: CddeAPI) -> None:
+    """
+    Initialize the module on the API.
+    """
     api.register_puml_parser('regex', Regex)

@@ -2,37 +2,36 @@
 API for CodeDesignDeltaEvaluator
 """
 from abc import ABC, abstractmethod
-from overrides import override
-from importlib.machinery import ModuleSpec
+import importlib
 from types import ModuleType
-from typing import Type
+from typing import Type, Optional
+from importlib.machinery import ModuleSpec
+import os
+from overrides import override
 from puml_generator import PumlGenerator
 from puml_parser import PumlParser
 from puml_observer import Observer
-import os
-from typing import Optional
-import importlib
 
 
 class CddeAPIAbstract(ABC):
+    """
+    Abstract API for CodeDesignDeltaEvaluator
+    """
     @abstractmethod
     def register_puml_generator(self, extension: str, generator: Type[PumlGenerator]) -> None:
         """
         Register a PlantUML generator.
         """
-        pass
 
     def register_puml_parser(self, extension: str, parser: Type[PumlParser]) -> None:
         """
         Register a PlantUML parser.
         """
-        pass
 
     def register_puml_observer(self, extension: str, observer: Type[Observer]) -> None:
         """
         Register a PlantUML observer.
         """
-        pass
 
 
 class CddeAPI(CddeAPIAbstract):
@@ -90,7 +89,8 @@ class CddeAPI(CddeAPIAbstract):
         spec: Optional[ModuleSpec] = importlib.util.spec_from_file_location(
             unique_name, path)
         if spec is None:
-            raise ImportError(f"Cannot find module named '{name}' at path '{path}'")
+            raise ImportError(f"Cannot find module named '{
+                              name}' at path '{path}'")
 
         rule_module: ModuleType = importlib.util.module_from_spec(spec)
         os.sys.modules[unique_name] = rule_module

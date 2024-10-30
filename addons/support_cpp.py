@@ -1,9 +1,11 @@
-from overrides import override
-from api import CddeAPI
- 
-from puml_generator import PumlGenerator
+"""
+Support for C++ files to generate PlantUML files.
+"""
 import subprocess
 import os
+from overrides import override
+from api import CddeAPI
+from puml_generator import PumlGenerator
 
 
 class CppPumlGenerator(PumlGenerator):
@@ -22,6 +24,7 @@ class CppPumlGenerator(PumlGenerator):
         name = os.path.basename(file_path)
         return _hpp2plantuml(directory, name, file_path)
 
+
 def _hpp2plantuml(directory: str, name: str, file_path: str) -> str:
     """
     run hpp2plantuml
@@ -33,4 +36,7 @@ def _hpp2plantuml(directory: str, name: str, file_path: str) -> str:
 
 
 def init_module(api: CddeAPI) -> None:
+    """
+    Initialize the module of the API.
+    """
     api.register_puml_generator('.cpp', CppPumlGenerator)

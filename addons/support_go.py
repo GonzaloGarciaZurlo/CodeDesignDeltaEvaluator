@@ -1,14 +1,16 @@
-from overrides import override
-from api import CddeAPI
-
-from puml_generator import PumlGenerator
+"""
+Support for Go files to generate PlantUML files.
+"""
 import subprocess
 import os
+from overrides import override
+from api import CddeAPI
+from puml_generator import PumlGenerator
 
 
 class GoPumlGenerator(PumlGenerator):
     """
-    PlantUML generator for C++ files.
+    PlantUML generator for go files.
     """
     @override
     def generate_plantuml(self, file_path: str) -> str:
@@ -40,4 +42,7 @@ def _goplantuml(directory: str, name: str, file_path: str) -> str:
 
 
 def init_module(api: CddeAPI) -> None:
+    """
+    Initialize the module of the API.
+    """
     api.register_puml_generator('.go', GoPumlGenerator)

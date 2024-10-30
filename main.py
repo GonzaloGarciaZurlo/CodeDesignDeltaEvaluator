@@ -32,7 +32,7 @@ class Main:
     regex = api.parsers['regex'](composable)
     parsimonious = api.parsers['parsimonius'](composable)
 
-    # Eliminar la base de datos
+    # Delete all nodes and relationships in the database
     db_neo4j.delete_all()
 
     archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
@@ -45,7 +45,7 @@ class Main:
     archivo_plantuml = cpp_generator.generate_plantuml(complex_example_cpp)
 
     # Parse the plantuml file
-    parsimonious.parse_uml(archivo_plantuml)
+    regex.parse_uml(archivo_plantuml)
 
     clasePy = "ISP_P.Trabajador"
     claseGo = "Dog"

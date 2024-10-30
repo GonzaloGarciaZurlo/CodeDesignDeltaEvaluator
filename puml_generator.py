@@ -14,8 +14,7 @@ class PumlGenerator(ABC):
         """
         Generate the PlantUML file.
         """
-        pass
-    
+
     def delete_plantuml(self, uml_path: str) -> None:
         """
         delete the plantuml file
