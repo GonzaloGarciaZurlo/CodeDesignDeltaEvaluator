@@ -1,0 +1,104 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class Admin {
+	+Admin(const std::string& uname, const std::string& mail, int level)
+	-admin_level : int
+	+getRole() : std::string {query}
+}
+
+
+class CreditCardProcessor {
+	+processPayment(float amount) : void {query}
+}
+
+
+class Customer {
+	+Customer(const std::string& uname, const std::string& mail, int id)
+	-customer_id : int
+	+getRole() : std::string {query}
+}
+
+
+class Order {
+	+Order(std::shared_ptr<Customer> cust, std::shared_ptr<PaymentProcessor> processor)
+	-customer : std::shared_ptr<Customer>
+	-payment_processor : std::shared_ptr<PaymentProcessor>
+	-items : std::vector<std::string>
+	+addItem(const std::string& item) : void
+	+processOrder() : void
+}
+
+
+class PayPalProcessor {
+	+processPayment(float amount) : void {query}
+}
+
+
+abstract class PaymentProcessor {
+	+{abstract} processPayment(float amount) : void {query}
+}
+
+
+class ShoppingCart {
+	+ShoppingCart(std::shared_ptr<Customer> cust)
+	+getTotal() : float {query}
+	-customer : std::shared_ptr<Customer>
+	-items : std::vector<std::string>
+	+addItem(const std::string& item) : void
+}
+
+
+abstract class User {
+	+User(const std::string& uname, const std::string& mail)
+	#email : std::string
+	+{abstract} getRole() : std::string {query}
+	#username : std::string
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+PaymentProcessor <|-- CreditCardProcessor
+
+
+PaymentProcessor <|-- PayPalProcessor
+
+
+User <|-- Admin
+
+
+User <|-- Customer
+
+
+
+
+
+/' Aggregation relationships '/
+
+Order *-- Customer
+
+
+Order *-- PaymentProcessor
+
+
+ShoppingCart *-- Customer
+
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml

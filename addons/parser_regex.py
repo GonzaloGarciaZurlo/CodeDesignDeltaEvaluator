@@ -6,7 +6,7 @@ import re
 from api import CddeAPI
 from puml_observer import Observer
 from puml_parser import PumlParser
-from constants import CLASS_PATTERN, RELATION_PATTERN, NAME_SPACE_PATTERN
+from constants import CLASS_PATTERN, RELATION_PATTERN, NAME_SPACE_PATTERN, ABS_CLASS_PATTERN
 from constants import convert_relation
 
 
@@ -40,6 +40,14 @@ class Regex(PumlParser):
         """
         Identify class declarations with or without aliases
         """
+        match = re.search(ABS_CLASS_PATTERN, line)
+        if match:
+            if match.group(3):
+                alias_name = match.group(3)
+                self.observer.on_class_found(alias_name, "abstract")
+            else:
+                class_name = match.group(4)
+                self.observer.on_class_found(class_name, "abstract")
         match = re.search(CLASS_PATTERN, line)
         if match:
             if match.group(2):  # Case with alias

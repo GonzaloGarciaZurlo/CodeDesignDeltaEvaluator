@@ -57,7 +57,7 @@ class Main:
     print(acoplamiento)
 
     # Eliminar el archivo .plantuml
-    cpp_generator.delete_plantuml(archivo_plantuml)
+    #cpp_generator.delete_plantuml(archivo_plantuml)
 
 
 # Ejecución del ejemplo
