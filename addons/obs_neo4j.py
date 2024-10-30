@@ -2,7 +2,7 @@
 This module handles the creation of a Neo4j database.
 """
 from overrides import override
-from neo4j import GraphDatabase
+from neo4j import GraphDatabase, Transaction
 from api import CddeAPI
 from puml_observer import Observer
 
@@ -17,13 +17,13 @@ class Neo4j(Observer):
         self.driver = GraphDatabase.driver(
             self.uri, auth=("neo4j", "holacomoestas"))
 
-    def _create_class(self, tx, name: str) -> None:
+    def _create_class(self, tx: Transaction, name: str) -> None:
         """
         Query to create a node with the class name.
         """
         tx.run("CREATE (p:Class {name: $name})", name=name)
 
-    def _create_relation(self, tx, class1: str, class2: str, relation: str) -> None:
+    def _create_relation(self, tx: Transaction, class1: str, class2: str, relation: str) -> None:
         """
         Query to create a relationship between two nodes.
         """
@@ -46,6 +46,20 @@ class Neo4j(Observer):
         Close the connection to the database.
         """
         self.driver.close()
+
+    @override
+    def open_observer(self) -> None:
+        """
+        Event triggered when the observer is opened.
+        """
+        pass
+
+    @override
+    def close_observer(self) -> None:
+        """
+        Event triggered when the observer is closed.
+        """
+        self.close()
 
     @override
     def on_class_found(self, class_name: str, kind: str) -> None:

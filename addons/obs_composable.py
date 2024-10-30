@@ -17,6 +17,22 @@ class Composable(Observer):
         self.observers = observers
 
     @override
+    def open_observer(self) -> None:
+        """
+        Event triggered when the observer is opened
+        """
+        for observer in self.observers:
+            observer.open_observer()
+
+    @override
+    def close_observer(self) -> None:
+        """
+        Event triggered when the observer is closed
+        """
+        for observer in self.observers:
+            observer.close_observer()
+
+    @override
     def on_class_found(self, class_name: str, kind: str) -> None:
         """
         Notifies the observers that a class was found.

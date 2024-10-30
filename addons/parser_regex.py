@@ -9,6 +9,7 @@ from puml_parser import PumlParser
 from constants import CLASS_PATTERN, RELATION_PATTERN, NAME_SPACE_PATTERN
 from constants import convert_relation
 
+
 class Regex(PumlParser):
     """
     Class that implements parser with regex to parse the plantuml file
@@ -24,6 +25,7 @@ class Regex(PumlParser):
         Parse the plantuml file
         """
         with open(file, 'r', encoding='utf-8') as filename:
+            self.observer.open_observer()
             for line in filename:
                 line = line.strip()
                 # Search for namespace declarations
@@ -32,6 +34,7 @@ class Regex(PumlParser):
                 self._parse_class(line)
                 # Finding relationships between classes
                 self._parse_relation(line)
+            self.observer.close_observer()
 
     def _parse_class(self, line: str) -> None:
         """

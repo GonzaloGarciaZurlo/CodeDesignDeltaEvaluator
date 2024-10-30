@@ -12,6 +12,20 @@ class Printer(Observer):
     Observer that prints the information it receives
     """
     @override
+    def open_observer(self) -> None:
+        """
+        Event triggered when the observer is opened
+        """
+        print("--------------------------------")
+
+    @override
+    def close_observer(self) -> None:
+        """
+        Event triggered when the observer is closed
+        """
+        print("--------------------------------")
+
+    @override
     def on_class_found(self, class_name: str, kind) -> None:
         """
         Print the class found
@@ -24,7 +38,6 @@ class Printer(Observer):
         Print the relationship found
         """
         print(f"Relationship found: {relation} : {class1} --> {class2}")
-
 
 
 def init_module(api: CddeAPI) -> None:

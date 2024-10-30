@@ -51,9 +51,11 @@ class Parsimonius(NodeVisitor):
         Parse the plantuml file
         """
         with open(file, 'r', encoding='utf-8') as filename:
+            self.observer.open_observer()
             content = filename.read()
             tree = grammar.parse(content)
             self.visit(tree)
+            self.observer.close_observer()
 
     def visit_name_space(self, node: Node , visited_children: list) -> None:
         """
