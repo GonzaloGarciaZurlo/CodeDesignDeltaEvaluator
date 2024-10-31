@@ -6,6 +6,7 @@ from overrides import override
 from api import CddeAPI
 from result_observer import ResultObserver
 
+
 class ResultPrinter(ResultObserver):
     """
     Observer that prints the information it receives
@@ -26,11 +27,12 @@ class ResultPrinter(ResultObserver):
         print("--------------------------------")
 
     @override
-    def on_result_found(self, result: str) -> None:
+    def on_result_found(self, result: str, kind: str) -> None:
         """
         Print the result found
         """
-        print(f"Result found: {result}")
+        print(f"Result of {kind}: {result}")
+
 
 def init_module(api: CddeAPI) -> None:
     """

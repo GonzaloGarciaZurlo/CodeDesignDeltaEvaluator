@@ -48,10 +48,10 @@ class QueriesCypher(ResultQueries):
         result = tx.run(query, class_name=class_name).single()
 
         coupling = {
-            'afferent coupling of ' + class_name: result["afferent_coupling"],
-            'deferent coupling of ' + class_name: result["deferent_coupling"]
+            'afferent coupling of class ' + class_name: result["afferent_coupling"],
+            'deferent coupling of class ' + class_name: result["deferent_coupling"]
         }
-        self.observer.on_result_found(str(coupling))
+        self.observer.on_result_found(str(coupling), "coupling")
 
 
 def init_module(api: CddeAPI) -> None:

@@ -17,17 +17,17 @@ class Main:
     api = CddeAPI()
     api.load_modules_from_directory("addons")
 
-    # get the generators
+    # Get the generators
     cpp_generator = api.generators['.cpp']()
     py_generator = api.generators['.py']()
     go_generator = api.generators['.go']()
 
-    # get observers
+    # Get observers
     printer = api.observers['printer']()
     db_neo4j = api.observers['neo4j']()
     composable = api.observers['composable']([printer, db_neo4j])
 
-    # get parsers
+    # Get parsers
     regex = api.parsers['regex'](composable)
     parsimonious = api.parsers['parsimonius'](composable)
 
@@ -40,7 +40,7 @@ class Main:
     complex_example_py = "Samples/Complex/complete_example.py"
     complex_example_cpp = "Samples/Complex/complete_example.c++"
 
-    # Generar el archivo .plantuml
+    # Generate the plantuml file
     archivo_plantuml = cpp_generator.generate_plantuml(complex_example_cpp)
 
     # Parse the plantuml file
@@ -51,19 +51,19 @@ class Main:
     claseCpp = "Auto"
     clase_complex_cpp = "User"
 
-    # get results observers
+    # Get results observers
     result_printer = api.results_observers['printer']()
 
-    # get result queries
+    # Get result queries
     cypher = api.result_queries['cypher'](result_printer)
 
-    # Consultar el acoplamiento de una clase
+    # Count the coupling of the class
     cypher.resolve_query(clase_complex_cpp)
 
-    # Eliminar el archivo .plantuml
+    # Delete the plantuml file
     cpp_generator.delete_plantuml(archivo_plantuml)
 
 
-# Ejecución del ejemplo
+# Execute the main logic
 if __name__ == "__main__":
     Main.ejecutar()

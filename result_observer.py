@@ -17,5 +17,5 @@ class ResultObserver(ABC):
         """Event triggered when the observer is closed."""
 
     @abstractmethod
-    def on_result_found(self, result: str) -> None:
+    def on_result_found(self, result: str, kind: str) -> None:
         """Event triggered when a result is found."""
