@@ -52,7 +52,6 @@ class Neo4j(Observer):
         """
         Event triggered when the observer is opened.
         """
-        pass
 
     @override
     def close_observer(self) -> None:

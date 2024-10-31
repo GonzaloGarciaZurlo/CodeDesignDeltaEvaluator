@@ -2,10 +2,10 @@
 This module contains the ResultCSV class,
 which is an Observer that saves the information it receives in a CSV file.
 """
+import subprocess
 from overrides import override
 from api import CddeAPI
 from result_observer import ResultObserver
-import subprocess
 
 
 class ResultCSV(ResultObserver):
@@ -40,19 +40,20 @@ class ResultCSV(ResultObserver):
         """
         Create the CSV file.
         """
-        subprocess.run("touch results.csv", shell=True)
+        subprocess.run("touch results.csv", shell=True, check=True)
 
     def _write_csv(self, result: str, kind: str) -> None:
         """
         Write the result in the CSV file.
         """
-        subprocess.run(f"echo '{kind},{result}' >> results.csv", shell=True)
+        subprocess.run(f"echo '{kind},{
+                       result}' >> results.csv", shell=True, check=True)
 
     def _delete_csv(self) -> None:
         """
         Delete the CSV file.
         """
-        subprocess.run("rm results.csv", shell=True)
+        subprocess.run("rm results.csv", shell=True, check=True)
 
 
 def init_module(api: CddeAPI) -> None:
