@@ -19,14 +19,32 @@ class QueriesCypher(ResultQueries):
             self.uri, auth=("neo4j", "holacomoestas"))
 
     @override
-    def resolve_query(self, query: str) -> None:
+    def resolve_query(self) -> None:
         """
         Resolves the query.
         """
-        class_name = query
+        class_name = ""
         self.observer.open_observer()
-        self.get_class_coupling(class_name)
+        classes = self.get_all_classes()
+        for class_name in classes:
+            self.get_class_coupling(class_name)
         self.observer.close_observer()
+
+    def get_all_classes(self) -> list:
+        """
+        Gets all classes in the database.
+        """
+        with self.driver.session() as session:
+            result = session.read_transaction(self._get_all_classes)
+        return result
+
+    def _get_all_classes(self, tx: Transaction) -> list:
+        """
+        Helper function to get all classes in the database.
+        """
+        query = "MATCH (c:Class) RETURN c.name AS name"
+        result = tx.run(query)
+        return [record["name"] for record in result]
 
     def get_class_coupling(self, class_name: str) -> None:
         """
@@ -48,8 +66,8 @@ class QueriesCypher(ResultQueries):
         result = tx.run(query, class_name=class_name).single()
 
         coupling = {
-            'afferent coupling of class ' + class_name: result["afferent_coupling"],
-            'deferent coupling of class ' + class_name: result["deferent_coupling"]
+            class_name + ' afferent coupling': result["afferent_coupling"],
+            class_name + ' deferent coupling' + class_name: result["deferent_coupling"]
         }
         self.observer.on_result_found(str(coupling), "coupling")
 

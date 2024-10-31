@@ -9,7 +9,7 @@ class Main:
     Main class that coordinates the execution of the program.
     """
     @staticmethod
-    def ejecutar():
+    def execute():
         """
         Executes the main logic of the program.
         """
@@ -46,11 +46,6 @@ class Main:
     # Parse the plantuml file
     regex.parse_uml(archivo_plantuml)
 
-    clasePy = "ISP_P.Trabajador"
-    claseGo = "Dog"
-    claseCpp = "Auto"
-    clase_complex_cpp = "User"
-
     # Get results observers
     result_printer = api.results_observers['printer']()
 
@@ -58,7 +53,7 @@ class Main:
     cypher = api.result_queries['cypher'](result_printer)
 
     # Count the coupling of the class
-    cypher.resolve_query(clase_complex_cpp)
+    cypher.resolve_query()
 
     # Delete the plantuml file
     cpp_generator.delete_plantuml(archivo_plantuml)
@@ -66,4 +61,4 @@ class Main:
 
 # Execute the main logic
 if __name__ == "__main__":
-    Main.ejecutar()
+    Main.execute()

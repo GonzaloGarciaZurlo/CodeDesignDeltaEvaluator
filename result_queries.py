@@ -13,5 +13,5 @@ class ResultQueries(ABC):
         self.observer = observer
 
     @abstractmethod
-    def resolve_query(self, query: str) -> None:
+    def resolve_query(self) -> None:
         "Abstract method that must be implemented by each resolver"
