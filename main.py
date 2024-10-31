@@ -48,9 +48,12 @@ class Main:
 
     # Get results observers
     result_printer = api.results_observers['printer']()
+    result_csv = api.results_observers['csv']()
+    result_composable = api.results_observers['composable'](
+        [result_printer, result_csv])
 
     # Get result queries
-    cypher = api.result_queries['cypher'](result_printer)
+    cypher = api.result_queries['cypher'](result_composable)
 
     # Count the coupling of the class
     cypher.resolve_query()
