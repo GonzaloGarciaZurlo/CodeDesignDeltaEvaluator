@@ -4,10 +4,9 @@ which is an Observer that prints the information it receives.
 """
 from overrides import override
 from api import CddeAPI
-from puml_observer import Observer
+from result_observer import ResultObserver
 
-
-class Printer(Observer):
+class ResultPrinter(ResultObserver):
     """
     Observer that prints the information it receives
     """
@@ -16,7 +15,7 @@ class Printer(Observer):
         """
         Event triggered when the observer is opened
         """
-        print("Parser:")
+        print("Results:")
         print("--------------------------------")
 
     @override
@@ -27,22 +26,14 @@ class Printer(Observer):
         print("--------------------------------")
 
     @override
-    def on_class_found(self, class_name: str, kind) -> None:
+    def on_result_found(self, result: str) -> None:
         """
-        Print the class found
+        Print the result found
         """
-        print(f"{kind} found: {class_name}")
-
-    @override
-    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
-        """
-        Print the relationship found
-        """
-        print(f"Relationship found: {relation} : {class1} --> {class2}")
-
+        print(f"Result found: {result}")
 
 def init_module(api: CddeAPI) -> None:
     """
     Initialize the module on the API.
     """
-    api.register_puml_observer('printer', Printer)
+    api.register_result_observer('printer', ResultPrinter)

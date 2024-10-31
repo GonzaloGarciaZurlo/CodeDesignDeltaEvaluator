@@ -1,10 +1,10 @@
 """
-module that contains the Observer abstract class for parsers   
+module that contains the Observer abstract class for results of queries
 """
 from abc import ABC, abstractmethod
 
 
-class Observer(ABC):
+class ResultObserver(ABC):
     """
     Abstract class that represents an observer.
     """
@@ -17,9 +17,5 @@ class Observer(ABC):
         """Event triggered when the observer is closed."""
 
     @abstractmethod
-    def on_class_found(self, class_name: str, kind: str) -> None:
-        """Event triggered when a class is found."""
-
-    @abstractmethod
-    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
-        """Event triggered when a relation is found."""
+    def on_result_found(self, result: str) -> None:
+        """Event triggered when a result is found."""

@@ -11,6 +11,8 @@ from overrides import override
 from puml_generator import PumlGenerator
 from puml_parser import PumlParser
 from puml_observer import Observer
+from result_observer import ResultObserver
+from result_queries import ResultQueries
 
 
 class CddeAPIAbstract(ABC):
@@ -33,6 +35,16 @@ class CddeAPIAbstract(ABC):
         Register a PlantUML observer.
         """
 
+    def register_result_observer(self, extension: str, observer: Type[ResultObserver]) -> None:
+        """
+        Register a result observer.
+        """
+
+    def register_result_queries(self, extension: str, queries: Type[ResultQueries]) -> None:
+        """
+        Register result queries.
+        """
+
 
 class CddeAPI(CddeAPIAbstract):
     """
@@ -43,6 +55,8 @@ class CddeAPI(CddeAPIAbstract):
         self.generators: dict[str, Type[PumlGenerator]] = {}
         self.parsers: dict[str, Type[PumlParser]] = {}
         self.observers: dict[str, Type[Observer]] = {}
+        self.results_observers: dict[str, Type[ResultObserver]] = {}
+        self.result_queries: dict[str, Type[ResultQueries]] = {}
 
     @override
     def register_puml_generator(self, extension: str, generator: Type[PumlGenerator]) -> None:
@@ -64,6 +78,20 @@ class CddeAPI(CddeAPIAbstract):
         Register a PlantUML observer.
         """
         self.observers[extension] = observer
+
+    @override
+    def register_result_observer(self, extension: str, observer: Type[ResultObserver]) -> None:
+        """
+        Register a result observer.
+        """
+        self.results_observers[extension] = observer
+
+    @override
+    def register_result_queries(self, extension: str, queries: Type[ResultQueries]) -> None:
+        """
+        Register result queries.
+        """
+        self.result_queries[extension] = queries
 
     def _generate_module_name(self, module: str) -> str:
         """

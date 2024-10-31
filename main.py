@@ -1,7 +1,6 @@
 """
 This module handles the main execution flow of the application.
 """
-from db_storer import queries
 from api import CddeAPI
 
 
@@ -52,12 +51,17 @@ class Main:
     claseCpp = "Auto"
     clase_complex_cpp = "User"
 
+    # get results observers
+    result_printer = api.results_observers['printer']()
+
+    # get result queries
+    cypher = api.result_queries['cypher'](result_printer)
+
     # Consultar el acoplamiento de una clase
-    acoplamiento = queries.Neo4jCoupling().get_class_coupling(clase_complex_cpp)
-    print(acoplamiento)
+    cypher.resolve_query(clase_complex_cpp)
 
     # Eliminar el archivo .plantuml
-    #cpp_generator.delete_plantuml(archivo_plantuml)
+    cpp_generator.delete_plantuml(archivo_plantuml)
 
 
 # Ejecución del ejemplo
