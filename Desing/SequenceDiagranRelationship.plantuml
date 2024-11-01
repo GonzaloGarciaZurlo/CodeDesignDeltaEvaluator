@@ -1,25 +1,56 @@
 @startuml
 participant main
-participant "ParserFactory" as PF
-main -> PF: create_parser(parser_name)
-create "Parser" as Parser
-PF --> Parser: create()
+participant "API" as API
+participant "Puml Generator" as PumlGenerator
+participant "Parser" as Parser
+participant "Observer" as Observer
+participant "RelationshipsDB" as relationshipsDB
+participant "Result Queries" as ResultQueries
+participant "Result Observer" as ResultObserver
+participant "MetricsDB" as metricsDB
+participant "Metrics Evaluator" as MetricsEvaluator
+participant "Veredict" as Veredict
 
-PF --> main: parser
+API -> main: puml_generator
 
-ObserverFactory --> main: composable_observer
+API -> main: parser
 
-main -> ObserverFactory: create_observer(observer_name)
-ObserverFactory --> main: observer
+API -> main: Observer
 
-main -> Parser: set_observer(observer)
-main -> Parser: parse(file)
+API -> main: result_queries
+
+API -> main: result_observer
+
+main -> PumlGenerator: generate_puml()
+
+PumlGenerator -> main: file.puml
+
+main -> Observer: create_observer()
+
+main -> Parser: parse(file.puml, observer)
+
 activate Parser
 
 loop
-    Parser -> observer: relationship
-    observer -> relationshipsDB: store\nrelationship
+    Parser -> Observer: relationship
+    Observer -> relationshipsDB: store\nrelationship
 end
 deactivate Parser
+
+main -> ResultObserver: create_result_observer()
+main -> ResultQueries: resolve_query(result_observer)
+
+activate ResultQueries
+
+loop
+    ResultQueries -> relationshipsDB: queries
+    ResultQueries -> ResultObserver: result
+    ResultObserver -> metricsDB: store\nmetrics
+end
+deactivate ResultQueries
+
+MetricsEvaluator -> metricsDB: metrics
+MetricsEvaluator -> Veredict: veredict
+
 @enduml
 

@@ -14,13 +14,15 @@ package "MetricsDB" <<Database>> {
 
 }
 
-[Src] -> [.puml] : RE-Tool 1
-[.puml] -> [Parser] : 2
-[Parser] -> [Obs Graph] : 3
-[Obs Graph] --> [RelationshipDB] : 4
-[Metrcis Collecter] --> [RelationshipDB] : queries 5
-[Metrcis Collecter] -> [MetricsDB] : 6
-[MetricsDB] --> [Metrics Evaluator] : 7
-[Metrics Evaluator] --> [Veredict] : 8
+[Src] -> [Puml Generator] : RE-Tool 1
+[Puml Generator] -> [file.puml] : 2
+[file.puml] -> [Parser] : 3
+[Parser] -> [Observer] : 4
+[Observer] --> [RelationshipDB] : 5
+[Result Queries] --> [RelationshipDB] : queries 6
+[Result Queries] -> [Result Observer] : 7
+[Result Observer] -> [MetricsDB] : 8
+[MetricsDB] <-- [Metrics Evaluator] : 9
+[Metrics Evaluator] --> [Veredict] : 10
 
 @enduml

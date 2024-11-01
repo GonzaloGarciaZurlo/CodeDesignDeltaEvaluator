@@ -1,0 +1,37 @@
+@startuml parser-observer
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam backgroundColor #F9F9F9
+skinparam packageBackgroundColor #DDDDDD
+skinparam packageBorderColor #000000
+skinparam arrowColor #000000
+skinparam arrowThickness 2
+
+abstract class PUML_Parser {
+    observer
+    parse_uml()
+}
+abstract class PUML_Obs {
+    open_observer()
+    close_observer()
+    on_class_found()
+    on_relation_found()
+}
+class parsimonius
+class regex
+class pyparsing
+class neo4j
+class printer
+class composable
+
+PUML_Parser <|-- parsimonius
+PUML_Parser <|-- regex
+PUML_Parser <|-- pyparsing
+
+
+PUML_Obs <|-- neo4j
+PUML_Obs <|-- printer
+PUML_Obs <|-- composable
+
+PUML_Parser -> PUML_Obs : (coupling)
+@enduml
