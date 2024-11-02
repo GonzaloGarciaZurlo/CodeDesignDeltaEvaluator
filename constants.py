@@ -16,24 +16,24 @@ IMPLEMENTATION = '..|>'
 IMPLEMENTATION2 = '<|..'
 DEPENDENCY = '-->'
 DEPENDENCY2 = '<--'
-COMPOSITION = '*--'
-COMPOSITION2 = '--*'
-AGGREGATION = 'o--'
-AGGREGATION2 = '--o'
+COMPOSITION = '--*'
+COMPOSITION2 = '*--'
+AGGREGATION = '--o'
+AGGREGATION2 = 'o--'
 ASSOCIATION = '--'
 
 # Mapping relation symbols to names
 RELATION_MAP = {
     INHERITANCE: 'inheritance',
-    INHERITANCE2: 'inheritance',
+    INHERITANCE2: 'inheritance2',
     IMPLEMENTATION: 'implementation',
-    IMPLEMENTATION2: 'implementation',
+    IMPLEMENTATION2: 'implementation2',
     DEPENDENCY: 'dependency',
-    DEPENDENCY2: 'dependency',
+    DEPENDENCY2: 'dependency2',
     COMPOSITION: 'composition',
-    COMPOSITION2: 'composition',
+    COMPOSITION2: 'composition2',
     AGGREGATION: 'aggregation',
-    AGGREGATION2: 'aggregation',
+    AGGREGATION2: 'aggregation2',
     ASSOCIATION: 'association'
 }
 

@@ -44,7 +44,7 @@ class Main:
     archivo_plantuml = cpp_generator.generate_plantuml(complex_example_cpp)
 
     # Parse the plantuml file
-    parsimonious.parse_uml(archivo_plantuml)
+    regex.parse_uml(archivo_plantuml)
 
     # Get results observers
     result_printer = api.results_observers['printer']()

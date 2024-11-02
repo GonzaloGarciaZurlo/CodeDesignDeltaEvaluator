@@ -124,6 +124,7 @@ class Parsimonius(NodeVisitor):
         # Convert relationship type to standard names
         rel_type = constants.convert_relation(rel_type)
         if "2" in rel_type:
+            rel_type = rel_type.replace("2", "")
             self.observer.on_relation_found(class_b, class_a, rel_type)
         else:
             self.observer.on_relation_found(class_a, class_b, rel_type)

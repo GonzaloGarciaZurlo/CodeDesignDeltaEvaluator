@@ -46,11 +46,11 @@ class Regex(PumlParser):
         if match:
             if match.group(2):  # Case with alias
                 alias_name = match.group(2)
-                self.observer.on_class_found(alias_name, "class")
+                self.observer.on_class_found(alias_name, "Class")
 
             else:  # Case without alias
                 class_name = match.group(3)
-                self.observer.on_class_found(class_name, "class")
+                self.observer.on_class_found(class_name, "Class")
 
     def _parse_abstract_class(self, line: str) -> None:
         """
@@ -60,10 +60,10 @@ class Regex(PumlParser):
         if match:
             if match.group(3):
                 alias_name = match.group(3)
-                self.observer.on_class_found(alias_name, "abstract")
+                self.observer.on_class_found(alias_name, "Abstract")
             else:
                 class_name = match.group(4)
-                self.observer.on_class_found(class_name, "abstract")
+                self.observer.on_class_found(class_name, "Abstract")
 
     def _parse_relation(self, line: str) -> None:
         """
@@ -77,6 +77,7 @@ class Regex(PumlParser):
             relation = convert_relation(relation)
 
             if "2" in relation:  # Reverse the relationship
+                relation = relation.replace("2", "")
                 self.observer.on_relation_found(class_b, class_a, relation)
             else:
                 self.observer.on_relation_found(class_a, class_b, relation)

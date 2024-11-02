@@ -17,18 +17,18 @@ class Neo4j(Observer):
         self.driver = GraphDatabase.driver(
             self.uri, auth=("neo4j", "holacomoestas"))
 
-    def _create_class(self, tx: Transaction, name: str) -> None:
+    def _create_class(self, tx: Transaction, name: str, kind: str) -> None:
         """
         Query to create a node with the class name.
         """
-        tx.run("CREATE (p:Class {name: $name})", name=name)
+        tx.run(f"CREATE (p:{kind} {{name: $name}})", name=name)
 
     def _create_relation(self, tx: Transaction, class1: str, class2: str, relation: str) -> None:
         """
         Query to create a relationship between two nodes.
         """
         query = (
-            f"MATCH (a:Class), (b:Class) "
+            f"MATCH (a), (b) "
             f"WHERE a.name = $class1 AND b.name = $class2 "
             f"CREATE (a)-[r:{relation}] -> (b)"
         )
@@ -66,7 +66,7 @@ class Neo4j(Observer):
         Create a node with the class name.
         """
         with self.driver.session() as session:
-            session.execute_write(self._create_class, class_name)
+            session.execute_write(self._create_class, class_name, kind)
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
