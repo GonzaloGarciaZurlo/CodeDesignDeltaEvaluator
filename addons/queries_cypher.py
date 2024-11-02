@@ -28,6 +28,8 @@ class QueriesCypher(ResultQueries):
         classes = self.get_all_classes()
         for class_name in classes:
             self.get_class_coupling(class_name)
+        for class_name in classes:
+            self.get_dependency(class_name)
         self.observer.close_observer()
 
     def get_all_classes(self) -> list:
@@ -85,6 +87,44 @@ class QueriesCypher(ResultQueries):
         result = tx.run(query, class_name=class_name).single()
         self.observer.on_result_found(
             str(result["afferent_coupling"]), f"{class_name}_affernt_coupling")
+
+    def get_dependency(self, class_name: str) -> None:
+        """
+        Gets the number of concrete and abstract classes on which a class depends..
+        """
+        with self.driver.session() as session:
+            session.read_transaction(self._calculate_dependency, class_name)
+
+    def _calculate_dependency(self, tx: Transaction, class_name: str) -> None:
+        """
+        Calculates the number of concrete and abstract classes on which a class depends.
+        """
+        self._calculate_dependency_concrete(tx, class_name)
+        self._calculate_dependency_abstract(tx, class_name)
+
+    def _calculate_dependency_abstract(self, tx: Transaction, class_name: str) -> None:
+        """
+        Calculates the number of abstract classes on which a class depends.
+        """
+        query = """
+        MATCH (c {name: $class_name})-[r]->(dependent:Abstract)
+        RETURN count(r) AS abstract_dependency
+        """
+        result = tx.run(query, class_name=class_name).single()
+        self.observer.on_result_found(
+            str(result["abstract_dependency"]), f"{class_name}_abstract_dependency")
+
+    def _calculate_dependency_concrete(self, tx: Transaction, class_name: str) -> None:
+        """
+        Calculates the number of concrete classes on which a class depends.
+        """
+        query = """
+        MATCH (c {name: $class_name})-[r]->(dependent:Class)
+        RETURN count(r) AS concrete_dependency
+        """
+        result = tx.run(query, class_name=class_name).single()
+        self.observer.on_result_found(
+            str(result["concrete_dependency"]), f"{class_name}_concrete_dependency")
 
 
 def init_module(api: CddeAPI) -> None:
