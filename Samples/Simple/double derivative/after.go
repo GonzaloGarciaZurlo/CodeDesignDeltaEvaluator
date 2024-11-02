@@ -1,43 +1,20 @@
-// vehiculo_derivacion.go
-package vehiculo
+package main
 
-import "fmt"
-
-// Clase base
+// Vehiculo es la estructura principal y contiene un Auto
 type Vehiculo struct {
-	Marca  string
-	Modelo string
+    marca string
+    auto  Auto
 }
 
-// Método para arrancar el vehículo
-func (v *Vehiculo) Arrancar() {
-	fmt.Printf("El %s %s está arrancando.\n", v.Marca, v.Modelo)
-}
-
-// Método para detener el vehículo
-func (v *Vehiculo) Detener() {
-	fmt.Printf("El %s %s se ha detenido.\n", v.Marca, v.Modelo)
-}
-
-// Subclase Auto
+// Auto es una subestructura de Vehiculo y contiene una Moto
 type Auto struct {
-	Vehiculo
-	Puertas int
+    Vehiculo
+    puertas int
+    
 }
 
-// Método para mostrar información del Auto
-func (a *Auto) MostrarInfo() {
-	fmt.Printf("Auto: %s %s con %d puertas.\n", a.Marca, a.Modelo, a.Puertas)
-}
-
-// Subclase Camion que ahora hereda de Auto
-type Camion struct {
-	Auto            // Composición: Camion tiene un Auto
-	CargaMaxima int // Peso máximo que puede cargar el camión
-}
-
-// Método para mostrar información del Camión
-func (c *Camion) MostrarInfo() {
-	fmt.Printf("Camión: %s %s con carga máxima de %d kg y %d puertas.\n",
-		c.Marca, c.Modelo, c.CargaMaxima, c.Puertas)
+// Moto es una subestructura de Auto
+type Moto struct {
+    Auto
+    cilindrada int
 }

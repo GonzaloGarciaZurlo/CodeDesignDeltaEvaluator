@@ -17,6 +17,14 @@ class ResultComposable(ResultObserver):
         self.observers = observers
 
     @override
+    def on_result_found(self, result: str, kind: str) -> None:
+        """
+        Notifies the observers that a result was found.
+        """
+        for observer in self.observers:
+            observer.on_result_found(result, kind)
+
+    @override
     def open_observer(self) -> None:
         """
         Event triggered when the observer is opened
@@ -31,14 +39,6 @@ class ResultComposable(ResultObserver):
         """
         for observer in self.observers:
             observer.close_observer()
-
-    @override
-    def on_result_found(self, result: str, kind: str) -> None:
-        """
-        Notifies the observers that a result was found.
-        """
-        for observer in self.observers:
-            observer.on_result_found(result, kind)
 
 
 def init_module(api: CddeAPI) -> None:

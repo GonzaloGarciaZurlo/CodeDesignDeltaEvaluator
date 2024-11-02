@@ -35,7 +35,7 @@ class Main:
     db_neo4j.delete_all()
 
     archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
-    archivo_go = "Samples/Simple/double derivative/before.go"
+    archivo_go = "Samples/Simple/double derivative/after.go"
     archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
     complex_example_py = "Samples/Complex/complete_example.py"
     complex_example_cpp = "Samples/Complex/complete_example.c++"
@@ -44,7 +44,7 @@ class Main:
     archivo_plantuml = cpp_generator.generate_plantuml(complex_example_cpp)
 
     # Parse the plantuml file
-    regex.parse_uml(archivo_plantuml)
+    parsimonious.parse_uml(archivo_plantuml)
 
     # Get results observers
     result_printer = api.results_observers['printer']()
