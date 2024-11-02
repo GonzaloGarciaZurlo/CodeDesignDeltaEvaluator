@@ -37,7 +37,7 @@ class QueriesCypher(ResultQueries):
         with self.driver.session() as session:
             result = session.read_transaction(self._get_all_classes)
             self.observer.on_result_found(
-                str(len(result)), "number of classes")
+                str(len(result)), "Number of classes")
         return result
 
     def _get_all_classes(self, tx: Transaction) -> list:
@@ -59,15 +59,10 @@ class QueriesCypher(ResultQueries):
         """
         Calculates the efferent and afferent coupling of a class or abstract class.
         """
-        afferent_coupling = self._calculate_afferent_coupling(tx, class_name)
-        efferent_coupling = self._calculate_efferent_coupling(tx, class_name)
-        coupling = {
-            class_name + ' afferent coupling': afferent_coupling,
-            class_name + ' efferent coupling': efferent_coupling
-        }
-        self.observer.on_result_found(str(coupling), "coupling")
+        self._calculate_afferent_coupling(tx, class_name)
+        self._calculate_efferent_coupling(tx, class_name)
 
-    def _calculate_efferent_coupling(self, tx: Transaction, class_name: str) -> int:
+    def _calculate_efferent_coupling(self, tx: Transaction, class_name: str) -> None:
         """
         Calculates the efferent coupling of a class or abstract class.
         """
@@ -76,7 +71,8 @@ class QueriesCypher(ResultQueries):
         RETURN count(r) AS efferent_coupling
         """
         result = tx.run(query, class_name=class_name).single()
-        return result["efferent_coupling"]
+        self.observer.on_result_found(
+            str(result["efferent_coupling"]), f"{class_name}_efferent_coupling")
 
     def _calculate_afferent_coupling(self, tx: Transaction, class_name: str) -> int:
         """
@@ -87,7 +83,8 @@ class QueriesCypher(ResultQueries):
         RETURN count(r) AS afferent_coupling
         """
         result = tx.run(query, class_name=class_name).single()
-        return result["afferent_coupling"]
+        self.observer.on_result_found(
+            str(result["afferent_coupling"]), f"{class_name}_affernt_coupling")
 
 
 def init_module(api: CddeAPI) -> None:

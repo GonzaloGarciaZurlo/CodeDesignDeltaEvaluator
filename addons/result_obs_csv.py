@@ -26,7 +26,7 @@ class ResultCSV(ResultObserver):
         Event triggered when the observer is closed,
         deleting the CSV file.
         """
-        self._delete_csv()
+        #self._delete_csv()
 
     @override
     def on_result_found(self, result: str, kind: str) -> None:
@@ -38,9 +38,9 @@ class ResultCSV(ResultObserver):
 
     def _create_csv(self) -> None:
         """
-        Create the CSV file.
+        Create the CSV file. If it already exists, delete it first.
         """
-        subprocess.run("touch results.csv", shell=True, check=True)
+        subprocess.run("rm -f results.csv && touch results.csv", shell=True, check=True)
 
     def _write_csv(self, result: str, kind: str) -> None:
         """

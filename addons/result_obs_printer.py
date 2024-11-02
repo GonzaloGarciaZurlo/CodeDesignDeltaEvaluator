@@ -31,7 +31,7 @@ class ResultPrinter(ResultObserver):
         """
         Print the result found
         """
-        print(f"Result of {kind}: {result}")
+        print(f"{kind}: {result}")
 
 
 def init_module(api: CddeAPI) -> None:

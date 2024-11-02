@@ -38,7 +38,7 @@ class Printer(Observer):
         """
         Print the relationship found
         """
-        print(f"Relationship found: {relation} : {class1} --> {class2}")
+        print(f"Relationship found: ({relation}) {class1} --> {class2}")
 
 
 def init_module(api: CddeAPI) -> None:
