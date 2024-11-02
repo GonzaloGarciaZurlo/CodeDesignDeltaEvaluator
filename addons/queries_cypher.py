@@ -36,13 +36,15 @@ class QueriesCypher(ResultQueries):
         """
         with self.driver.session() as session:
             result = session.read_transaction(self._get_all_classes)
+            self.observer.on_result_found(
+                str(len(result)), "number of classes")
         return result
 
     def _get_all_classes(self, tx: Transaction) -> list:
         """
         Helper function to get all classes in the database.
         """
-        query = "MATCH (c:Class) RETURN c.name AS name"
+        query = "MATCH (c) RETURN c.name AS name"
         result = tx.run(query)
         return [record["name"] for record in result]
 
@@ -55,21 +57,37 @@ class QueriesCypher(ResultQueries):
 
     def _calculate_coupling(self, tx: Transaction, class_name: str) -> None:
         """
-        Calculates the efferent and afferent coupling of a class.
+        Calculates the efferent and afferent coupling of a class or abstract class.
         """
-        query = """
-        MATCH (c:Class {name: $class_name})
-        OPTIONAL MATCH (external:Class)-[r1]->(c)
-        OPTIONAL MATCH (c)-[r2]->(dependent:Class)
-        RETURN count(r1) AS afferent_coupling, count(r2) AS deferent_coupling
-        """
-        result = tx.run(query, class_name=class_name).single()
-
+        afferent_coupling = self._calculate_afferent_coupling(tx, class_name)
+        efferent_coupling = self._calculate_efferent_coupling(tx, class_name)
         coupling = {
-            class_name + ' afferent coupling': result["afferent_coupling"],
-            class_name + ' deferent coupling' + class_name: result["deferent_coupling"]
+            class_name + ' afferent coupling': afferent_coupling,
+            class_name + ' efferent coupling': efferent_coupling
         }
         self.observer.on_result_found(str(coupling), "coupling")
+
+    def _calculate_efferent_coupling(self, tx: Transaction, class_name: str) -> int:
+        """
+        Calculates the efferent coupling of a class or abstract class.
+        """
+        query = """
+        MATCH (c {name: $class_name})-[r]->(dependent)
+        RETURN count(r) AS efferent_coupling
+        """
+        result = tx.run(query, class_name=class_name).single()
+        return result["efferent_coupling"]
+
+    def _calculate_afferent_coupling(self, tx: Transaction, class_name: str) -> int:
+        """
+        Calculates the afferent coupling of a class or abstract class.
+        """
+        query = """
+        MATCH (external)-[r]->(c {name: $class_name})
+        RETURN count(r) AS afferent_coupling
+        """
+        result = tx.run(query, class_name=class_name).single()
+        return result["afferent_coupling"]
 
 
 def init_module(api: CddeAPI) -> None:
