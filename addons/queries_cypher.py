@@ -28,8 +28,9 @@ class QueriesCypher(ResultQueries):
         classes = self.get_all_classes()
         for class_name in classes:
             self.get_class_coupling(class_name)
-        for class_name in classes:
             self.get_dependency(class_name)
+            self.get_all_relations(class_name)
+
         self.observer.close_observer()
 
     def get_all_classes(self) -> list:
@@ -39,7 +40,9 @@ class QueriesCypher(ResultQueries):
         with self.driver.session() as session:
             result = session.read_transaction(self._get_all_classes)
             self.observer.on_result_found(
-                str(len(result)), "Number of classes")
+                str(len(result)), "Number_of_classes")
+            self.observer.on_result_found(
+                str(result), "All_classes")
         return result
 
     def _get_all_classes(self, tx: Transaction) -> list:
@@ -125,6 +128,34 @@ class QueriesCypher(ResultQueries):
         result = tx.run(query, class_name=class_name).single()
         self.observer.on_result_found(
             str(result["concrete_dependency"]), f"{class_name}_concrete_dependency")
+
+    def get_all_relations(self, class_name: str) -> None:
+        """
+        Gets all relations of a class.
+        """
+        with self.driver.session() as session:
+            session.read_transaction(self._get_all_relations, class_name)
+
+    def _get_all_relations(self, tx: Transaction, class_name: str) -> None:
+        """
+        Helper function to get all relations of a class.
+        """
+        query1 = """
+        MATCH (c {name: $class_name})-[r]->(dependent)
+        RETURN type(r) AS relation, dependent.name AS dependent
+        """
+        query2 = """
+        MATCH (dependent)-[r]->(c {name: $class_name})
+        RETURN type(r) AS relation, dependent.name AS dependent
+        """
+        result1 = tx.run(query1, class_name=class_name)
+        for record in result1:
+            self.observer.on_result_found(str(record["relation"]), f"{
+                                          class_name}_relation_{record['dependent']}")
+        result2 = tx.run(query2, class_name=class_name)
+        for record in result2:
+            self.observer.on_result_found(str(record["relation"]), f"{
+                                          record['dependent']}_relation_{class_name}")
 
 
 def init_module(api: CddeAPI) -> None:
