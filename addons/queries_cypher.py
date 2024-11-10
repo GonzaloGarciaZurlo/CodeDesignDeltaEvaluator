@@ -5,33 +5,53 @@ from neo4j import GraphDatabase, Transaction
 from overrides import override
 from result_queries import ResultQueries
 from api import CddeAPI
-#from queries import cypher
+from result_observer import ResultObserver
+import yaml
+
 
 class QueriesCypher(ResultQueries):
     """
     This class is responsible for calculating the coupling of a class.
     """
 
-    def __init__(self, observer) -> None:
+    def __init__(self, observer: ResultObserver) -> None:
         super().__init__(observer)
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(
             self.uri, auth=("neo4j", "holacomoestas"))
+        self.queries = {}
 
     @override
     def resolve_query(self) -> None:
         """
         Resolves the query.
         """
+        self.queries = self._load_queries("queries/cypher.yml")
         class_name = ""
         self.observer.open_observer()
         classes = self.get_all_classes()
+        self.observer.on_result_metric_found(len(classes), "Nclasses", "total")
         for class_name in classes:
             self.get_class_coupling(class_name)
             self.get_dependency(class_name)
             self.get_all_relations(class_name)
 
         self.observer.close_observer()
+
+    def _load_queries(self, file_path: str) -> dict:
+        with open(file_path, 'r', encoding="utf-8") as file:
+            data = yaml.safe_load(file)
+        queries_dict = {}
+
+        for section in ['per-class-metrics', 'general-metrics']:
+            # Convertir la lista de métricas en un diccionario
+            if section in data:
+                queries_dict[section] = {
+                    metric_entry['metric']: metric_entry['query']
+                    for metric_entry in data[section]
+                }
+
+        return queries_dict
 
     def get_all_classes(self) -> list:
         """
@@ -46,9 +66,26 @@ class QueriesCypher(ResultQueries):
         """
         Helper function to get all classes in the database.
         """
-        query = "MATCH (c) RETURN c.name AS name"
+        query = self.queries['general-metrics']['all_classes']
         result = tx.run(query)
         return [record["name"] for record in result]
+
+    def get_all_relations(self, class_name: str) -> None:
+        """
+        Gets all relations of a class.
+        """
+        with self.driver.session() as session:
+            session.read_transaction(self._get_all_relations, class_name)
+
+    def _get_all_relations(self, tx: Transaction, class_name: str) -> None:
+        """
+        Helper function to get all relations of a class.
+        """
+        query = self.queries['general-metrics']['all_relations']
+        result1 = tx.run(query, class_name=class_name)
+        for record in result1:
+            self.observer.on_result_data_found(
+                str(class_name)+' --> '+str(record['dependent']), str(record["relation"]))
 
     def get_class_coupling(self, class_name: str) -> None:
         """
@@ -68,25 +105,19 @@ class QueriesCypher(ResultQueries):
         """
         Calculates the efferent coupling of a class or abstract class.
         """
-        query = """
-        MATCH (c {name: $class_name})-[r]->(dependent)
-        RETURN count(r) AS efferent_coupling
-        """
+        query = self.queries['per-class-metrics']['efferent_count']
         result = tx.run(query, class_name=class_name).single()
         self.observer.on_result_metric_found(
-            str(result["efferent_coupling"]), "efferent_coupling", class_name)
+            str(result["metric"]), "efferent_coupling", class_name)
 
     def _calculate_afferent_coupling(self, tx: Transaction, class_name: str) -> int:
         """
         Calculates the afferent coupling of a class or abstract class.
         """
-        query = """
-        MATCH (external)-[r]->(c {name: $class_name})
-        RETURN count(r) AS afferent_coupling
-        """
+        query = self.queries['per-class-metrics']['afferent_count']
         result = tx.run(query, class_name=class_name).single()
         self.observer.on_result_metric_found(
-            str(result["afferent_coupling"]), "affernt_coupling", class_name)
+            str(result["metric"]), "affernt_coupling", class_name)
 
     def get_dependency(self, class_name: str) -> None:
         """
@@ -106,44 +137,20 @@ class QueriesCypher(ResultQueries):
         """
         Calculates the number of abstract classes on which a class depends.
         """
-        query = """
-        MATCH (c {name: $class_name})-[r]->(dependent:Abstract)
-        RETURN count(r) AS abstract_dependency
-        """
+        query = self.queries['per-class-metrics']['abstracts_deps_count']
         result = tx.run(query, class_name=class_name).single()
         self.observer.on_result_metric_found(
-            str(result["abstract_dependency"]), "abstract_dependency", class_name)
+            str(result["metric"]), "abstract_dependency", class_name)
 
     def _calculate_dependency_concrete(self, tx: Transaction, class_name: str) -> None:
         """
         Calculates the number of concrete classes on which a class depends.
         """
-        query = """
-        MATCH (c {name: $class_name})-[r]->(dependent:Class)
-        RETURN count(r) AS concrete_dependency
-        """
+        query = self.queries['per-class-metrics']['concrete_deps_count']
         result = tx.run(query, class_name=class_name).single()
         self.observer.on_result_metric_found(
-            str(result["concrete_dependency"]), "concrete_dependency", class_name)
+            str(result["metric"]), "concrete_dependency", class_name)
 
-    def get_all_relations(self, class_name: str) -> None:
-        """
-        Gets all relations of a class.
-        """
-        with self.driver.session() as session:
-            session.read_transaction(self._get_all_relations, class_name)
-
-    def _get_all_relations(self, tx: Transaction, class_name: str) -> None:
-        """
-        Helper function to get all relations of a class.
-        """
-        query1 = """
-        MATCH (c {name: $class_name})-[r]->(dependent)
-        RETURN type(r) AS relation, dependent.name AS dependent
-        """
-        result1 = tx.run(query1, class_name=class_name)
-        for record in result1:
-            self.observer.on_result_data_found(str(class_name)+' --> '+str(record['dependent']), str(record["relation"]))
 
 def init_module(api: CddeAPI) -> None:
     """

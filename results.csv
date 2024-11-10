@@ -1,4 +1,5 @@
 Data,classes,[Admin, CreditCardProcessor, Customer, Order, PayPalProcessor, PaymentProcessor, ShoppingCart, User]
+total,Nclasses,8
 Admin,affernt_coupling,0
 Admin,efferent_coupling,1
 Admin,concrete_dependency,0

@@ -43,13 +43,13 @@ class ResultJson(ResultObserver):
         """
         In this case, the result is not saved in the Json file.
         """
-
+        self._write_json("Data", kind, result)
 
     def _create_json(self) -> None:
         """
         Create the Json file. If it already exists, delete it first.
         """
-        subprocess.run("rm -rf results.Json && touch results.json",
+        subprocess.run("rm -rf results.json && touch results.json",
                        shell=True, check=True)
 
     def _write_json(self, result: str, kind: str, class_name: str) -> None:
@@ -71,7 +71,7 @@ class ResultJson(ResultObserver):
         data[kind][class_name] = result
 
         # Escribir el contenido actualizado de nuevo en el archivo JSON
-        with open(file_path, 'w',encoding="utf-8") as file:
+        with open(file_path, 'w', encoding="utf-8") as file:
             json.dump(data, file, indent=4)
 
     def _delete_json(self) -> None:

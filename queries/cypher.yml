@@ -1,17 +1,28 @@
 language: cypher
+
 per-class-metrics:
-    - metric: abstracts_deps
-      query: |
-        MATCH (c {name: $class_name})-[r]->(dependent:Abstract)
-        RETURN count(r) AS metric
-    - metric: concrete_deps
-      query: |
-        MATCH (c {name: $class_name})-[r]->(dependent:Class)
-        RETURN count(r) AS metric
-    - metric: afferent_count
-      query: |
-        MATCH (external)-[r]->(c {name: $class_name})
-        RETURN count(r) AS afferent_coupling
-expr-metrics:
-    - metric: afferent_count
-      expression: abstract_deps + concrete_deps
+  - metric: abstracts_deps_count
+    query: |
+      MATCH (c {name: $class_name})-[r]->(dependent:Abstract)
+      RETURN count(r) AS metric
+  - metric: concrete_deps_count
+    query: |
+      MATCH (c {name: $class_name})-[r]->(dependent:Class)
+      RETURN count(r) AS metric
+  - metric: afferent_count
+    query: |
+      MATCH (external)-[r]->(c {name: $class_name})
+      RETURN count(r) AS metric
+  - metric: efferent_count
+    query: |
+      MATCH (c {name: $class_name})-[r]->(external)
+      RETURN count(r) AS metric
+
+general-metrics:
+  - metric: all_classes
+    query: |
+      MATCH (c) RETURN c.name AS name
+  - metric: all_relations
+    query: |
+      MATCH (c {name: $class_name})-[r]->(dependent)
+      RETURN type(r) AS relation, dependent.name AS dependent
