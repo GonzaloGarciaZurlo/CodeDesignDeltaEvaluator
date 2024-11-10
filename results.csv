@@ -1,48 +1,40 @@
-Number_of_classes,8
-All_classes,[Admin, CreditCardProcessor, Customer, Order, PayPalProcessor, PaymentProcessor, ShoppingCart, User]
-Admin_affernt_coupling,0
-Admin_efferent_coupling,1
-Admin_concrete_dependency,0
-Admin_abstract_dependency,1
-Admin_relation_User,inheritance
-CreditCardProcessor_affernt_coupling,0
-CreditCardProcessor_efferent_coupling,1
-CreditCardProcessor_concrete_dependency,0
-CreditCardProcessor_abstract_dependency,1
-CreditCardProcessor_relation_PaymentProcessor,inheritance
-Customer_affernt_coupling,0
-Customer_efferent_coupling,3
-Customer_concrete_dependency,2
-Customer_abstract_dependency,1
-Customer_relation_User,inheritance
-Customer_relation_Order,composition
-Customer_relation_ShoppingCart,composition
-Order_affernt_coupling,2
-Order_efferent_coupling,0
-Order_concrete_dependency,0
-Order_abstract_dependency,0
-Customer_relation_Order,composition
-PaymentProcessor_relation_Order,composition
-PayPalProcessor_affernt_coupling,0
-PayPalProcessor_efferent_coupling,1
-PayPalProcessor_concrete_dependency,0
-PayPalProcessor_abstract_dependency,1
-PayPalProcessor_relation_PaymentProcessor,inheritance
-PaymentProcessor_affernt_coupling,2
-PaymentProcessor_efferent_coupling,1
-PaymentProcessor_concrete_dependency,1
-PaymentProcessor_abstract_dependency,0
-PaymentProcessor_relation_Order,composition
-CreditCardProcessor_relation_PaymentProcessor,inheritance
-PayPalProcessor_relation_PaymentProcessor,inheritance
-ShoppingCart_affernt_coupling,1
-ShoppingCart_efferent_coupling,0
-ShoppingCart_concrete_dependency,0
-ShoppingCart_abstract_dependency,0
-Customer_relation_ShoppingCart,composition
-User_affernt_coupling,2
-User_efferent_coupling,0
-User_concrete_dependency,0
-User_abstract_dependency,0
-Admin_relation_User,inheritance
-Customer_relation_User,inheritance
+Data,classes,[Admin, CreditCardProcessor, Customer, Order, PayPalProcessor, PaymentProcessor, ShoppingCart, User]
+Admin,affernt_coupling,0
+Admin,efferent_coupling,1
+Admin,concrete_dependency,0
+Admin,abstract_dependency,1
+Data,inheritance,Admin --> User
+CreditCardProcessor,affernt_coupling,0
+CreditCardProcessor,efferent_coupling,1
+CreditCardProcessor,concrete_dependency,0
+CreditCardProcessor,abstract_dependency,1
+Data,inheritance,CreditCardProcessor --> PaymentProcessor
+Customer,affernt_coupling,0
+Customer,efferent_coupling,3
+Customer,concrete_dependency,2
+Customer,abstract_dependency,1
+Data,inheritance,Customer --> User
+Data,composition,Customer --> Order
+Data,composition,Customer --> ShoppingCart
+Order,affernt_coupling,2
+Order,efferent_coupling,0
+Order,concrete_dependency,0
+Order,abstract_dependency,0
+PayPalProcessor,affernt_coupling,0
+PayPalProcessor,efferent_coupling,1
+PayPalProcessor,concrete_dependency,0
+PayPalProcessor,abstract_dependency,1
+Data,inheritance,PayPalProcessor --> PaymentProcessor
+PaymentProcessor,affernt_coupling,2
+PaymentProcessor,efferent_coupling,1
+PaymentProcessor,concrete_dependency,1
+PaymentProcessor,abstract_dependency,0
+Data,composition,PaymentProcessor --> Order
+ShoppingCart,affernt_coupling,1
+ShoppingCart,efferent_coupling,0
+ShoppingCart,concrete_dependency,0
+ShoppingCart,abstract_dependency,0
+User,affernt_coupling,2
+User,efferent_coupling,0
+User,concrete_dependency,0
+User,abstract_dependency,0

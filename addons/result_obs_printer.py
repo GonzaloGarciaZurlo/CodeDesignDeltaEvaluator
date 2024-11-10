@@ -27,7 +27,14 @@ class ResultPrinter(ResultObserver):
         print("--------------------------------")
 
     @override
-    def on_result_found(self, result: str, kind: str) -> None:
+    def on_result_metric_found(self, result: str, kind: str, class_name) -> None:
+        """
+        Print the result found
+        """
+        print(f"{class_name} {kind}: {result}")
+
+    @override
+    def on_result_data_found(self, result: str, kind: str) -> None:
         """
         Print the result found
         """

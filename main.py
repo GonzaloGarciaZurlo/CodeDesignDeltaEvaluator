@@ -49,8 +49,9 @@ class Main:
     # Get results observers
     result_printer = api.results_observers['printer']()
     result_csv = api.results_observers['csv']()
+    result_json = api.results_observers['json']()
     result_composable = api.results_observers['composable'](
-        [result_printer, result_csv])
+        [result_printer, result_csv, result_json])
 
     # Get result queries
     cypher = api.result_queries['cypher'](result_composable)

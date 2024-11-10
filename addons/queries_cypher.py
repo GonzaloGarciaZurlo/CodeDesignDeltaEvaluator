@@ -5,7 +5,7 @@ from neo4j import GraphDatabase, Transaction
 from overrides import override
 from result_queries import ResultQueries
 from api import CddeAPI
-
+#from queries import cypher
 
 class QueriesCypher(ResultQueries):
     """
@@ -39,10 +39,7 @@ class QueriesCypher(ResultQueries):
         """
         with self.driver.session() as session:
             result = session.read_transaction(self._get_all_classes)
-            self.observer.on_result_found(
-                str(len(result)), "Number_of_classes")
-            self.observer.on_result_found(
-                str(result), "All_classes")
+            self.observer.on_result_data_found(str(result), "classes")
         return result
 
     def _get_all_classes(self, tx: Transaction) -> list:
@@ -76,8 +73,8 @@ class QueriesCypher(ResultQueries):
         RETURN count(r) AS efferent_coupling
         """
         result = tx.run(query, class_name=class_name).single()
-        self.observer.on_result_found(
-            str(result["efferent_coupling"]), f"{class_name}_efferent_coupling")
+        self.observer.on_result_metric_found(
+            str(result["efferent_coupling"]), "efferent_coupling", class_name)
 
     def _calculate_afferent_coupling(self, tx: Transaction, class_name: str) -> int:
         """
@@ -88,8 +85,8 @@ class QueriesCypher(ResultQueries):
         RETURN count(r) AS afferent_coupling
         """
         result = tx.run(query, class_name=class_name).single()
-        self.observer.on_result_found(
-            str(result["afferent_coupling"]), f"{class_name}_affernt_coupling")
+        self.observer.on_result_metric_found(
+            str(result["afferent_coupling"]), "affernt_coupling", class_name)
 
     def get_dependency(self, class_name: str) -> None:
         """
@@ -114,8 +111,8 @@ class QueriesCypher(ResultQueries):
         RETURN count(r) AS abstract_dependency
         """
         result = tx.run(query, class_name=class_name).single()
-        self.observer.on_result_found(
-            str(result["abstract_dependency"]), f"{class_name}_abstract_dependency")
+        self.observer.on_result_metric_found(
+            str(result["abstract_dependency"]), "abstract_dependency", class_name)
 
     def _calculate_dependency_concrete(self, tx: Transaction, class_name: str) -> None:
         """
@@ -126,8 +123,8 @@ class QueriesCypher(ResultQueries):
         RETURN count(r) AS concrete_dependency
         """
         result = tx.run(query, class_name=class_name).single()
-        self.observer.on_result_found(
-            str(result["concrete_dependency"]), f"{class_name}_concrete_dependency")
+        self.observer.on_result_metric_found(
+            str(result["concrete_dependency"]), "concrete_dependency", class_name)
 
     def get_all_relations(self, class_name: str) -> None:
         """
@@ -144,19 +141,9 @@ class QueriesCypher(ResultQueries):
         MATCH (c {name: $class_name})-[r]->(dependent)
         RETURN type(r) AS relation, dependent.name AS dependent
         """
-        query2 = """
-        MATCH (dependent)-[r]->(c {name: $class_name})
-        RETURN type(r) AS relation, dependent.name AS dependent
-        """
         result1 = tx.run(query1, class_name=class_name)
         for record in result1:
-            self.observer.on_result_found(str(record["relation"]), f"{
-                                          class_name}_relation_{record['dependent']}")
-        result2 = tx.run(query2, class_name=class_name)
-        for record in result2:
-            self.observer.on_result_found(str(record["relation"]), f"{
-                                          record['dependent']}_relation_{class_name}")
-
+            self.observer.on_result_data_found(str(class_name)+' --> '+str(record['dependent']), str(record["relation"]))
 
 def init_module(api: CddeAPI) -> None:
     """

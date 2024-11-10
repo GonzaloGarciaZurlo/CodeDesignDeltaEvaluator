@@ -17,12 +17,20 @@ class ResultComposable(ResultObserver):
         self.observers = observers
 
     @override
-    def on_result_found(self, result: str, kind: str) -> None:
+    def on_result_metric_found(self, result: str, kind: str, class_name) -> None:
         """
         Notifies the observers that a result was found.
         """
         for observer in self.observers:
-            observer.on_result_found(result, kind)
+            observer.on_result_metric_found(result, kind, class_name)
+
+    @override
+    def on_result_data_found(self, result: str, kind: str) -> None:
+        """
+        Notifies the observers that a result was found.
+        """
+        for observer in self.observers:
+            observer.on_result_data_found(result, kind)
 
     @override
     def open_observer(self) -> None:
