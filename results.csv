@@ -1,20 +1,20 @@
-Data,classes,[Auto2, Vehiculo2, Auto, Vehiculo]
+Data,classes,[beforeAuto, beforeVehiculo, afterAuto, afterVehiculo]
 total,Nclasses,4
-Auto2,affernt_coupling,1
-Auto2,efferent_coupling,0
-Auto2,concrete_dependency,0
-Auto2,abstract_dependency,0
-Vehiculo2,affernt_coupling,0
-Vehiculo2,efferent_coupling,1
-Vehiculo2,concrete_dependency,1
-Vehiculo2,abstract_dependency,0
-Data,composition,Vehiculo2 --> Auto2
-Auto,affernt_coupling,0
-Auto,efferent_coupling,1
-Auto,concrete_dependency,1
-Auto,abstract_dependency,0
-Data,inheritance,Auto --> Vehiculo
-Vehiculo,affernt_coupling,1
-Vehiculo,efferent_coupling,0
-Vehiculo,concrete_dependency,0
-Vehiculo,abstract_dependency,0
+beforeAuto,affernt_coupling,0
+beforeAuto,efferent_coupling,1
+beforeAuto,concrete_dependency,1
+beforeAuto,abstract_dependency,0
+Data,inheritance,beforeAuto --> beforeVehiculo
+beforeVehiculo,affernt_coupling,1
+beforeVehiculo,efferent_coupling,0
+beforeVehiculo,concrete_dependency,0
+beforeVehiculo,abstract_dependency,0
+afterAuto,affernt_coupling,1
+afterAuto,efferent_coupling,0
+afterAuto,concrete_dependency,0
+afterAuto,abstract_dependency,0
+afterVehiculo,affernt_coupling,0
+afterVehiculo,efferent_coupling,1
+afterVehiculo,concrete_dependency,1
+afterVehiculo,abstract_dependency,0
+Data,composition,afterVehiculo --> afterAuto

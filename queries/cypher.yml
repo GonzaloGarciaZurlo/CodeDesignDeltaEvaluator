@@ -17,6 +17,18 @@ per-class-metrics:
     query: |
       MATCH (c {name: $class_name})-[r]->(external)
       RETURN count(r) AS metric
+  - metric: deletes_classes
+    query: |
+      MATCH (a), (b)
+      WHERE a.name = $class1 AND b.name = $class2
+      CREATE (a)-[r:{relation}] -> (b)
+      MATCH (a)-[:REL]->(aNodes)
+      WITH a, collect(aNodes) AS aNodeList
+      MATCH (b)-[:REL]->(bNodes)
+      WITH aNodeList, collect(bNodes) AS bNodeList
+      WITH [node IN aNodeList WHERE NOT node IN bNodeList] AS metric
+      RETURN metric
+      DELETE r
 
 general-metrics:
   - metric: all_classes

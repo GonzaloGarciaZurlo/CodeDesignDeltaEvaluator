@@ -18,7 +18,7 @@ class QueriesCypher(ResultQueries):
         super().__init__(observer)
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(
-            self.uri, auth=("neo4j", "holacomoestas"))
+            self.uri, auth=None)
         self.queries = {}
 
     @override

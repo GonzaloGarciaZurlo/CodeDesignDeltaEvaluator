@@ -15,33 +15,21 @@ class Neo4j(Observer):
     def __init__(self) -> None:
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(
-            self.uri, auth=("neo4j", "holacomoestas"))
+            self.uri, auth=None)
 
-    def _create_class(self, tx: Transaction, name: str, kind: str) -> None:
+    def _create_class(self, tx: Transaction, name: str, kind: str, label: str) -> None:
         """
-        Query to create a node with the class name. If the node already exists, 
-        it creates another node with the same name with 2 in the final of the name.
+        Query to create a node with the class name.
         """
-        result = tx.run("MATCH (p {name: $name}) RETURN p", name=name)
-        if result.single():
-            name = name + "2"
+        name = label + name
         tx.run(f"CREATE (p:{kind} {{name: $name}})", name=name)
 
-    def _create_relation(self, tx: Transaction, class1: str, class2: str, relation: str) -> None:
+    def _create_relation(self, tx: Transaction, class1: str, class2: str, relation: str, label: str) -> None:
         """
-        Query to create a relationship between two nodes. If the relationship already exists,
-        it modifies the class names by adding a 2 at the end and creates the relationship.
+        Query to create a relationship between two nodes.
         """
-        query = (
-            f"MATCH (a)-[r]-(b) "
-            f"WHERE a.name = $class1 AND b.name = $class2 "
-            f"RETURN r"
-        )
-        result = tx.run(query, class1=class1, class2=class2)
-        if result.single():
-            class1 += "2"
-            class2 += "2"
-        
+        class1 = label + class1
+        class2 = label + class2
         query = (
             f"MATCH (a), (b) "
             f"WHERE a.name = $class1 AND b.name = $class2 "
@@ -76,21 +64,21 @@ class Neo4j(Observer):
         self.close()
 
     @override
-    def on_class_found(self, class_name: str, kind: str) -> None:
+    def on_class_found(self, class_name: str, kind: str, label: str) -> None:
         """
         Create a node with the class name.
         """
         with self.driver.session() as session:
-            session.execute_write(self._create_class, class_name, kind)
+            session.execute_write(self._create_class, class_name, kind, label)
 
     @override
-    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
+    def on_relation_found(self, class1: str, class2: str, relation: str, label: str) -> None:
         """
         Create a relationship between two nodes.
         """
         with self.driver.session() as session:
             session.execute_write(self._create_relation,
-                                  class1, class2, relation)
+                                  class1, class2, relation, label)
 
 
 def init_module(api: CddeAPI) -> None:

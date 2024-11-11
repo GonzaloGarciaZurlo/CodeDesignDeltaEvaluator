@@ -42,9 +42,10 @@ class Parsimonius(NodeVisitor):
     Class that implements parser with parsimonius to parse the plantuml file
     """
 
-    def __init__(self, observer: Observer):
+    def __init__(self, observer: Observer, label: str) -> None:
         self.namespace = ""
         self.observer = observer
+        self.label = label
 
     def parse_uml(self, file: str) -> None:
         """ 
@@ -70,9 +71,9 @@ class Parsimonius(NodeVisitor):
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
             alias = visited_children[5][0]
-            self.observer.on_class_found(alias, "Class")
+            self.observer.on_class_found(alias, "Class", self.label)
         else:
-            self.observer.on_class_found(class_name, "Class")
+            self.observer.on_class_found(class_name, "Class", self.label)
 
     def visit_class_name(self, node: Node, visited_children: list) -> str:
         """
@@ -99,9 +100,9 @@ class Parsimonius(NodeVisitor):
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
             alias = visited_children[5][0]
-            self.observer.on_class_found(alias, "Abstract")
+            self.observer.on_class_found(alias, "Abstract", self.label)
         else:
-            self.observer.on_class_found(class_name, "Abstract")
+            self.observer.on_class_found(class_name, "Abstract", self.label)
 
     def visit_relationship_type(self, node: Node, visited_children: list) -> str:
         """
@@ -125,9 +126,9 @@ class Parsimonius(NodeVisitor):
         rel_type = constants.convert_relation(rel_type)
         if "2" in rel_type:
             rel_type = rel_type.replace("2", "")
-            self.observer.on_relation_found(class_b, class_a, rel_type)
+            self.observer.on_relation_found(class_b, class_a, rel_type, self.label)
         else:
-            self.observer.on_relation_found(class_a, class_b, rel_type)
+            self.observer.on_relation_found(class_a, class_b, rel_type, self.label)
 
     def generic_visit(self, node: Node, visited_children: list) -> str:
         """

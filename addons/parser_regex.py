@@ -15,8 +15,8 @@ class Regex(PumlParser):
     Class that implements parser with regex to parse the plantuml file
     """
 
-    def __init__(self, observer: Observer) -> None:
-        super().__init__(observer)
+    def __init__(self, observer: Observer, label: str) -> None:
+        super().__init__(observer, label)
         self.namespace = ""
 
     # @override
@@ -31,39 +31,39 @@ class Regex(PumlParser):
                 # Search for namespace declarations
                 self._set_namespace(line)
                 # Search for abstract class declarations
-                self._parse_abstract_class(line)
+                abs_name = self._parse_abstract_class(line)
+                self.observer.on_class_found(abs_name, "Abstract", self.label)
                 # Search for class declarations
-                self._parse_class(line)
+                class_name = self._parse_class(line)
+                self.observer.on_class_found(class_name, "Class", self.label)
                 # Finding relationships between classes
                 self._parse_relation(line)
+
             self.observer.close_observer()
 
-    def _parse_class(self, line: str) -> None:
+    def _parse_class(self, line: str) -> str:
         """
         Identify class declarations with or without aliases
         """
         match = re.search(CLASS_PATTERN, line)
         if match:
             if match.group(2):  # Case with alias
-                alias_name = match.group(2)
-                self.observer.on_class_found(alias_name, "Class")
-
+                class_name = match.group(2)
             else:  # Case without alias
                 class_name = match.group(3)
-                self.observer.on_class_found(class_name, "Class")
+        return class_name
 
-    def _parse_abstract_class(self, line: str) -> None:
+    def _parse_abstract_class(self, line: str) -> str:
         """
         Identify abstract class declarations with or without aliases
         """
         match = re.search(ABS_CLASS_PATTERN, line)
         if match:
             if match.group(3):
-                alias_name = match.group(3)
-                self.observer.on_class_found(alias_name, "Abstract")
-            else:
+                class_name = match.group(3)  # Case with alias
+            else:   # Case without alias
                 class_name = match.group(4)
-                self.observer.on_class_found(class_name, "Abstract")
+            return class_name
 
     def _parse_relation(self, line: str) -> None:
         """
@@ -78,9 +78,11 @@ class Regex(PumlParser):
 
             if "2" in relation:  # Reverse the relationship
                 relation = relation.replace("2", "")
-                self.observer.on_relation_found(class_b, class_a, relation)
+                self.observer.on_relation_found(
+                    class_b, class_a, relation, self.label)
             else:
-                self.observer.on_relation_found(class_a, class_b, relation)
+                self.observer.on_relation_found(
+                    class_a, class_b, relation, self.label)
 
     def _set_namespace(self, line: str) -> None:
         """
