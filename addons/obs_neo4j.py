@@ -24,7 +24,8 @@ class Neo4j(Observer):
         name = label + name
         tx.run(f"CREATE (p:{kind} {{name: $name}})", name=name)
 
-    def _create_relation(self, tx: Transaction, class1: str, class2: str, relation: str, label: str) -> None:
+    def _create_relation(self, tx: Transaction, class1: str, class2:
+                         str, relation: str, label: str) -> None:
         """
         Query to create a relationship between two nodes.
         """

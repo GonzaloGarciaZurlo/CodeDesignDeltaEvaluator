@@ -24,33 +24,31 @@ class QueriesCypher(ResultQueries):
     @override
     def resolve_query(self) -> None:
         """
-        Resolves the query.
+        Resolves all queries.
         """
         self.queries = self._load_queries("queries/cypher.yml")
         class_name = ""
         self.observer.open_observer()
         classes = self.get_all_classes()
         self.observer.on_result_metric_found(len(classes), "Nclasses", "total")
+        self.get_diff_classes()
         for class_name in classes:
             self.get_class_coupling(class_name)
             self.get_dependency(class_name)
             self.get_all_relations(class_name)
-
         self.observer.close_observer()
 
     def _load_queries(self, file_path: str) -> dict:
+        queries_dict = {}
         with open(file_path, 'r', encoding="utf-8") as file:
             data = yaml.safe_load(file)
-        queries_dict = {}
 
         for section in ['per-class-metrics', 'general-metrics']:
-            # Convertir la lista de métricas en un diccionario
             if section in data:
                 queries_dict[section] = {
                     metric_entry['metric']: metric_entry['query']
                     for metric_entry in data[section]
                 }
-
         return queries_dict
 
     def get_all_classes(self) -> list:
@@ -140,7 +138,7 @@ class QueriesCypher(ResultQueries):
         query = self.queries['per-class-metrics']['abstracts_deps_count']
         result = tx.run(query, class_name=class_name).single()
         self.observer.on_result_metric_found(
-            str(result["metric"]), "abstract_dependency", class_name)
+            result["metric"], "abstract_dependency", class_name)
 
     def _calculate_dependency_concrete(self, tx: Transaction, class_name: str) -> None:
         """
@@ -149,7 +147,39 @@ class QueriesCypher(ResultQueries):
         query = self.queries['per-class-metrics']['concrete_deps_count']
         result = tx.run(query, class_name=class_name).single()
         self.observer.on_result_metric_found(
-            str(result["metric"]), "concrete_dependency", class_name)
+            result["metric"], "concrete_dependency", class_name)
+
+    def get_diff_classes(self) -> None:
+        """
+        Gets the difference between the classes in the before and after state.
+        """
+        with self.driver.session() as session:
+            session.read_transaction(self._get_delete_classes)
+            session.read_transaction(self._get_add_classes)
+
+    def _get_delete_classes(self, tx: Transaction) -> None:
+        """
+        Get the diference between the classes in the before and after state.
+        """
+        query = self.queries['general-metrics']['delete_classes']
+        result = tx.run(query).single()
+        if result is not None:
+            self.observer.on_result_data_found(
+                result["deleted_nodes"], "deleted_classes")
+            self.observer.on_result_metric_found(
+                len(result["deleted_nodes"]), "N_deleted_classes", "total")
+
+    def _get_add_classes(self, tx: Transaction) -> None:
+        """
+        Get the diference between the classes in the before and after state.
+        """
+        query = self.queries['general-metrics']['add_classes']
+        result = tx.run(query).single()
+        if result is not None:
+            self.observer.on_result_data_found(
+                result["added_nodes"], "added_classes")
+            self.observer.on_result_metric_found(
+                len(result["added_nodes"]), "N_added_classes", "total")
 
 
 def init_module(api: CddeAPI) -> None:
