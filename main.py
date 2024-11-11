@@ -27,31 +27,33 @@ class Main:
     db_neo4j = api.observers['neo4j']()
     composable = api.observers['composable']([printer, db_neo4j])
 
+    db_neo4j.delete_all()
+
     # Get parsers
     regex = api.parsers['regex'](composable)
     parsimonious = api.parsers['parsimonius'](composable)
 
-    # Delete all nodes and relationships in the database
-    db_neo4j.delete_all()
-
-    archivo_cpp = "Samples/Simple/derivative to composition/before.c++"
+    archivo_cpp_before = "Samples/Simple/derivative to composition/before.c++"
+    archivo_cpp_after = "Samples/Simple/derivative to composition/after.c++"
     archivo_go = "Samples/Simple/double derivative/after.go"
     archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
     complex_example_py = "Samples/Complex/complete_example.py"
     complex_example_cpp = "Samples/Complex/complete_example.c++"
 
     # Generate the plantuml file
-    archivo_plantuml = cpp_generator.generate_plantuml(complex_example_cpp)
+    archivo_plantuml_before = cpp_generator.generate_plantuml(archivo_cpp_before)
+    archivo_plantuml_after = cpp_generator.generate_plantuml(archivo_cpp_after)
 
     # Parse the plantuml file
-    parsimonious.parse_uml(archivo_plantuml)
+    parsimonious.parse_uml(archivo_plantuml_before)
+    parsimonious.parse_uml(archivo_plantuml_after)
 
     # Get results observers
     result_printer = api.results_observers['printer']()
     result_csv = api.results_observers['csv']()
     result_json = api.results_observers['json']()
     result_composable = api.results_observers['composable'](
-        [result_printer, result_csv, result_json])
+        [result_csv, result_json])
 
     # Get result queries
     cypher = api.result_queries['cypher'](result_composable)
@@ -60,7 +62,8 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    cpp_generator.delete_plantuml(archivo_plantuml)
+    #cpp_generator.delete_plantuml(archivo_plantuml_before)
+    #cpp_generator.delete_plantuml(archivo_plantuml_after)
 
 
 # Execute the main logic

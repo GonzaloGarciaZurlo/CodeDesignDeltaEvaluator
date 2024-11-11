@@ -19,14 +19,29 @@ class Neo4j(Observer):
 
     def _create_class(self, tx: Transaction, name: str, kind: str) -> None:
         """
-        Query to create a node with the class name.
+        Query to create a node with the class name. If the node already exists, 
+        it creates another node with the same name with 2 in the final of the name.
         """
+        result = tx.run("MATCH (p {name: $name}) RETURN p", name=name)
+        if result.single():
+            name = name + "2"
         tx.run(f"CREATE (p:{kind} {{name: $name}})", name=name)
 
     def _create_relation(self, tx: Transaction, class1: str, class2: str, relation: str) -> None:
         """
-        Query to create a relationship between two nodes.
+        Query to create a relationship between two nodes. If the relationship already exists,
+        it modifies the class names by adding a 2 at the end and creates the relationship.
         """
+        query = (
+            f"MATCH (a)-[r]-(b) "
+            f"WHERE a.name = $class1 AND b.name = $class2 "
+            f"RETURN r"
+        )
+        result = tx.run(query, class1=class1, class2=class2)
+        if result.single():
+            class1 += "2"
+            class2 += "2"
+        
         query = (
             f"MATCH (a), (b) "
             f"WHERE a.name = $class1 AND b.name = $class2 "
