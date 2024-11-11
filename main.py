@@ -48,8 +48,8 @@ class Main:
     archivo_plantuml_after = cpp_generator.generate_plantuml(archivo_cpp_after)
 
     # Parse the plantuml file
-    parsimonious_before.parse_uml(archivo_plantuml_before,)
-    parsimonius_after.parse_uml(archivo_plantuml_after)
+    regex_before.parse_uml(archivo_plantuml_before,)
+    regex_after.parse_uml(archivo_plantuml_after)
 
     # Get results observers
     result_printer = api.results_observers['printer']()

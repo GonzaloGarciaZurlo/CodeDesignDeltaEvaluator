@@ -32,10 +32,12 @@ class Regex(PumlParser):
                 self._set_namespace(line)
                 # Search for abstract class declarations
                 abs_name = self._parse_abstract_class(line)
-                self.observer.on_class_found(abs_name, "Abstract", self.label)
+                if abs_name is not None:
+                    self.observer.on_class_found(abs_name, "Abstract", self.label)
                 # Search for class declarations
                 class_name = self._parse_class(line)
-                self.observer.on_class_found(class_name, "Class", self.label)
+                if class_name is not None:
+                    self.observer.on_class_found(class_name, "Class", self.label)
                 # Finding relationships between classes
                 self._parse_relation(line)
 
@@ -51,7 +53,7 @@ class Regex(PumlParser):
                 class_name = match.group(2)
             else:  # Case without alias
                 class_name = match.group(3)
-        return class_name
+            return class_name
 
     def _parse_abstract_class(self, line: str) -> str:
         """
