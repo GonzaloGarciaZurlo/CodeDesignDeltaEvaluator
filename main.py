@@ -41,14 +41,15 @@ class Main:
     archivo_go = "Samples/Simple/double derivative/after.go"
     archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
     complex_example_py = "Samples/Complex/complete_example.py"
-    complex_example_cpp = "Samples/Complex/complete_example.c++"
+    complex_example_cpp_before = "Samples/Complex/complete_example_before.c++"
+    complex_example_cpp_after = "Samples/Complex/complete_example_after.c++"
 
     # Generate the plantuml file
-    archivo_plantuml_before = cpp_generator.generate_plantuml(archivo_cpp_before)
-    archivo_plantuml_after = cpp_generator.generate_plantuml(archivo_cpp_after)
+    archivo_plantuml_before = cpp_generator.generate_plantuml(complex_example_cpp_before)
+    archivo_plantuml_after = cpp_generator.generate_plantuml(complex_example_cpp_after)
 
     # Parse the plantuml file
-    regex_before.parse_uml(archivo_plantuml_before,)
+    regex_before.parse_uml(archivo_plantuml_before)
     regex_after.parse_uml(archivo_plantuml_after)
 
     # Get results observers
@@ -65,8 +66,8 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    cpp_generator.delete_plantuml(archivo_plantuml_before)
-    cpp_generator.delete_plantuml(archivo_plantuml_after)
+    #cpp_generator.delete_plantuml(archivo_plantuml_before)
+    #cpp_generator.delete_plantuml(archivo_plantuml_after)
 
 
 # Execute the main logic

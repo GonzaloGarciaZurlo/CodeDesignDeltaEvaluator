@@ -161,25 +161,21 @@ class QueriesCypher(ResultQueries):
         """
         Get the diference between the classes in the before and after state.
         """
-        query = self.queries['general-metrics']['delete_classes']
+        query = self.queries['per-class-metrics']['delete_classes']
         result = tx.run(query).single()
         if result is not None:
-            self.observer.on_result_data_found(
-                result["deleted_nodes"], "deleted_classes")
             self.observer.on_result_metric_found(
-                len(result["deleted_nodes"]), "N_deleted_classes", "total")
+                result["deleted_nodes_count"], "class differences", "deleted classes")
 
     def _get_add_classes(self, tx: Transaction) -> None:
         """
         Get the diference between the classes in the before and after state.
         """
-        query = self.queries['general-metrics']['add_classes']
+        query = self.queries['per-class-metrics']['add_classes']
         result = tx.run(query).single()
         if result is not None:
-            self.observer.on_result_data_found(
-                result["added_nodes"], "added_classes")
             self.observer.on_result_metric_found(
-                len(result["added_nodes"]), "N_added_classes", "total")
+                result["added_nodes_count"], "class differences", "added classes")
 
 
 def init_module(api: CddeAPI) -> None:
