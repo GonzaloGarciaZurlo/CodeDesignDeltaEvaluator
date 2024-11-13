@@ -66,8 +66,8 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    #cpp_generator.delete_plantuml(archivo_plantuml_before)
-    #cpp_generator.delete_plantuml(archivo_plantuml_after)
+    cpp_generator.delete_plantuml(archivo_plantuml_before)
+    cpp_generator.delete_plantuml(archivo_plantuml_after)
 
 
 # Execute the main logic

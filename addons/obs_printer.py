@@ -31,14 +31,14 @@ class Printer(Observer):
         """
         Print the class found
         """
-        print(f"{kind} found: {label}{class_name}")
+        print(f"{kind} found: {label}_{class_name}")
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: str, label: str) -> None:
         """
         Print the relationship found
         """
-        print(f"Relationship found: ({label}{relation}) {class1} --> {class2}")
+        print(f"Relationship found: ({relation}) {label}_{class1} --> {label}_{class2}")
 
 
 def init_module(api: CddeAPI) -> None:

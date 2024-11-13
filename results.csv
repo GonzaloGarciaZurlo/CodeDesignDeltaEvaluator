@@ -1,72 +1,72 @@
-Data,classes,[afterDiscountManager, afterOrder, afterShoppingCart, afterUser, beforeAdmin, beforeCreditCardProcessor, beforeCustomer, beforeOrder, beforePayPalProcessor, beforePaymentProcessor, beforeShoppingCart, beforeUser, afterAdmin, afterCustomer]
+Data,classes,[beforePayPalProcessor, beforePaymentProcessor, beforeShoppingCart, beforeUser, afterAdmin, afterCustomer, afterDiscountManager, afterOrder, afterShoppingCart, afterUser, beforeAdmin, beforeCreditCardProcessor, beforeCustomer, beforeOrder]
 total,Nclasses,14
-deleted classes,class differences,3
-added classes,class differences,1
-afterDiscountManager,affernt_coupling,0
-afterDiscountManager,efferent_coupling,1
-afterDiscountManager,concrete_dependency,1
-afterDiscountManager,abstract_dependency,0
-Data,composition,afterDiscountManager --> afterOrder
-afterOrder,affernt_coupling,2
-afterOrder,efferent_coupling,0
-afterOrder,concrete_dependency,0
-afterOrder,abstract_dependency,0
-afterShoppingCart,affernt_coupling,1
-afterShoppingCart,efferent_coupling,0
-afterShoppingCart,concrete_dependency,0
-afterShoppingCart,abstract_dependency,0
-afterUser,affernt_coupling,2
-afterUser,efferent_coupling,0
-afterUser,concrete_dependency,0
-afterUser,abstract_dependency,0
-beforeAdmin,affernt_coupling,0
-beforeAdmin,efferent_coupling,1
-beforeAdmin,concrete_dependency,0
-beforeAdmin,abstract_dependency,1
-Data,inheritance,beforeAdmin --> beforeUser
-beforeCreditCardProcessor,affernt_coupling,0
-beforeCreditCardProcessor,efferent_coupling,1
-beforeCreditCardProcessor,concrete_dependency,0
-beforeCreditCardProcessor,abstract_dependency,1
-Data,inheritance,beforeCreditCardProcessor --> beforePaymentProcessor
-beforeCustomer,affernt_coupling,0
-beforeCustomer,efferent_coupling,3
-beforeCustomer,concrete_dependency,2
-beforeCustomer,abstract_dependency,1
-Data,inheritance,beforeCustomer --> beforeUser
-Data,composition,beforeCustomer --> beforeOrder
-Data,composition,beforeCustomer --> beforeShoppingCart
-beforeOrder,affernt_coupling,2
-beforeOrder,efferent_coupling,0
-beforeOrder,concrete_dependency,0
-beforeOrder,abstract_dependency,0
-beforePayPalProcessor,affernt_coupling,0
-beforePayPalProcessor,efferent_coupling,1
-beforePayPalProcessor,concrete_dependency,0
-beforePayPalProcessor,abstract_dependency,1
+deleted_classes,class differences,3
+added_classes,class differences,1
 Data,inheritance,beforePayPalProcessor --> beforePaymentProcessor
-beforePaymentProcessor,affernt_coupling,2
-beforePaymentProcessor,efferent_coupling,1
-beforePaymentProcessor,concrete_dependency,1
-beforePaymentProcessor,abstract_dependency,0
+beforePayPalProcessor,abstracts_deps_count,1
+beforePayPalProcessor,concrete_deps_count,0
+beforePayPalProcessor,afferent_count,0
+beforePayPalProcessor,efferent_count,1
 Data,composition,beforePaymentProcessor --> beforeOrder
-beforeShoppingCart,affernt_coupling,1
-beforeShoppingCart,efferent_coupling,0
-beforeShoppingCart,concrete_dependency,0
-beforeShoppingCart,abstract_dependency,0
-beforeUser,affernt_coupling,2
-beforeUser,efferent_coupling,0
-beforeUser,concrete_dependency,0
-beforeUser,abstract_dependency,0
-afterAdmin,affernt_coupling,0
-afterAdmin,efferent_coupling,1
-afterAdmin,concrete_dependency,0
-afterAdmin,abstract_dependency,1
+beforePaymentProcessor,abstracts_deps_count,0
+beforePaymentProcessor,concrete_deps_count,1
+beforePaymentProcessor,afferent_count,2
+beforePaymentProcessor,efferent_count,1
+beforeShoppingCart,abstracts_deps_count,0
+beforeShoppingCart,concrete_deps_count,0
+beforeShoppingCart,afferent_count,1
+beforeShoppingCart,efferent_count,0
+beforeUser,abstracts_deps_count,0
+beforeUser,concrete_deps_count,0
+beforeUser,afferent_count,2
+beforeUser,efferent_count,0
 Data,inheritance,afterAdmin --> afterUser
-afterCustomer,affernt_coupling,0
-afterCustomer,efferent_coupling,3
-afterCustomer,concrete_dependency,2
-afterCustomer,abstract_dependency,1
+afterAdmin,abstracts_deps_count,1
+afterAdmin,concrete_deps_count,0
+afterAdmin,afferent_count,0
+afterAdmin,efferent_count,1
+Data,inheritance,afterCustomer --> afterUser
 Data,composition,afterCustomer --> afterOrder
 Data,composition,afterCustomer --> afterShoppingCart
-Data,inheritance,afterCustomer --> afterUser
+afterCustomer,abstracts_deps_count,1
+afterCustomer,concrete_deps_count,2
+afterCustomer,afferent_count,0
+afterCustomer,efferent_count,3
+Data,composition,afterDiscountManager --> afterOrder
+afterDiscountManager,abstracts_deps_count,0
+afterDiscountManager,concrete_deps_count,1
+afterDiscountManager,afferent_count,0
+afterDiscountManager,efferent_count,1
+afterOrder,abstracts_deps_count,0
+afterOrder,concrete_deps_count,0
+afterOrder,afferent_count,2
+afterOrder,efferent_count,0
+afterShoppingCart,abstracts_deps_count,0
+afterShoppingCart,concrete_deps_count,0
+afterShoppingCart,afferent_count,1
+afterShoppingCart,efferent_count,0
+afterUser,abstracts_deps_count,0
+afterUser,concrete_deps_count,0
+afterUser,afferent_count,2
+afterUser,efferent_count,0
+Data,inheritance,beforeAdmin --> beforeUser
+beforeAdmin,abstracts_deps_count,1
+beforeAdmin,concrete_deps_count,0
+beforeAdmin,afferent_count,0
+beforeAdmin,efferent_count,1
+Data,inheritance,beforeCreditCardProcessor --> beforePaymentProcessor
+beforeCreditCardProcessor,abstracts_deps_count,1
+beforeCreditCardProcessor,concrete_deps_count,0
+beforeCreditCardProcessor,afferent_count,0
+beforeCreditCardProcessor,efferent_count,1
+Data,composition,beforeCustomer --> beforeOrder
+Data,composition,beforeCustomer --> beforeShoppingCart
+Data,inheritance,beforeCustomer --> beforeUser
+beforeCustomer,abstracts_deps_count,1
+beforeCustomer,concrete_deps_count,2
+beforeCustomer,afferent_count,0
+beforeCustomer,efferent_count,3
+beforeOrder,abstracts_deps_count,0
+beforeOrder,concrete_deps_count,0
+beforeOrder,afferent_count,2
+beforeOrder,efferent_count,0
