@@ -27,12 +27,12 @@ class QueriesCypher(ResultQueries):
         Resolves all queries.
         """
         self.queries = self._load_queries("queries/cypher.yml")
-        class_name = ""
         self.observer.open_observer()
 
         classes = self.get_all_classes()
         self._execute_general_query()
-
+        
+        class_name = ""
         for class_name in classes:
             self.get_all_relations(class_name)
             self._execute_per_class_query(class_name)

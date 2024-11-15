@@ -1,7 +1,29 @@
-Data,classes,[beforePayPalProcessor, beforePaymentProcessor, beforeShoppingCart, beforeUser, afterAdmin, afterCustomer, afterDiscountManager, afterOrder, afterShoppingCart, afterUser, beforeAdmin, beforeCreditCardProcessor, beforeCustomer, beforeOrder]
+Data,classes,[beforeAdmin, beforeCreditCardProcessor, beforeCustomer, beforeOrder, beforePayPalProcessor, beforePaymentProcessor, beforeShoppingCart, beforeUser, afterAdmin, afterCustomer, afterDiscountManager, afterOrder, afterShoppingCart, afterUser]
 total,Nclasses,14
 deleted_classes,class differences,3
 added_classes,class differences,1
+base_class_change,class differences,5
+Data,inheritance,beforeAdmin --> beforeUser
+beforeAdmin,abstracts_deps_count,1
+beforeAdmin,concrete_deps_count,0
+beforeAdmin,afferent_count,0
+beforeAdmin,efferent_count,1
+Data,inheritance,beforeCreditCardProcessor --> beforePaymentProcessor
+beforeCreditCardProcessor,abstracts_deps_count,1
+beforeCreditCardProcessor,concrete_deps_count,0
+beforeCreditCardProcessor,afferent_count,0
+beforeCreditCardProcessor,efferent_count,1
+Data,inheritance,beforeCustomer --> beforeUser
+Data,composition,beforeCustomer --> beforeOrder
+Data,composition,beforeCustomer --> beforeShoppingCart
+beforeCustomer,abstracts_deps_count,1
+beforeCustomer,concrete_deps_count,2
+beforeCustomer,afferent_count,0
+beforeCustomer,efferent_count,3
+beforeOrder,abstracts_deps_count,0
+beforeOrder,concrete_deps_count,0
+beforeOrder,afferent_count,2
+beforeOrder,efferent_count,0
 Data,inheritance,beforePayPalProcessor --> beforePaymentProcessor
 beforePayPalProcessor,abstracts_deps_count,1
 beforePayPalProcessor,concrete_deps_count,0
@@ -49,24 +71,3 @@ afterUser,abstracts_deps_count,0
 afterUser,concrete_deps_count,0
 afterUser,afferent_count,2
 afterUser,efferent_count,0
-Data,inheritance,beforeAdmin --> beforeUser
-beforeAdmin,abstracts_deps_count,1
-beforeAdmin,concrete_deps_count,0
-beforeAdmin,afferent_count,0
-beforeAdmin,efferent_count,1
-Data,inheritance,beforeCreditCardProcessor --> beforePaymentProcessor
-beforeCreditCardProcessor,abstracts_deps_count,1
-beforeCreditCardProcessor,concrete_deps_count,0
-beforeCreditCardProcessor,afferent_count,0
-beforeCreditCardProcessor,efferent_count,1
-Data,composition,beforeCustomer --> beforeOrder
-Data,composition,beforeCustomer --> beforeShoppingCart
-Data,inheritance,beforeCustomer --> beforeUser
-beforeCustomer,abstracts_deps_count,1
-beforeCustomer,concrete_deps_count,2
-beforeCustomer,afferent_count,0
-beforeCustomer,efferent_count,3
-beforeOrder,abstracts_deps_count,0
-beforeOrder,concrete_deps_count,0
-beforeOrder,afferent_count,2
-beforeOrder,efferent_count,0

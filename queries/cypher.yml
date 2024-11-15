@@ -37,3 +37,15 @@ general-metrics:
           WHERE b.name = 'before' + substring(a.name, 5)
         }
       RETURN count(a) AS added_nodes_count
+  - metric: base_class_change
+  # number of classes that have changed their base class
+    query: |
+      MATCH (a)-[r]->(b)
+      WHERE a.name STARTS WITH 'after'
+        AND b.name STARTS WITH 'after'
+        AND NOT EXISTS {
+          MATCH (c)-[r]->(d)
+          WHERE c.name = 'before' + substring(a.name, 5)
+            AND d.name = 'before' + substring(b.name, 5)
+        }
+      RETURN count(r) AS metric
