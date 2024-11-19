@@ -1,0 +1,12 @@
+imports:
+  - file: cypher.yml
+
+derivate_metrics:
+  - name: delta_classes
+    formula: added_classes - deleted_classes
+  - name: delta_relationships
+    formula: added_relationships - deleted_relationships
+  - name: delta_nodes
+    formula: added_nodes - deleted_nodes
+  - name: delta_abstracts
+    formula: added_abstracts - deleted_abstracts

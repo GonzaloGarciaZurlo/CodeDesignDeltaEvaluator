@@ -19,17 +19,37 @@ per-class-metrics:
       RETURN count(r) AS metric
 
 general-metrics:
-  - metric: after_classes
+  - metric: after_nodes
     query: |
       MATCH (a)
       WHERE a.name STARTS WITH 'after'
       RETURN count(a) AS metric
-  - metric: before_classes
+  - metric: before_nodes
     query: |
       MATCH (b)
       WHERE b.name STARTS WITH 'before'
       RETURN count(b) AS metric
-  - metric: deleted_classes
+  - metric: after_classes
+    query: |
+      MATCH (a:Class)
+      WHERE a.name STARTS WITH 'after'
+      RETURN count(a) AS metric
+  - metric: before_classes
+    query: |
+      MATCH (b:Class)
+      WHERE b.name STARTS WITH 'before'
+      RETURN count(b) AS metric
+  - metric: after_abstracts
+    query: |
+      MATCH (a:Abstract)
+      WHERE a.name STARTS WITH 'after'
+      RETURN count(a) AS metric
+  - metric: before_abstracts
+    query: |
+      MATCH (b:Abstract)
+      WHERE b.name STARTS WITH 'before'
+      RETURN count(b) AS metric
+  - metric: deleted_nodes
     query: |
       MATCH (b)
       WHERE b.name STARTS WITH 'before'
@@ -38,7 +58,7 @@ general-metrics:
           WHERE a.name = 'after' + substring(b.name, 6)
         }
       RETURN count(b) AS deleted_nodes_count
-  - metric: added_classes
+  - metric: added_nodes
     query: |
       MATCH (a)
       WHERE a.name STARTS WITH 'after'
@@ -47,6 +67,42 @@ general-metrics:
           WHERE b.name = 'before' + substring(a.name, 5)
         }
       RETURN count(a) AS added_nodes_count
+  - metric: deleted_classes
+    query: |
+      MATCH (b:Class)
+      WHERE b.name STARTS WITH 'before'
+        AND NOT EXISTS {
+          MATCH (a:Class)
+          WHERE a.name = 'after' + substring(b.name, 6)
+        }
+      RETURN count(b) AS deleted_classes_count
+  - metric: added_classes
+    query: |
+      MATCH (a:Class)
+      WHERE a.name STARTS WITH 'after'
+        AND NOT EXISTS {
+          MATCH (b:Class)
+          WHERE b.name = 'before' + substring(a.name, 5)
+        }
+      RETURN count(a) AS added_classes_count
+  - metric: deleted_abstracts
+    query: |
+      MATCH (b:Abstract)
+      WHERE b.name STARTS WITH 'before'
+        AND NOT EXISTS {
+          MATCH (a:Abstract)
+          WHERE a.name = 'after' + substring(b.name, 6)
+        }
+      RETURN count(b) AS deleted_abstracts_count
+  - metric: added_abstracts
+    query: |
+      MATCH (a:Abstract)
+      WHERE a.name STARTS WITH 'after'
+        AND NOT EXISTS {
+          MATCH (b:Abstract)
+          WHERE b.name = 'before' + substring(a.name, 5)
+        }
+      RETURN count(a) AS added_abstracts_count
   - metric: base_class_change
     query: |
       MATCH (a)-[r1]->(b)

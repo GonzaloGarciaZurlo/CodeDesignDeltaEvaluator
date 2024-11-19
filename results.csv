@@ -1,9 +1,17 @@
 Data,classes,[beforePayPalProcessor, beforePaymentProcessor, beforeShoppingCart, beforeUser, afterAdmin, afterCustomer, afterDiscountManager, afterOrder, afterShoppingCart, afterUser, beforeAdmin, beforeCreditCardProcessor, beforeCustomer, beforeOrder]
 total,classes,14
-after_classes,class differences,6
-before_classes,class differences,8
-deleted_classes,class differences,3
+after_nodes,class differences,6
+before_nodes,class differences,8
+after_classes,class differences,5
+before_classes,class differences,6
+after_abstracts,class differences,1
+before_abstracts,class differences,2
+deleted_nodes,class differences,3
+added_nodes,class differences,1
+deleted_classes,class differences,2
 added_classes,class differences,1
+deleted_abstracts,class differences,1
+added_abstracts,class differences,0
 base_class_change,class differences,1
 added_relationships,class differences,1
 deleted_relationships,class differences,3
