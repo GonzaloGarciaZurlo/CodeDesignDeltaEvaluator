@@ -1,89 +1,34 @@
-Data,classes,[beforePayPalProcessor, beforePaymentProcessor, beforeShoppingCart, beforeUser, afterAdmin, afterCustomer, afterDiscountManager, afterOrder, afterShoppingCart, afterUser, beforeAdmin, beforeCreditCardProcessor, beforeCustomer, beforeOrder]
-total,classes,14
-after_nodes,class differences,6
-before_nodes,class differences,8
-after_classes,class differences,5
-before_classes,class differences,6
-after_abstracts,class differences,1
-before_abstracts,class differences,2
-deleted_nodes,class differences,3
-added_nodes,class differences,1
-deleted_classes,class differences,2
-added_classes,class differences,1
-deleted_abstracts,class differences,1
+Data,classes,[afterafter.Run, beforebefore.Run, afterafter.BaseRun]
+total,classes,3
+after_nodes,class differences,2
+before_nodes,class differences,1
+after_classes,class differences,2
+before_classes,class differences,1
+after_abstracts,class differences,0
+before_abstracts,class differences,0
+deleted_nodes,class differences,1
+added_nodes,class differences,2
+deleted_classes,class differences,1
+added_classes,class differences,2
+deleted_abstracts,class differences,0
 added_abstracts,class differences,0
 base_class_change,class differences,1
 added_relationships,class differences,1
-deleted_relationships,class differences,3
+deleted_relationships,class differences,0
 inheritance_to_composition,class differences,0
 composition_to_inheritance,class differences,0
 class_to_abs,class differences,0
 abs_to_class,class differences,0
-Data,inheritance,beforePayPalProcessor --> beforePaymentProcessor
-beforePayPalProcessor,abstracts_deps_count,1
-beforePayPalProcessor,concrete_deps_count,0
-beforePayPalProcessor,afferent_count,0
-beforePayPalProcessor,efferent_count,1
-Data,composition,beforePaymentProcessor --> beforeOrder
-beforePaymentProcessor,abstracts_deps_count,0
-beforePaymentProcessor,concrete_deps_count,1
-beforePaymentProcessor,afferent_count,2
-beforePaymentProcessor,efferent_count,1
-beforeShoppingCart,abstracts_deps_count,0
-beforeShoppingCart,concrete_deps_count,0
-beforeShoppingCart,afferent_count,1
-beforeShoppingCart,efferent_count,0
-beforeUser,abstracts_deps_count,0
-beforeUser,concrete_deps_count,0
-beforeUser,afferent_count,2
-beforeUser,efferent_count,0
-Data,inheritance,afterAdmin --> afterUser
-afterAdmin,abstracts_deps_count,1
-afterAdmin,concrete_deps_count,0
-afterAdmin,afferent_count,0
-afterAdmin,efferent_count,1
-Data,inheritance,afterCustomer --> afterUser
-Data,composition,afterCustomer --> afterOrder
-Data,composition,afterCustomer --> afterShoppingCart
-afterCustomer,abstracts_deps_count,1
-afterCustomer,concrete_deps_count,2
-afterCustomer,afferent_count,0
-afterCustomer,efferent_count,3
-Data,composition,afterDiscountManager --> afterOrder
-afterDiscountManager,abstracts_deps_count,0
-afterDiscountManager,concrete_deps_count,1
-afterDiscountManager,afferent_count,0
-afterDiscountManager,efferent_count,1
-afterOrder,abstracts_deps_count,0
-afterOrder,concrete_deps_count,0
-afterOrder,afferent_count,2
-afterOrder,efferent_count,0
-afterShoppingCart,abstracts_deps_count,0
-afterShoppingCart,concrete_deps_count,0
-afterShoppingCart,afferent_count,1
-afterShoppingCart,efferent_count,0
-afterUser,abstracts_deps_count,0
-afterUser,concrete_deps_count,0
-afterUser,afferent_count,2
-afterUser,efferent_count,0
-Data,inheritance,beforeAdmin --> beforeUser
-beforeAdmin,abstracts_deps_count,1
-beforeAdmin,concrete_deps_count,0
-beforeAdmin,afferent_count,0
-beforeAdmin,efferent_count,1
-Data,inheritance,beforeCreditCardProcessor --> beforePaymentProcessor
-beforeCreditCardProcessor,abstracts_deps_count,1
-beforeCreditCardProcessor,concrete_deps_count,0
-beforeCreditCardProcessor,afferent_count,0
-beforeCreditCardProcessor,efferent_count,1
-Data,composition,beforeCustomer --> beforeOrder
-Data,composition,beforeCustomer --> beforeShoppingCart
-Data,inheritance,beforeCustomer --> beforeUser
-beforeCustomer,abstracts_deps_count,1
-beforeCustomer,concrete_deps_count,2
-beforeCustomer,afferent_count,0
-beforeCustomer,efferent_count,3
-beforeOrder,abstracts_deps_count,0
-beforeOrder,concrete_deps_count,0
-beforeOrder,afferent_count,2
-beforeOrder,efferent_count,0
+Data,inheritance,afterafter.Run --> afterafter.BaseRun
+afterafter.Run,abstracts_deps_count,0
+afterafter.Run,concrete_deps_count,1
+afterafter.Run,afferent_count,0
+afterafter.Run,efferent_count,1
+beforebefore.Run,abstracts_deps_count,0
+beforebefore.Run,concrete_deps_count,0
+beforebefore.Run,afferent_count,0
+beforebefore.Run,efferent_count,0
+afterafter.BaseRun,abstracts_deps_count,0
+afterafter.BaseRun,concrete_deps_count,0
+afterafter.BaseRun,afferent_count,1
+afterafter.BaseRun,efferent_count,0

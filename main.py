@@ -43,10 +43,18 @@ class Main:
     complex_example_py = "Samples/Complex/complete_example.py"
     complex_example_cpp_before = "Samples/Complex/complete_example_before.c++"
     complex_example_cpp_after = "Samples/Complex/complete_example_after.c++"
+    pylint_before = "Samples/Reals/pylint/before.py"
+    pylint_after = "Samples/Reals/pylint/after.py"
+    openMW_before = "Samples/Reals/OpenMW/before.cpp"
+    openMW_after = "Samples/Reals/OpenMW/after.cpp"
+    cdde_before = "Samples/Reals/Cdde/before.py"
+    cdde_after = "Samples/Reals/Cdde/after.py"
 
     # Generate the plantuml file
-    archivo_plantuml_before = cpp_generator.generate_plantuml(complex_example_cpp_before)
-    archivo_plantuml_after = cpp_generator.generate_plantuml(complex_example_cpp_after)
+    archivo_plantuml_before = py_generator.generate_plantuml(
+        pylint_before)
+    archivo_plantuml_after = py_generator.generate_plantuml(
+        pylint_after)
 
     # Parse the plantuml file
     regex_before.parse_uml(archivo_plantuml_before)
@@ -66,8 +74,8 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    cpp_generator.delete_plantuml(archivo_plantuml_before)
-    cpp_generator.delete_plantuml(archivo_plantuml_after)
+    py_generator.delete_plantuml(archivo_plantuml_before)
+    py_generator.delete_plantuml(archivo_plantuml_after)
 
 
 # Execute the main logic
