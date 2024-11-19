@@ -85,7 +85,7 @@ class QueriesCypher(ResultQueries):
             result = session.read_transaction(self._get_all_classes)
             self.observer.on_result_data_found(str(result), "classes")
             self.observer.on_result_metric_found(
-                len(result), "Nclasses", "total")
+                len(result), "classes", "total")
         return result
 
     def _get_all_classes(self, tx: Transaction) -> list:

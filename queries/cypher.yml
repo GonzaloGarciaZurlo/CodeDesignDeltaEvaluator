@@ -19,6 +19,16 @@ per-class-metrics:
       RETURN count(r) AS metric
 
 general-metrics:
+  - metric: after_classes
+    query: |
+      MATCH (a)
+      WHERE a.name STARTS WITH 'after'
+      RETURN count(a) AS metric
+  - metric: before_classes
+    query: |
+      MATCH (b)
+      WHERE b.name STARTS WITH 'before'
+      RETURN count(b) AS metric
   - metric: deleted_classes
     query: |
       MATCH (b)
@@ -38,14 +48,79 @@ general-metrics:
         }
       RETURN count(a) AS added_nodes_count
   - metric: base_class_change
-  # number of classes that have changed their base class
+    query: |
+      MATCH (a)-[r1]->(b)
+      WHERE a.name STARTS WITH 'after'
+        AND b.name STARTS WITH 'after'
+        AND NOT EXISTS {
+          MATCH (c)-[r2]->(d)
+          WHERE c.name = 'before' + substring(a.name, 5)
+            AND d.name = 'before' + substring(b.name, 5)
+        }
+      RETURN count(r1) AS metric
+  - metric: added_relationships
     query: |
       MATCH (a)-[r]->(b)
       WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND NOT EXISTS {
-          MATCH (c)-[r]->(d)
+          MATCH (c)-[r1]->(d)
           WHERE c.name = 'before' + substring(a.name, 5)
             AND d.name = 'before' + substring(b.name, 5)
         }
       RETURN count(r) AS metric
+  - metric: deleted_relationships
+    query: |
+      MATCH (c)-[r]->(d)
+      WHERE c.name STARTS WITH 'before'
+        AND d.name STARTS WITH 'before'
+        AND NOT EXISTS {
+          MATCH (a)-[r1]->(b)
+          WHERE a.name = 'after' + substring(c.name, 6)
+            AND b.name = 'after' + substring(d.name, 6)
+        }
+      RETURN count(r) AS metric
+  - metric: inheritance_to_composition
+    query: |
+      MATCH (a)-[r]->(b)
+      WHERE a.name STARTS WITH 'after'
+        AND b.name STARTS WITH 'after'
+        AND r.name = 'composition'
+      AND EXISTS {
+        MATCH (c)-[r1]->(d)
+        WHERE c.name = 'before' + substring(a.name, 5)
+          AND d.name = 'before' + substring(b.name, 5)
+          AND r1.name = 'inheritance'
+      }
+      RETURN count(r) AS metric
+  - metric: composition_to_inheritance
+    query: |
+      MATCH (a)-[r]->(b)
+      WHERE a.name STARTS WITH 'after'
+        AND b.name STARTS WITH 'after'
+        AND r.name = 'inheritance'
+      AND EXISTS {
+        MATCH (c)-[r1]->(d)
+        WHERE c.name = 'before' + substring(a.name, 5)
+          AND d.name = 'before' + substring(b.name, 5)
+          AND r1.name = 'composition'
+      }
+      RETURN count(r) AS metric
+  - metric: class_to_abs
+    query: |
+      MATCH (a:Abstract)
+      WHERE a.name STARTS WITH 'after'
+      AND EXISTS {
+        MATCH (b:Class)
+        WHERE b.name = 'before' + substring(a.name, 5)
+      }
+      RETURN count(a) AS metric
+  - metric: abs_to_class
+    query: |
+      MATCH (a:Class)
+      WHERE a.name STARTS WITH 'after'
+      AND EXISTS {
+        MATCH (b:Abstract)
+        WHERE b.name = 'before' + substring(a.name, 5)
+      }
+      RETURN count(a) AS metric

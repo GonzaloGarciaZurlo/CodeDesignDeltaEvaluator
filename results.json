@@ -1,28 +1,30 @@
 {
     "classes": {
-        "['beforeAdmin', 'beforeCreditCardProcessor', 'beforeCustomer', 'beforeOrder', 'beforePayPalProcessor', 'beforePaymentProcessor', 'beforeShoppingCart', 'beforeUser', 'afterAdmin', 'afterCustomer', 'afterDiscountManager', 'afterOrder', 'afterShoppingCart', 'afterUser']": "Data"
-    },
-    "Nclasses": {
+        "['beforePayPalProcessor', 'beforePaymentProcessor', 'beforeShoppingCart', 'beforeUser', 'afterAdmin', 'afterCustomer', 'afterDiscountManager', 'afterOrder', 'afterShoppingCart', 'afterUser', 'beforeAdmin', 'beforeCreditCardProcessor', 'beforeCustomer', 'beforeOrder']": "Data",
         "total": 14
     },
     "class differences": {
+        "after_classes": 6,
+        "before_classes": 8,
         "deleted_classes": 3,
         "added_classes": 1,
-        "base_class_change": 5
+        "base_class_change": 1,
+        "added_relationships": 1,
+        "deleted_relationships": 3,
+        "inheritance_to_composition": 0,
+        "composition_to_inheritance": 0,
+        "class_to_abs": 0,
+        "abs_to_class": 0
     },
     "inheritance": {
-        "beforeAdmin --> beforeUser": "Data",
-        "beforeCreditCardProcessor --> beforePaymentProcessor": "Data",
-        "beforeCustomer --> beforeUser": "Data",
         "beforePayPalProcessor --> beforePaymentProcessor": "Data",
         "afterAdmin --> afterUser": "Data",
-        "afterCustomer --> afterUser": "Data"
+        "afterCustomer --> afterUser": "Data",
+        "beforeAdmin --> beforeUser": "Data",
+        "beforeCreditCardProcessor --> beforePaymentProcessor": "Data",
+        "beforeCustomer --> beforeUser": "Data"
     },
     "abstracts_deps_count": {
-        "beforeAdmin": 1,
-        "beforeCreditCardProcessor": 1,
-        "beforeCustomer": 1,
-        "beforeOrder": 0,
         "beforePayPalProcessor": 1,
         "beforePaymentProcessor": 0,
         "beforeShoppingCart": 0,
@@ -32,13 +34,13 @@
         "afterDiscountManager": 0,
         "afterOrder": 0,
         "afterShoppingCart": 0,
-        "afterUser": 0
+        "afterUser": 0,
+        "beforeAdmin": 1,
+        "beforeCreditCardProcessor": 1,
+        "beforeCustomer": 1,
+        "beforeOrder": 0
     },
     "concrete_deps_count": {
-        "beforeAdmin": 0,
-        "beforeCreditCardProcessor": 0,
-        "beforeCustomer": 2,
-        "beforeOrder": 0,
         "beforePayPalProcessor": 0,
         "beforePaymentProcessor": 1,
         "beforeShoppingCart": 0,
@@ -48,13 +50,13 @@
         "afterDiscountManager": 1,
         "afterOrder": 0,
         "afterShoppingCart": 0,
-        "afterUser": 0
-    },
-    "afferent_count": {
+        "afterUser": 0,
         "beforeAdmin": 0,
         "beforeCreditCardProcessor": 0,
-        "beforeCustomer": 0,
-        "beforeOrder": 2,
+        "beforeCustomer": 2,
+        "beforeOrder": 0
+    },
+    "afferent_count": {
         "beforePayPalProcessor": 0,
         "beforePaymentProcessor": 2,
         "beforeShoppingCart": 1,
@@ -64,13 +66,13 @@
         "afterDiscountManager": 0,
         "afterOrder": 2,
         "afterShoppingCart": 1,
-        "afterUser": 2
+        "afterUser": 2,
+        "beforeAdmin": 0,
+        "beforeCreditCardProcessor": 0,
+        "beforeCustomer": 0,
+        "beforeOrder": 2
     },
     "efferent_count": {
-        "beforeAdmin": 1,
-        "beforeCreditCardProcessor": 1,
-        "beforeCustomer": 3,
-        "beforeOrder": 0,
         "beforePayPalProcessor": 1,
         "beforePaymentProcessor": 1,
         "beforeShoppingCart": 0,
@@ -80,14 +82,18 @@
         "afterDiscountManager": 1,
         "afterOrder": 0,
         "afterShoppingCart": 0,
-        "afterUser": 0
+        "afterUser": 0,
+        "beforeAdmin": 1,
+        "beforeCreditCardProcessor": 1,
+        "beforeCustomer": 3,
+        "beforeOrder": 0
     },
     "composition": {
-        "beforeCustomer --> beforeOrder": "Data",
-        "beforeCustomer --> beforeShoppingCart": "Data",
         "beforePaymentProcessor --> beforeOrder": "Data",
         "afterCustomer --> afterOrder": "Data",
         "afterCustomer --> afterShoppingCart": "Data",
-        "afterDiscountManager --> afterOrder": "Data"
+        "afterDiscountManager --> afterOrder": "Data",
+        "beforeCustomer --> beforeOrder": "Data",
+        "beforeCustomer --> beforeShoppingCart": "Data"
     }
 }
