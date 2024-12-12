@@ -10,7 +10,7 @@ class PumlGenerator(ABC):
     """
 
     @abstractmethod
-    def generate_plantuml(self, file_path: str) -> str:
+    def generate_plantuml(self, directory: str) -> str:
         """
         Generate the PlantUML file.
         """

@@ -36,13 +36,10 @@ class Main:
     parsimonius_after = api.parsers['parsimonius'](composable, "after")
 
     # Examples files
-    archivo_cpp_before = "Samples/Simple/derivative to composition/before.c++"
-    archivo_cpp_after = "Samples/Simple/derivative to composition/after.c++"
     archivo_go = "Samples/Simple/double derivative/after.go"
     archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
-    complex_example_py = "Samples/Complex/complete_example.py"
-    complex_example_cpp_before = "Samples/Complex/complete_example_before.c++"
-    complex_example_cpp_after = "Samples/Complex/complete_example_after.c++"
+    
+
     pylint_before = "Samples/Reals/pylint/before.py"
     pylint_after = "Samples/Reals/pylint/after.py"
     openMW_before = "Samples/Reals/OpenMW/before.cpp"
@@ -50,11 +47,22 @@ class Main:
     cdde_before = "Samples/Reals/Cdde/before.py"
     cdde_after = "Samples/Reals/Cdde/after.py"
 
+    # python examples
+    complex_example = "Samples/Complex/python/before"
+    base_class_change_before = "Samples/Simple/base-class-change/before"
+    base_class_change_after = "Samples/Simple/base-class-change/after"
+
+    # c++ examples
+    derivate_to_composition_cpp_before = "Samples/Simple/derivative-to-composition/before"
+    derivate_to_composition_cpp_after = "Samples/Simple/derivative-to-composition/after"
+    complex_example_cpp_before = "Samples/Complex/c++/before"
+    complex_example_cpp_after = "Samples/Complex/c++/after"
+
     # Generate the plantuml file
     archivo_plantuml_before = py_generator.generate_plantuml(
-        pylint_before)
+        base_class_change_before)
     archivo_plantuml_after = py_generator.generate_plantuml(
-        pylint_after)
+        base_class_change_after)
 
     # Parse the plantuml file
     regex_before.parse_uml(archivo_plantuml_before)

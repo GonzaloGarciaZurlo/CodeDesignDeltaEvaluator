@@ -13,26 +13,41 @@ class PyPumlGenerator(PumlGenerator):
     PlantUML generator for Python files.
     """
     @override
-    def generate_plantuml(self, file_path: str) -> str:
+    def generate_plantuml(self, directory: str) -> str:
         """
         Generate the PlantUML file.
         """
-        if not os.path.isfile(file_path):
+        if not os.path.isdir(directory):
             return "Error: The specified file does not exist."
+        if directory[-1] != '/':
+            directory += '/'
+        return _pyreverse(directory)
 
-        directory = os.path.dirname(file_path)
-        name = os.path.basename(file_path)
-        return _pyreverse(directory, name, file_path)
+
+def _py_files(directory: str) -> list:
+    """
+    Get the python files in the directory and return them as a string
+    """
+    files = []
+    for file in os.listdir(directory):
+        if file.endswith('.py'):
+            files.append(directory + file)
+    return files
 
 
-def _pyreverse(directory: str, name: str, file_path: str) -> str:
+def _pyreverse(directory: str) -> str:
     """
     run pyreverse
     """
+    files = _py_files(directory)
     subprocess.run(['pyreverse', '-o', 'plantuml', '-p',
-                    name.replace('.py', ''), '-d', directory, file_path], check=True)
+                   'UML', '-d', directory] + files, check=True)
 
-    file_path = directory + "/classes_" + name.replace('.py', '.plantuml')
+    if os.path.isfile(directory + 'packages_UML.plantuml'):
+        packages = directory + 'packages_UML.plantuml'
+        subprocess.run(['rm', '-rf', packages], check=True)
+
+    file_path = directory + "classes_" + 'UML.plantuml'
     return file_path
 
 

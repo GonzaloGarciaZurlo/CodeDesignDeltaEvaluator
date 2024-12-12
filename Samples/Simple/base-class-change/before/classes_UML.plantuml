@@ -1,0 +1,19 @@
+@startuml classes_UML
+set namespaceSeparator none
+class "Auto" as auto.Auto {
+  puertas
+  mostrar_info()
+}
+class "Motor" as motor.Motor {
+  tipo_motor
+  apagar_motor()
+  encender_motor()
+}
+class "Vehiculo" as vehiculo.Vehiculo {
+  marca
+  modelo
+  arrancar()
+  detener()
+}
+auto.Auto --|> vehiculo.Vehiculo
+@enduml

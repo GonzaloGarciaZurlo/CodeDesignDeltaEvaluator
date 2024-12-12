@@ -1,0 +1,42 @@
+@startuml classes_UML
+set namespaceSeparator none
+class "Admin" as complete_example.Admin {
+  admin_level
+  get_role()
+}
+class "CreditCardProcessor" as complete_example.CreditCardProcessor {
+  process_payment(amount)
+}
+class "Customer" as complete_example.Customer {
+  customer_id
+  get_role()
+}
+class "Order" as complete_example.Order {
+  customer
+  items : list
+  payment_processor
+  add_item(item)
+  process_order()
+}
+class "PayPalProcessor" as complete_example.PayPalProcessor {
+  process_payment(amount)
+}
+class "PaymentProcessor" as complete_example.PaymentProcessor {
+  {abstract}process_payment(amount)
+}
+class "ShoppingCart" as complete_example.ShoppingCart {
+  customer
+  items : list
+  add_item(item)
+  get_total()
+}
+class "User" as complete_example.User {
+  email
+  username
+  {abstract}get_role()
+}
+complete_example.Admin --|> complete_example.User
+complete_example.CreditCardProcessor --|> complete_example.PaymentProcessor
+complete_example.Customer --|> complete_example.User
+complete_example.PayPalProcessor --|> complete_example.PaymentProcessor
+@enduml
