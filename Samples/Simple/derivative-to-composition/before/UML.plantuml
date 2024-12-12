@@ -1,0 +1,27 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+
+
+
+/' Inheritance relationships '/
+
+
+
+
+/' Aggregation relationships '/
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml
