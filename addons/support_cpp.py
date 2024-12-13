@@ -13,25 +13,24 @@ class CppPumlGenerator(PumlGenerator):
     PlantUML generator for C++ files.
     """
     @override
-    def generate_plantuml(self, file_path: str) -> str:
+    def generate_plantuml(self, directory: str) -> str:
         """
         Generate the PlantUML file.
         """
-        if not os.path.isfile(file_path):
-            return "Error: The specified file does not exist."
+        if not os.path.isdir(directory):
+            return "Error: The specified directory does not exist."
+        if directory[-1] != '/':
+            directory += '/'
+        return _hpp2plantuml(directory)
 
-        directory = os.path.dirname(file_path)
-        name = os.path.basename(file_path)
-        return _hpp2plantuml(directory, name, file_path)
 
-
-def _hpp2plantuml(directory: str, name: str, file_path: str) -> str:
+def _hpp2plantuml(directory: str) -> str:
     """
     run hpp2plantuml
     """
-    subprocess.run(['hpp2plantuml', '-i', file_path, '-o', directory +
-                   '/' + name.replace('.c++', '.plantuml')], check=True)
-    file_path = directory + '/' + name.replace('.c++', '.plantuml')
+    file_path = os.path.join(directory, 'UML.plantuml')
+    subprocess.run(['hpp2plantuml', '-o', file_path,
+                   '-i', directory + '*.hpp'], check=True)
     return file_path
 
 

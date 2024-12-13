@@ -8,15 +8,20 @@
 
 class Auto {
 	+Auto(const std::string& marca, const std::string& modelo, int puertas)
+	-vehiculo : Vehiculo
 	-puertas : int
+	+arrancar() : void {query}
+	+detener() : void {query}
 	+mostrarInfo() : void {query}
 }
 
 
 class Vehiculo {
 	+Vehiculo(const std::string& marca, const std::string& modelo)
-	#marca : std::string
-	#modelo : std::string
+	+getMarca() : std::string {query}
+	+getModelo() : std::string {query}
+	-marca : std::string
+	-modelo : std::string
 	+arrancar() : void {query}
 	+detener() : void {query}
 }
@@ -27,19 +32,13 @@ class Vehiculo {
 
 /' Inheritance relationships '/
 
-Vehiculo <|-- Auto
-
-
 
 
 
 /' Aggregation relationships '/
 
+Auto *-- Vehiculo
 
-
-
-
-/' Dependency relationships '/
 
 
 

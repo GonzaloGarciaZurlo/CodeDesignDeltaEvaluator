@@ -59,10 +59,10 @@ class Main:
     complex_example_cpp_after = "Samples/Complex/c++/after"
 
     # Generate the plantuml file
-    archivo_plantuml_before = py_generator.generate_plantuml(
-        base_class_change_before)
-    archivo_plantuml_after = py_generator.generate_plantuml(
-        base_class_change_after)
+    archivo_plantuml_before = cpp_generator.generate_plantuml(
+        complex_example_cpp_before)
+    archivo_plantuml_after = cpp_generator.generate_plantuml(
+        complex_example_cpp_after)
 
     # Parse the plantuml file
     regex_before.parse_uml(archivo_plantuml_before)
@@ -82,8 +82,8 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    py_generator.delete_plantuml(archivo_plantuml_before)
-    py_generator.delete_plantuml(archivo_plantuml_after)
+    #cpp_generator.delete_plantuml(archivo_plantuml_before)
+    #cpp_generator.delete_plantuml(archivo_plantuml_after)
 
 
 # Execute the main logic

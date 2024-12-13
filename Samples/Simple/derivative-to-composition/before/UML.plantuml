@@ -6,10 +6,29 @@
 
 /' Objects '/
 
+class Auto {
+	+Auto(const std::string& marca, const std::string& modelo, int puertas)
+	-puertas : int
+	+mostrarInfo() : void {query}
+}
+
+
+class Vehiculo {
+	+Vehiculo(const std::string& marca, const std::string& modelo)
+	#marca : std::string
+	#modelo : std::string
+	+arrancar() : void {query}
+	+detener() : void {query}
+}
+
+
 
 
 
 /' Inheritance relationships '/
+
+Vehiculo <|-- Auto
+
 
 
 
