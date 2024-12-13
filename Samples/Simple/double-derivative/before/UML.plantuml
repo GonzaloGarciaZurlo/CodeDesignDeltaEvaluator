@@ -1,0 +1,20 @@
+@startuml
+namespace main {
+    class Auto << (S,Aquamarine) >> {
+        + Puertas int
+
+    }
+    class Moto << (S,Aquamarine) >> {
+        + Cilindrada int
+
+    }
+    class Vehiculo << (S,Aquamarine) >> {
+        + Marca string
+
+    }
+}
+"main.Vehiculo" *-- "main.Auto"
+"main.Vehiculo" *-- "main.Moto"
+
+
+@enduml

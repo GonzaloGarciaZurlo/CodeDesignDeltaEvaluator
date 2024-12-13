@@ -13,31 +13,25 @@ class GoPumlGenerator(PumlGenerator):
     PlantUML generator for go files.
     """
     @override
-    def generate_plantuml(self, file_path: str) -> str:
+    def generate_plantuml(self, directory: str) -> str:
         """
         Generate the PlantUML file.
         """
-        if not os.path.isfile(file_path):
-            return "Error: The specified file does not exist."
+        if not os.path.isdir(directory):
+            return "Error: The specified directory does not exist."
+        if directory[-1] != '/':
+            directory += '/'
+        return _goplantuml(directory)
 
-        directory = os.path.dirname(file_path)
-        name = os.path.basename(file_path)
-        return _goplantuml(directory, name, file_path)
 
-
-def _goplantuml(directory: str, name: str, file_path: str) -> str:
+def _goplantuml(directory: str) -> str:
     """
     run goplantuml
     """
-    subprocess.Popen(["mkdir", "-p", "temp_dir"])
-    subprocess.run(['cp', file_path, 'temp_dir'], check=True)
-    with open(directory + '/' + name.replace('.go', '.plantuml'),
-              'w', encoding="utf-8") as output_file:
-        subprocess.run(['goplantuml', 'temp_dir'],
+    file_path = directory + 'UML.plantuml'
+    with open(file_path, 'w', encoding="utf-8") as output_file:
+        subprocess.run(['goplantuml', directory],
                        stdout=output_file, check=True)
-    subprocess.run(['rm', '-rf', './temp_dir'], check=True)
-
-    file_path = directory + '/' + name.replace('.go', '.plantuml')
     return file_path
 
 

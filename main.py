@@ -35,38 +35,31 @@ class Main:
     parsimonious_before = api.parsers['parsimonius'](composable, "before")
     parsimonius_after = api.parsers['parsimonius'](composable, "after")
 
-    # Examples files
-    archivo_go = "Samples/Simple/double derivative/after.go"
-    archivo_py = "Samples/SOLID+LoD/I/ISP_P.py"
-    
-
-    pylint_before = "Samples/Reals/pylint/before.py"
-    pylint_after = "Samples/Reals/pylint/after.py"
-    openMW_before = "Samples/Reals/OpenMW/before.cpp"
-    openMW_after = "Samples/Reals/OpenMW/after.cpp"
-    cdde_before = "Samples/Reals/Cdde/before.py"
-    cdde_after = "Samples/Reals/Cdde/after.py"
+    # go examples
+    double_derivative_before = "Samples/Simple/double-derivative/before"
+    double_derivative_after = "Samples/Simple/double-derivative/after"
 
     # python examples
     complex_example = "Samples/Complex/python/before"
+    ISP_P = "Samples/SOLID+LoD/I/ISP_P.py"
     base_class_change_before = "Samples/Simple/base-class-change/before"
     base_class_change_after = "Samples/Simple/base-class-change/after"
 
     # c++ examples
-    derivate_to_composition_cpp_before = "Samples/Simple/derivative-to-composition/before"
-    derivate_to_composition_cpp_after = "Samples/Simple/derivative-to-composition/after"
-    complex_example_cpp_before = "Samples/Complex/c++/before"
-    complex_example_cpp_after = "Samples/Complex/c++/after"
+    derivate_to_composition_before = "Samples/Simple/derivative-to-composition/before"
+    derivate_to_composition_after = "Samples/Simple/derivative-to-composition/after"
+    complex_example_before = "Samples/Complex/c++/before"
+    complex_example_after = "Samples/Complex/c++/after"
 
     # Generate the plantuml file
-    archivo_plantuml_before = cpp_generator.generate_plantuml(
-        complex_example_cpp_before)
-    archivo_plantuml_after = cpp_generator.generate_plantuml(
-        complex_example_cpp_after)
+    archivo_plantuml_before = go_generator.generate_plantuml(
+        double_derivative_before)
+    archivo_plantuml_after = go_generator.generate_plantuml(
+        double_derivative_after)
 
     # Parse the plantuml file
-    regex_before.parse_uml(archivo_plantuml_before)
-    regex_after.parse_uml(archivo_plantuml_after)
+    parsimonious_before.parse_uml(archivo_plantuml_before)
+    parsimonius_after.parse_uml(archivo_plantuml_after)
 
     # Get results observers
     result_printer = api.results_observers['printer']()
@@ -82,8 +75,8 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    #cpp_generator.delete_plantuml(archivo_plantuml_before)
-    #cpp_generator.delete_plantuml(archivo_plantuml_after)
+    # go_generator.delete_plantuml(archivo_plantuml_before)
+    # go_generator.delete_plantuml(archivo_plantuml_after)
 
 
 # Execute the main logic
