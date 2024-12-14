@@ -30,7 +30,7 @@ def _hpp2plantuml(directory: str) -> str:
     """
     file_path = os.path.join(directory, 'UML.plantuml')
     subprocess.run(['hpp2plantuml', '-o', file_path,
-                   '-i', directory + '*.hpp'], check=True)
+                   '-i', directory + '**/*.hpp'], check=True)
     return file_path
 
 

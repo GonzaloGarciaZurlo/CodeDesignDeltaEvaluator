@@ -29,9 +29,10 @@ def _py_files(directory: str) -> list:
     Get the python files in the directory and return them as a string
     """
     files = []
-    for file in os.listdir(directory):
-        if file.endswith('.py'):
-            files.append(directory + file)
+    for root, _, files_in_dir in os.walk(directory):
+        for file in files_in_dir:
+            if file.endswith('.py'):
+                files.append(os.path.join(root, file))
     return files
 
 

@@ -30,7 +30,7 @@ def _goplantuml(directory: str) -> str:
     """
     file_path = directory + 'UML.plantuml'
     with open(file_path, 'w', encoding="utf-8") as output_file:
-        subprocess.run(['goplantuml', directory],
+        subprocess.run(['goplantuml', '-recursive', directory],
                        stdout=output_file, check=True)
     return file_path
 
