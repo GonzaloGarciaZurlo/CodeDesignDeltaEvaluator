@@ -1,34 +1,189 @@
-Data,classes,[afterafter.Run, beforebefore.Run, afterafter.BaseRun]
-total,classes,3
-after_nodes,class differences,2
-before_nodes,class differences,1
-after_classes,class differences,2
-before_classes,class differences,1
+Data,classes,[beforeClassParser, beforeField, beforeFunction, beforeLineStringBuilder, beforeRenderingOptions, beforeStruct, beforeparser.AliasSlice, beforeparser.RenderingOption, beforeTest, beforeSubfolder2, beforetest, beforetestingsupport.TestComplicatedAlias, beforetestingsupport.myInt, afterImplementsAbstractInterface, afterconnectionlabels.AliasOfInt, afterRenderingOptionSlice, aftermain.RenderingOptionSlice, afterMyType, afterAlias, afterAliasSlice, afterClassDiagramOptions, afterClassParser, afterField, afterFunction, afterLineStringBuilder, afterRenderingOptions, afterStruct, afterparser.AliasSlice, afterparser.RenderingOption, afterTest, afterSubfolder2, aftertest, aftertestingsupport.TestComplicatedAlias, aftertestingsupport.myInt, beforeImplementsAbstractInterface, beforeconnectionlabels.AliasOfInt, beforeRenderingOptionSlice, beforemain.RenderingOptionSlice, beforeMyType, beforeAlias, beforeAliasSlice, beforeClassDiagramOptions]
+total,classes,42
+after_nodes,class differences,21
+before_nodes,class differences,21
+after_classes,class differences,21
+before_classes,class differences,21
 after_abstracts,class differences,0
 before_abstracts,class differences,0
-deleted_nodes,class differences,1
-added_nodes,class differences,2
-deleted_classes,class differences,1
-added_classes,class differences,2
+deleted_nodes,class differences,0
+added_nodes,class differences,0
+deleted_classes,class differences,0
+added_classes,class differences,0
 deleted_abstracts,class differences,0
 added_abstracts,class differences,0
-base_class_change,class differences,1
-added_relationships,class differences,1
+base_class_change,class differences,0
+added_relationships,class differences,0
 deleted_relationships,class differences,0
 inheritance_to_composition,class differences,0
 composition_to_inheritance,class differences,0
 class_to_abs,class differences,0
 abs_to_class,class differences,0
-Data,inheritance,afterafter.Run --> afterafter.BaseRun
-afterafter.Run,abstracts_deps_count,0
-afterafter.Run,concrete_deps_count,1
-afterafter.Run,afferent_count,0
-afterafter.Run,efferent_count,1
-beforebefore.Run,abstracts_deps_count,0
-beforebefore.Run,concrete_deps_count,0
-beforebefore.Run,afferent_count,0
-beforebefore.Run,efferent_count,0
-afterafter.BaseRun,abstracts_deps_count,0
-afterafter.BaseRun,concrete_deps_count,0
-afterafter.BaseRun,afferent_count,1
-afterafter.BaseRun,efferent_count,0
+beforeClassParser,abstracts_deps_count,0
+beforeClassParser,concrete_deps_count,0
+beforeClassParser,afferent_count,0
+beforeClassParser,efferent_count,0
+beforeField,abstracts_deps_count,0
+beforeField,concrete_deps_count,0
+beforeField,afferent_count,0
+beforeField,efferent_count,0
+beforeFunction,abstracts_deps_count,0
+beforeFunction,concrete_deps_count,0
+beforeFunction,afferent_count,0
+beforeFunction,efferent_count,0
+beforeLineStringBuilder,abstracts_deps_count,0
+beforeLineStringBuilder,concrete_deps_count,0
+beforeLineStringBuilder,afferent_count,0
+beforeLineStringBuilder,efferent_count,0
+beforeRenderingOptions,abstracts_deps_count,0
+beforeRenderingOptions,concrete_deps_count,0
+beforeRenderingOptions,afferent_count,0
+beforeRenderingOptions,efferent_count,0
+beforeStruct,abstracts_deps_count,0
+beforeStruct,concrete_deps_count,0
+beforeStruct,afferent_count,0
+beforeStruct,efferent_count,0
+beforeparser.AliasSlice,abstracts_deps_count,0
+beforeparser.AliasSlice,concrete_deps_count,0
+beforeparser.AliasSlice,afferent_count,0
+beforeparser.AliasSlice,efferent_count,0
+beforeparser.RenderingOption,abstracts_deps_count,0
+beforeparser.RenderingOption,concrete_deps_count,0
+beforeparser.RenderingOption,afferent_count,0
+beforeparser.RenderingOption,efferent_count,0
+beforeTest,abstracts_deps_count,0
+beforeTest,concrete_deps_count,0
+beforeTest,afferent_count,0
+beforeTest,efferent_count,0
+beforeSubfolder2,abstracts_deps_count,0
+beforeSubfolder2,concrete_deps_count,0
+beforeSubfolder2,afferent_count,0
+beforeSubfolder2,efferent_count,0
+beforetest,abstracts_deps_count,0
+beforetest,concrete_deps_count,0
+beforetest,afferent_count,0
+beforetest,efferent_count,0
+beforetestingsupport.TestComplicatedAlias,abstracts_deps_count,0
+beforetestingsupport.TestComplicatedAlias,concrete_deps_count,0
+beforetestingsupport.TestComplicatedAlias,afferent_count,0
+beforetestingsupport.TestComplicatedAlias,efferent_count,0
+beforetestingsupport.myInt,abstracts_deps_count,0
+beforetestingsupport.myInt,concrete_deps_count,0
+beforetestingsupport.myInt,afferent_count,0
+beforetestingsupport.myInt,efferent_count,0
+afterImplementsAbstractInterface,abstracts_deps_count,0
+afterImplementsAbstractInterface,concrete_deps_count,0
+afterImplementsAbstractInterface,afferent_count,0
+afterImplementsAbstractInterface,efferent_count,0
+afterconnectionlabels.AliasOfInt,abstracts_deps_count,0
+afterconnectionlabels.AliasOfInt,concrete_deps_count,0
+afterconnectionlabels.AliasOfInt,afferent_count,0
+afterconnectionlabels.AliasOfInt,efferent_count,0
+afterRenderingOptionSlice,abstracts_deps_count,0
+afterRenderingOptionSlice,concrete_deps_count,0
+afterRenderingOptionSlice,afferent_count,0
+afterRenderingOptionSlice,efferent_count,0
+aftermain.RenderingOptionSlice,abstracts_deps_count,0
+aftermain.RenderingOptionSlice,concrete_deps_count,0
+aftermain.RenderingOptionSlice,afferent_count,0
+aftermain.RenderingOptionSlice,efferent_count,0
+afterMyType,abstracts_deps_count,0
+afterMyType,concrete_deps_count,0
+afterMyType,afferent_count,0
+afterMyType,efferent_count,0
+afterAlias,abstracts_deps_count,0
+afterAlias,concrete_deps_count,0
+afterAlias,afferent_count,0
+afterAlias,efferent_count,0
+afterAliasSlice,abstracts_deps_count,0
+afterAliasSlice,concrete_deps_count,0
+afterAliasSlice,afferent_count,0
+afterAliasSlice,efferent_count,0
+afterClassDiagramOptions,abstracts_deps_count,0
+afterClassDiagramOptions,concrete_deps_count,0
+afterClassDiagramOptions,afferent_count,0
+afterClassDiagramOptions,efferent_count,0
+afterClassParser,abstracts_deps_count,0
+afterClassParser,concrete_deps_count,0
+afterClassParser,afferent_count,0
+afterClassParser,efferent_count,0
+afterField,abstracts_deps_count,0
+afterField,concrete_deps_count,0
+afterField,afferent_count,0
+afterField,efferent_count,0
+afterFunction,abstracts_deps_count,0
+afterFunction,concrete_deps_count,0
+afterFunction,afferent_count,0
+afterFunction,efferent_count,0
+afterLineStringBuilder,abstracts_deps_count,0
+afterLineStringBuilder,concrete_deps_count,0
+afterLineStringBuilder,afferent_count,0
+afterLineStringBuilder,efferent_count,0
+afterRenderingOptions,abstracts_deps_count,0
+afterRenderingOptions,concrete_deps_count,0
+afterRenderingOptions,afferent_count,0
+afterRenderingOptions,efferent_count,0
+afterStruct,abstracts_deps_count,0
+afterStruct,concrete_deps_count,0
+afterStruct,afferent_count,0
+afterStruct,efferent_count,0
+afterparser.AliasSlice,abstracts_deps_count,0
+afterparser.AliasSlice,concrete_deps_count,0
+afterparser.AliasSlice,afferent_count,0
+afterparser.AliasSlice,efferent_count,0
+afterparser.RenderingOption,abstracts_deps_count,0
+afterparser.RenderingOption,concrete_deps_count,0
+afterparser.RenderingOption,afferent_count,0
+afterparser.RenderingOption,efferent_count,0
+afterTest,abstracts_deps_count,0
+afterTest,concrete_deps_count,0
+afterTest,afferent_count,0
+afterTest,efferent_count,0
+afterSubfolder2,abstracts_deps_count,0
+afterSubfolder2,concrete_deps_count,0
+afterSubfolder2,afferent_count,0
+afterSubfolder2,efferent_count,0
+aftertest,abstracts_deps_count,0
+aftertest,concrete_deps_count,0
+aftertest,afferent_count,0
+aftertest,efferent_count,0
+aftertestingsupport.TestComplicatedAlias,abstracts_deps_count,0
+aftertestingsupport.TestComplicatedAlias,concrete_deps_count,0
+aftertestingsupport.TestComplicatedAlias,afferent_count,0
+aftertestingsupport.TestComplicatedAlias,efferent_count,0
+aftertestingsupport.myInt,abstracts_deps_count,0
+aftertestingsupport.myInt,concrete_deps_count,0
+aftertestingsupport.myInt,afferent_count,0
+aftertestingsupport.myInt,efferent_count,0
+beforeImplementsAbstractInterface,abstracts_deps_count,0
+beforeImplementsAbstractInterface,concrete_deps_count,0
+beforeImplementsAbstractInterface,afferent_count,0
+beforeImplementsAbstractInterface,efferent_count,0
+beforeconnectionlabels.AliasOfInt,abstracts_deps_count,0
+beforeconnectionlabels.AliasOfInt,concrete_deps_count,0
+beforeconnectionlabels.AliasOfInt,afferent_count,0
+beforeconnectionlabels.AliasOfInt,efferent_count,0
+beforeRenderingOptionSlice,abstracts_deps_count,0
+beforeRenderingOptionSlice,concrete_deps_count,0
+beforeRenderingOptionSlice,afferent_count,0
+beforeRenderingOptionSlice,efferent_count,0
+beforemain.RenderingOptionSlice,abstracts_deps_count,0
+beforemain.RenderingOptionSlice,concrete_deps_count,0
+beforemain.RenderingOptionSlice,afferent_count,0
+beforemain.RenderingOptionSlice,efferent_count,0
+beforeMyType,abstracts_deps_count,0
+beforeMyType,concrete_deps_count,0
+beforeMyType,afferent_count,0
+beforeMyType,efferent_count,0
+beforeAlias,abstracts_deps_count,0
+beforeAlias,concrete_deps_count,0
+beforeAlias,afferent_count,0
+beforeAlias,efferent_count,0
+beforeAliasSlice,abstracts_deps_count,0
+beforeAliasSlice,concrete_deps_count,0
+beforeAliasSlice,afferent_count,0
+beforeAliasSlice,efferent_count,0
+beforeClassDiagramOptions,abstracts_deps_count,0
+beforeClassDiagramOptions,concrete_deps_count,0
+beforeClassDiagramOptions,afferent_count,0
+beforeClassDiagramOptions,efferent_count,0
