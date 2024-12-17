@@ -30,14 +30,37 @@ class QueriesCypher(ResultQueries):
         self.observer.open_observer()
 
         classes = self.get_all_classes()
+        self._execute_before_query()
+        self._execute_after_query()
         self._execute_general_query()
-        
         class_name = ""
         for class_name in classes:
             self.get_all_relations(class_name)
             self._execute_per_class_query(class_name)
 
         self.observer.close_observer()
+
+    def _execute_before_query(self) -> None:
+        """
+        Executes a query.
+        """
+        for query in self.queries['before-metrics']:
+            with self.driver.session() as session:
+                result = session.read_transaction(
+                    lambda tx: tx.run(self.queries['before-metrics'][query]).single()[0])
+            self.observer.on_result_metric_found(
+                result, "before_classes", str(query))
+
+    def _execute_after_query(self) -> None:
+        """
+        Executes a query.
+        """
+        for query in self.queries['after-metrics']:
+            with self.driver.session() as session:
+                result = session.read_transaction(
+                    lambda tx: tx.run(self.queries['after-metrics'][query]).single()[0])
+            self.observer.on_result_metric_found(
+                result, "after_classes", str(query))
 
     def _execute_general_query(self) -> None:
         """
@@ -48,7 +71,7 @@ class QueriesCypher(ResultQueries):
                 result = session.read_transaction(
                     lambda tx: tx.run(self.queries['general-metrics'][query]).single()[0])
             self.observer.on_result_metric_found(
-                result, "class differences", str(query))
+                result, "class_differences", str(query))
 
     def _execute_per_class_query(self, class_name: str) -> None:
         """
@@ -69,7 +92,7 @@ class QueriesCypher(ResultQueries):
         with open(file_path, 'r', encoding="utf-8") as file:
             data = yaml.safe_load(file)
 
-        for section in ['per-class-metrics', 'general-metrics']:
+        for section in ['per-class-metrics', 'general-metrics', 'before-metrics', 'after-metrics']:
             if section in data:
                 queries_dict[section] = {
                     metric_entry['metric']: metric_entry['query']

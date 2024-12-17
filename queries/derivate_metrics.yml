@@ -10,3 +10,10 @@ derivate_metrics:
     formula: added_nodes - deleted_nodes
   - name: delta_abstracts
     formula: added_abstracts - deleted_abstracts
+  - name: abstractness_before
+    formula: before_abstracts / before_nodes
+  - name: abstractness_after
+    formula: after_abstracts / after_nodes
+  - name: abstractness_delta
+    formula: abstractness_after - abstractness_before
+  - name: total_efferent_count

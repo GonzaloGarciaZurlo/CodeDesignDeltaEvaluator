@@ -17,38 +17,54 @@ per-class-metrics:
     query: |
       MATCH (c {name: $class_name})-[r]->(external)
       RETURN count(r) AS metric
+  - metric: instability
+    query: |
+      MATCH (c {name: $class_name}) // Nodo actual
+      OPTIONAL MATCH (c)-[r]->(external) // Relación saliente
+      WITH c, count(r) AS salidas
+      OPTIONAL MATCH (external2)-[r2]->(c) // Relación entrante
+      WITH salidas, count(r2) AS entradas
+      RETURN
+        CASE 
+          WHEN (salidas + entradas) = 0 THEN 0 // Manejar casos de división por 0
+          ELSE toFloat(salidas) / toFloat(salidas + entradas) 
+        END AS metric
 
-general-metrics:
+before-metrics:
+  - metric: nodes
+    query: |
+      MATCH (b)
+      WHERE b.name STARTS WITH 'before'
+      RETURN count(b) AS metric
+  - metric: classes
+    query: |
+      MATCH (b:Class)
+      WHERE b.name STARTS WITH 'before'
+      RETURN count(b) AS metric
+  - metric: abstracts
+    query: |
+      MATCH (b:Abstract)
+      WHERE b.name STARTS WITH 'before'
+      RETURN count(b) AS metric
+
+after-metrics:
   - metric: after_nodes
     query: |
       MATCH (a)
       WHERE a.name STARTS WITH 'after'
       RETURN count(a) AS metric
-  - metric: before_nodes
-    query: |
-      MATCH (b)
-      WHERE b.name STARTS WITH 'before'
-      RETURN count(b) AS metric
   - metric: after_classes
     query: |
       MATCH (a:Class)
       WHERE a.name STARTS WITH 'after'
       RETURN count(a) AS metric
-  - metric: before_classes
-    query: |
-      MATCH (b:Class)
-      WHERE b.name STARTS WITH 'before'
-      RETURN count(b) AS metric
   - metric: after_abstracts
     query: |
       MATCH (a:Abstract)
       WHERE a.name STARTS WITH 'after'
       RETURN count(a) AS metric
-  - metric: before_abstracts
-    query: |
-      MATCH (b:Abstract)
-      WHERE b.name STARTS WITH 'before'
-      RETURN count(b) AS metric
+
+general-metrics:
   - metric: deleted_nodes
     query: |
       MATCH (b)
