@@ -51,23 +51,24 @@ class Main:
     derivate_to_composition_after = "Samples/Simple/derivative-to-composition/after"
     complex_example_before = "Samples/Complex/c++/before"
     complex_example_after = "Samples/Complex/c++/after"
+    complex_example_after_base_class_change = "Samples/Complex/c++/after_base_class_change"
 
     # Git examples
-    git_clone_go = GitClone(
-        "https://github.com/jfeliu007/goplantuml", 168)  # GO (none changes)
+    # git_clone_go = GitClone(
+    #    "https://github.com/jfeliu007/goplantuml", 168)  # GO (none changes)
     # git_clone_cpp = GitClone(
     #   "https://github.com/jfeliu007/goplantuml", 145) # GO (many changes)
 
-    git_clone_go.run()
+    # git_clone_go.run()
     # Temporal directories
-    before = git_clone_go.before_dir
-    after = git_clone_go.after_dir
+    # before = git_clone_go.before_dir
+    # after = git_clone_go.after_dir
 
     # Generate the plantuml file
-    archivo_plantuml_before = go_generator.generate_plantuml(
-        before)
-    archivo_plantuml_after = go_generator.generate_plantuml(
-        after)
+    archivo_plantuml_before = cpp_generator.generate_plantuml(
+        complex_example_before)
+    archivo_plantuml_after = cpp_generator.generate_plantuml(
+        complex_example_after_base_class_change)
 
     # Parse the plantuml file
     parsimonious_before.parse_uml(archivo_plantuml_before)
@@ -87,11 +88,11 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    go_generator.delete_plantuml(archivo_plantuml_before)
-    go_generator.delete_plantuml(archivo_plantuml_after)
+    #cpp_generator.delete_plantuml(archivo_plantuml_before)
+    #cpp_generator.delete_plantuml(archivo_plantuml_after)
 
     # Delete the temporary directories
-    git_clone_go._delete_dir()
+    #git_clone_go._delete_dir()
 
 
 # Execute the main logic

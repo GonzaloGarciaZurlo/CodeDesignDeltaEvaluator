@@ -13,25 +13,35 @@ class Admin {
 }
 
 
+class CreditCardProcessor {
+	+processPayment(float amount) : void {query}
+}
+
+
 class Customer {
-	+Customer(const std::string& uname, const std::string& mail, int id)
+	+Customer(const std::string& uname, const std::string& mail, int id, std::shared_ptr<PaymentProcessor> processor)
 	-customer_id : int
+	-payment_processor : std::shared_ptr<PaymentProcessor>
 	+getRole() : std::string {query}
 }
 
 
-class DiscountManager {
-	+calculateDiscount(float total) : float {query}
-}
-
-
 class Order {
-	+Order(std::shared_ptr<Customer> cust, std::shared_ptr<DiscountManager> manager)
+	+Order(std::shared_ptr<Customer> cust)
 	-customer : std::shared_ptr<Customer>
-	-discount_manager : std::shared_ptr<DiscountManager>
 	-items : std::vector<std::string>
 	+addItem(const std::string& item) : void
 	+processOrder() : void
+}
+
+
+class PayPalProcessor {
+	+processPayment(float amount) : void {query}
+}
+
+
+abstract class PaymentProcessor {
+	+{abstract} processPayment(float amount) : void {query}
 }
 
 
@@ -57,7 +67,13 @@ abstract class User {
 
 /' Inheritance relationships '/
 
-User <|-- Admin
+Customer <|-- Admin
+
+
+PaymentProcessor <|-- CreditCardProcessor
+
+
+PaymentProcessor <|-- PayPalProcessor
 
 
 User <|-- Customer
@@ -68,10 +84,10 @@ User <|-- Customer
 
 /' Aggregation relationships '/
 
+Customer *-- PaymentProcessor
+
+
 Order *-- Customer
-
-
-Order *-- DiscountManager
 
 
 ShoppingCart *-- Customer
