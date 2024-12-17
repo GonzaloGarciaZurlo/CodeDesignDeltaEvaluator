@@ -108,10 +108,13 @@ general-metrics:
       MATCH (a)-[r1]->(b)
       WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
-        AND NOT EXISTS {
-          MATCH (c)-[r2]->(d)
+        AND EXISTS {
+          MATCH (c), (d)
           WHERE c.name = 'before' + substring(a.name, 5)
             AND d.name = 'before' + substring(b.name, 5)
+            AND NOT EXISTS {
+              MATCH (c)-[r2]->(d)
+            }
         }
       RETURN count(r1) AS metric
   - metric: added_relationships
