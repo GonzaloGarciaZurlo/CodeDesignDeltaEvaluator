@@ -1,8 +1,8 @@
 Data,classes,[beforeAdmin, beforeCreditCardProcessor, beforeCustomer, beforeOrder, beforePayPalProcessor, beforePaymentProcessor, beforeShoppingCart, beforeUser, afterAdmin, afterCreditCardProcessor, afterCustomer, afterOrder, afterPayPalProcessor, afterPaymentProcessor, afterShoppingCart, afterUser]
 total,classes,16
-nodes,before_classes,8
-classes,before_classes,6
-abstracts,before_classes,2
+before_nodes,before_classes,8
+before_classes,before_classes,6
+before_abstracts,before_classes,2
 after_nodes,after_classes,8
 after_classes,after_classes,6
 after_abstracts,after_classes,2
@@ -24,13 +24,13 @@ beforeAdmin,abstracts_deps_count,1
 beforeAdmin,concrete_deps_count,0
 beforeAdmin,afferent_count,0
 beforeAdmin,efferent_count,1
-beforeAdmin,instability,1.0
+beforeAdmin,instability_class,1.0
 Data,inheritance,beforeCreditCardProcessor --> beforePaymentProcessor
 beforeCreditCardProcessor,abstracts_deps_count,1
 beforeCreditCardProcessor,concrete_deps_count,0
 beforeCreditCardProcessor,afferent_count,0
 beforeCreditCardProcessor,efferent_count,1
-beforeCreditCardProcessor,instability,1.0
+beforeCreditCardProcessor,instability_class,1.0
 Data,inheritance,beforeCustomer --> beforeUser
 Data,composition,beforeCustomer --> beforeOrder
 Data,composition,beforeCustomer --> beforeShoppingCart
@@ -38,46 +38,46 @@ beforeCustomer,abstracts_deps_count,1
 beforeCustomer,concrete_deps_count,2
 beforeCustomer,afferent_count,0
 beforeCustomer,efferent_count,3
-beforeCustomer,instability,1.0
+beforeCustomer,instability_class,1.0
 beforeOrder,abstracts_deps_count,0
 beforeOrder,concrete_deps_count,0
 beforeOrder,afferent_count,2
 beforeOrder,efferent_count,0
-beforeOrder,instability,0.0
+beforeOrder,instability_class,0.0
 Data,inheritance,beforePayPalProcessor --> beforePaymentProcessor
 beforePayPalProcessor,abstracts_deps_count,1
 beforePayPalProcessor,concrete_deps_count,0
 beforePayPalProcessor,afferent_count,0
 beforePayPalProcessor,efferent_count,1
-beforePayPalProcessor,instability,1.0
+beforePayPalProcessor,instability_class,1.0
 Data,composition,beforePaymentProcessor --> beforeOrder
 beforePaymentProcessor,abstracts_deps_count,0
 beforePaymentProcessor,concrete_deps_count,1
 beforePaymentProcessor,afferent_count,2
 beforePaymentProcessor,efferent_count,1
-beforePaymentProcessor,instability,0.3333333333333333
+beforePaymentProcessor,instability_class,0.3333333333333333
 beforeShoppingCart,abstracts_deps_count,0
 beforeShoppingCart,concrete_deps_count,0
 beforeShoppingCart,afferent_count,1
 beforeShoppingCart,efferent_count,0
-beforeShoppingCart,instability,0.0
+beforeShoppingCart,instability_class,0.0
 beforeUser,abstracts_deps_count,0
 beforeUser,concrete_deps_count,0
 beforeUser,afferent_count,2
 beforeUser,efferent_count,0
-beforeUser,instability,0.0
+beforeUser,instability_class,0.0
 Data,inheritance,afterAdmin --> afterCustomer
 afterAdmin,abstracts_deps_count,0
 afterAdmin,concrete_deps_count,1
 afterAdmin,afferent_count,0
 afterAdmin,efferent_count,1
-afterAdmin,instability,1.0
+afterAdmin,instability_class,1.0
 Data,inheritance,afterCreditCardProcessor --> afterPaymentProcessor
 afterCreditCardProcessor,abstracts_deps_count,1
 afterCreditCardProcessor,concrete_deps_count,0
 afterCreditCardProcessor,afferent_count,0
 afterCreditCardProcessor,efferent_count,1
-afterCreditCardProcessor,instability,1.0
+afterCreditCardProcessor,instability_class,1.0
 Data,inheritance,afterCustomer --> afterUser
 Data,composition,afterCustomer --> afterOrder
 Data,composition,afterCustomer --> afterShoppingCart
@@ -85,31 +85,38 @@ afterCustomer,abstracts_deps_count,1
 afterCustomer,concrete_deps_count,2
 afterCustomer,afferent_count,2
 afterCustomer,efferent_count,3
-afterCustomer,instability,0.6
+afterCustomer,instability_class,0.6
 afterOrder,abstracts_deps_count,0
 afterOrder,concrete_deps_count,0
 afterOrder,afferent_count,1
 afterOrder,efferent_count,0
-afterOrder,instability,0.0
+afterOrder,instability_class,0.0
 Data,inheritance,afterPayPalProcessor --> afterPaymentProcessor
 afterPayPalProcessor,abstracts_deps_count,1
 afterPayPalProcessor,concrete_deps_count,0
 afterPayPalProcessor,afferent_count,0
 afterPayPalProcessor,efferent_count,1
-afterPayPalProcessor,instability,1.0
+afterPayPalProcessor,instability_class,1.0
 Data,composition,afterPaymentProcessor --> afterCustomer
 afterPaymentProcessor,abstracts_deps_count,0
 afterPaymentProcessor,concrete_deps_count,1
 afterPaymentProcessor,afferent_count,2
 afterPaymentProcessor,efferent_count,1
-afterPaymentProcessor,instability,0.3333333333333333
+afterPaymentProcessor,instability_class,0.3333333333333333
 afterShoppingCart,abstracts_deps_count,0
 afterShoppingCart,concrete_deps_count,0
 afterShoppingCart,afferent_count,1
 afterShoppingCart,efferent_count,0
-afterShoppingCart,instability,0.0
+afterShoppingCart,instability_class,0.0
 afterUser,abstracts_deps_count,0
 afterUser,concrete_deps_count,0
 afterUser,afferent_count,1
 afterUser,efferent_count,0
-afterUser,instability,0.0
+afterUser,instability_class,0.0
+delta_classes,derivate_metrics,0
+delta_relationships,derivate_metrics,0
+delta_nodes,derivate_metrics,0
+delta_abstracts,derivate_metrics,0
+all_abstractness_before,derivate_metrics,0.25
+all_abstractness_after,derivate_metrics,0.25
+abstractness_delta,derivate_metrics,0.0

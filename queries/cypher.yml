@@ -1,5 +1,3 @@
-language: cypher
-
 per-class-metrics:
   - metric: abstracts_deps_count
     query: |
@@ -17,7 +15,7 @@ per-class-metrics:
     query: |
       MATCH (c {name: $class_name})-[r]->(external)
       RETURN count(r) AS metric
-  - metric: instability
+  - metric: instability_class
     query: |
       MATCH (c {name: $class_name}) // Nodo actual
       OPTIONAL MATCH (c)-[r]->(external) // Relación saliente
@@ -31,17 +29,17 @@ per-class-metrics:
         END AS metric
 
 before-metrics:
-  - metric: nodes
+  - metric: before_nodes
     query: |
       MATCH (b)
       WHERE b.name STARTS WITH 'before'
       RETURN count(b) AS metric
-  - metric: classes
+  - metric: before_classes
     query: |
       MATCH (b:Class)
       WHERE b.name STARTS WITH 'before'
       RETURN count(b) AS metric
-  - metric: abstracts
+  - metric: before_abstracts
     query: |
       MATCH (b:Abstract)
       WHERE b.name STARTS WITH 'before'

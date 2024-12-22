@@ -4,9 +4,9 @@
         "total": 16
     },
     "before_classes": {
-        "nodes": 8,
-        "classes": 6,
-        "abstracts": 2
+        "before_nodes": 8,
+        "before_classes": 6,
+        "before_abstracts": 2
     },
     "after_classes": {
         "after_nodes": 8,
@@ -110,7 +110,7 @@
         "afterShoppingCart": 0,
         "afterUser": 0
     },
-    "instability": {
+    "instability_class": {
         "beforeAdmin": 1.0,
         "beforeCreditCardProcessor": 1.0,
         "beforeCustomer": 1.0,
@@ -135,5 +135,14 @@
         "afterCustomer --> afterOrder": "Data",
         "afterCustomer --> afterShoppingCart": "Data",
         "afterPaymentProcessor --> afterCustomer": "Data"
+    },
+    "derivate_metrics": {
+        "delta_classes": 0,
+        "delta_relationships": 0,
+        "delta_nodes": 0,
+        "delta_abstracts": 0,
+        "all_abstractness_before": 0.25,
+        "all_abstractness_after": 0.25,
+        "abstractness_delta": 0.0
     }
 }
