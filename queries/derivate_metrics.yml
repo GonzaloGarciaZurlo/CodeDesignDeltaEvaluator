@@ -1,16 +1,16 @@
 # Derivate metrics are calculated based on the metrics that are already calculated.
 derivate_metrics:
   - metric: delta_classes
-    query: added_classes - deleted_classes
+    query: abs(added_classes - deleted_classes)
   - metric: delta_relationships
-    query: added_relationships - deleted_relationships
+    query: abs(added_relationships - deleted_relationships)
   - metric: delta_nodes
-    query: added_nodes - deleted_nodes
+    query: abs(added_nodes - deleted_nodes)
   - metric: delta_abstracts
-    query: added_abstracts - deleted_abstracts
+    query: abs(added_abstracts - deleted_abstracts)
   - metric: all_abstractness_before
     query: before_abstracts / before_nodes
   - metric: all_abstractness_after
     query: after_abstracts / after_nodes
   - metric: abstractness_delta
-    query: (after_abstracts / after_nodes) - (before_abstracts / before_nodes)
+    query: abs((after_abstracts / after_nodes) - (before_abstracts / before_nodes))

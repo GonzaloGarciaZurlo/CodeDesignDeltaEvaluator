@@ -175,6 +175,7 @@ _operations = {
     ast.Mult: operator.mul,
     ast.Div: operator.truediv,
     ast.Pow: operator.pow,
+    'abs': abs
 }
 
 
@@ -190,6 +191,10 @@ def _safe_eval(node, variables, functions):
         if isinstance(node.op, ast.Pow):
             assert right < 100
         return op(left, right)
+    elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'abs':
+        # Manejar la función abs
+        arg = _safe_eval(node.args[0], variables, functions)
+        return abs(arg)
     elif isinstance(node, ast.Call):
         assert not node.keywords and not node.starargs and not node.kwargs
         assert isinstance(node.func, ast.Name), 'Unsafe function derivation'
