@@ -68,7 +68,7 @@ class Main:
     archivo_plantuml_before = cpp_generator.generate_plantuml(
         complex_example_before)
     archivo_plantuml_after = cpp_generator.generate_plantuml(
-        complex_example_after_base_class_change)
+        complex_example_after)
 
     # Parse the plantuml file
     parsimonious_before.parse_uml(archivo_plantuml_before)
@@ -88,8 +88,8 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    #cpp_generator.delete_plantuml(archivo_plantuml_before)
-    #cpp_generator.delete_plantuml(archivo_plantuml_after)
+    cpp_generator.delete_plantuml(archivo_plantuml_before)
+    cpp_generator.delete_plantuml(archivo_plantuml_after)
 
     # Delete the temporary directories
     #git_clone_go._delete_dir()
