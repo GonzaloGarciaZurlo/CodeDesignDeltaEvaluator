@@ -1,12 +1,16 @@
-imports:
-  - file: cypher.yml
-
+# Derivate metrics are calculated based on the metrics that are already calculated.
 derivate_metrics:
-  - name: delta_classes
-    formula: added_classes - deleted_classes
-  - name: delta_relationships
-    formula: added_relationships - deleted_relationships
-  - name: delta_nodes
-    formula: added_nodes - deleted_nodes
-  - name: delta_abstracts
-    formula: added_abstracts - deleted_abstracts
+  - metric: delta_classes
+    query: abs(added_classes - deleted_classes)
+  - metric: delta_relationships
+    query: abs(added_relationships - deleted_relationships)
+  - metric: delta_nodes
+    query: abs(added_nodes - deleted_nodes)
+  - metric: delta_abstracts
+    query: abs(added_abstracts - deleted_abstracts)
+  - metric: all_abstractness_before
+    query: before_abstracts / before_nodes
+  - metric: all_abstractness_after
+    query: after_abstracts / after_nodes
+  - metric: abstractness_delta
+    query: abs((after_abstracts / after_nodes) - (before_abstracts / before_nodes))
