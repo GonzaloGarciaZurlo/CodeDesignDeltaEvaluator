@@ -36,6 +36,17 @@ class Neo4j(Observer):
             f"WHERE a.name = $class1 AND b.name = $class2 "
             f"CREATE (a)-[r:{relation}] -> (b)"
         )
+        query_check_or_create_a = (
+            "MERGE (a {name: $class1}) "
+            "RETURN a"
+        )
+
+        query_check_or_create_b = (
+            "MERGE (b {name: $class2}) "
+            "RETURN b"
+        )
+        tx.run(query_check_or_create_a, class1=class1)
+        tx.run(query_check_or_create_b, class2=class2)
         tx.run(query, class1=class1, class2=class2)
 
     def delete_all(self) -> None:

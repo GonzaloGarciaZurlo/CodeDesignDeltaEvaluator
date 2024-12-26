@@ -11,7 +11,6 @@ grammar = Grammar(
     r"""
     start               = ( class_definition / abstract_definition / interface_definition / struct_definition / comment / directive / relationship / other)*
 
-
     class_definition    = ws? "class" ws class_name ws? alias? ws? "{"? ws?
 
     abstract_definition = ws? abstract_class ws class_name ws? alias? ws? "{"? ws?
