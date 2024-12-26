@@ -30,11 +30,13 @@ class Main:
 
     db_neo4j.delete_all()
 
+    # Get Filter
+    filter = api.observers['filter'](composable)
+    filter2 = api.observers['filter'](composable)
+
     # Get parsers
-    regex_before = api.parsers['regex'](composable, "before")
-    regex_after = api.parsers['regex'](composable, "after")
-    parsimonious_before = api.parsers['parsimonius'](composable, "before")
-    parsimonius_after = api.parsers['parsimonius'](composable, "after")
+    parsimonious_before = api.parsers['parsimonius'](filter, "before")
+    parsimonius_after = api.parsers['parsimonius'](filter2, "after")
 
     # go examples
     double_derivative_before = "Samples/Simple/double-derivative/before"

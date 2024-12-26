@@ -9,17 +9,19 @@ import constants
 
 grammar = Grammar(
     r"""
-    start               = ( name_space / class_definition / abstract_definition /comment / directive / relationship / other)*
-
-    name_space           = ws? "namespace" ws? class_name ws? "{"? ws?
+    start               = ( class_definition / abstract_definition / interface_definition / struct_definition / comment / directive / relationship / other)*
 
     class_definition    = ws? "class" ws class_name ws? alias? ws? "{"? ws?
 
     abstract_definition = ws? abstract_class ws class_name ws? alias? ws? "{"? ws?
 
+    interface_definition = ws? "interface" ws class_name ws? alias? ws? "{"? ws?
+
+    struct_definition   = ws? "struct" ws class_name ws? alias? ws? "{"? ws?
+
     abstract_class      = "abstract class"/ "abstract" 
 
-    class_name          = ~r'"?[A-Za-z_][A-Za-z0-9_.]*"?'  
+    class_name          = ~r'"?[A-Za-z_][A-Za-z0-9_.]*"?'
 
     alias               = "as" ws class_name               
 
@@ -58,12 +60,6 @@ class Parsimonius(NodeVisitor):
             self.visit(tree)
             self.observer.close_observer()
 
-    def visit_name_space(self, node: Node , visited_children: list) -> None:
-        """
-        Set namespace name
-        """
-        self.namespace = visited_children[3]
-
     def visit_class_definition(self, node: Node, visited_children: list) -> None:
         """
         Identify class declarations with or without aliases
@@ -91,7 +87,7 @@ class Parsimonius(NodeVisitor):
         """
         Extract alias name without quotes
         """
-        return node.text.strip('"')
+        return visited_children[2].strip('"')
 
     def visit_abstract_definition(self, node: Node, visited_children: list) -> None:
         """
@@ -104,11 +100,28 @@ class Parsimonius(NodeVisitor):
         else:
             self.observer.on_class_found(class_name, "Abstract", self.label)
 
+    def visit_interface_definition(self, node: Node, visited_children: list) -> None:
+        """
+        Identify interface declarations with or without aliases
+        """
+        class_name = visited_children[3]
+        if len(visited_children[5]) > 0:
+            alias = visited_children[5][0]
+            self.observer.on_class_found(alias, "Interface", self.label)
+        else:
+            self.observer.on_class_found(class_name, "Interface", self.label)
+
     def visit_relationship_type(self, node: Node, visited_children: list) -> str:
         """
         Extract relationship type
         """
         return str(node.text)
+
+    def visit_class_name_without_dot(self, node: Node, visited_children: list) -> str:
+        """
+        Extract class name in "someting.Class" format
+        """
+        return visited_children[1]
 
     def visit_relationship(self, node: Node, visited_children: list) -> None:
         """
@@ -126,9 +139,11 @@ class Parsimonius(NodeVisitor):
         rel_type = constants.convert_relation(rel_type)
         if "2" in rel_type:
             rel_type = rel_type.replace("2", "")
-            self.observer.on_relation_found(class_b, class_a, rel_type, self.label)
+            self.observer.on_relation_found(
+                class_b, class_a, rel_type, self.label)
         else:
-            self.observer.on_relation_found(class_a, class_b, rel_type, self.label)
+            self.observer.on_relation_found(
+                class_a, class_b, rel_type, self.label)
 
     def generic_visit(self, node: Node, visited_children: list) -> str:
         """
