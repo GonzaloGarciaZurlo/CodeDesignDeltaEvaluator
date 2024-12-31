@@ -1,0 +1,88 @@
+@startuml
+
+
+
+
+
+/' Objects '/
+
+class Admin {
+	+Admin(const std::string& uname, const std::string& mail, int level)
+	-admin_level : int
+	+getRole() : std::string {query}
+}
+
+
+class Customer {
+	+Customer(const std::string& uname, const std::string& mail, int id)
+	-customer_id : int
+	+getRole() : std::string {query}
+}
+
+
+class DiscountManager {
+	+calculateDiscount(float total) : float {query}
+}
+
+
+class Order {
+	+Order(std::shared_ptr<Customer> cust, std::shared_ptr<DiscountManager> manager)
+	-customer : std::shared_ptr<Customer>
+	-discount_manager : std::shared_ptr<DiscountManager>
+	-items : std::vector<std::string>
+	+addItem(const std::string& item) : void
+	+processOrder() : void
+}
+
+
+class ShoppingCart {
+	+ShoppingCart(std::shared_ptr<Customer> cust)
+	+getTotal() : float {query}
+	-customer : std::shared_ptr<Customer>
+	-items : std::vector<std::string>
+	+addItem(const std::string& item) : void
+}
+
+
+abstract class User {
+	+User(const std::string& uname, const std::string& mail)
+	#email : std::string
+	+{abstract} getRole() : std::string {query}
+	#username : std::string
+}
+
+
+
+
+
+/' Inheritance relationships '/
+
+User <|-- Admin
+
+
+User <|-- Customer
+
+
+
+
+
+/' Aggregation relationships '/
+
+Order *-- Customer
+
+
+Order *-- DiscountManager
+
+
+ShoppingCart *-- Customer
+
+
+
+
+
+
+/' Nested objects '/
+
+
+
+@enduml
