@@ -92,6 +92,12 @@ class Neo4j(Observer):
             session.execute_write(self._create_relation,
                                   class1, class2, relation, label)
 
+    def on_package_found(self, package_name: str, classes: list,  label: str) -> None:
+        """
+        Create a node with the package name.
+        """
+        pass
+
 
 def init_module(api: CddeAPI) -> None:
     """

@@ -9,25 +9,29 @@ import constants
 
 grammar = Grammar(
     r"""
-    start               = ( package_namespace / class_definition / comment / directive / relationship / other)*
+    start               = ( package_namespace / class_definition / relationship / other)*
 
     package_namespace   = package / namespace
 
-    package             = ws? "package" ws? name ws? "{" ws? namespace* ws? "}"
+    package             = ws? "package" ws? name ws? "{" ws? class_definition+ ws? "}"
 
-    namespace           = ws? "namespace" ws? name ws? "{" ws declaration+ ws "}"
-
-    declaration         = class_definition / comment
+    namespace           = ws? "namespace" ws? name ws? "{" ws? class_definition+ ws? "}"
 
     class_type          = "class" / "interface" / "struct" / "abstract class" / "abstract" 
 
-    class_definition    = ws? class_type ws name ws? alias? ws? stereotype? ws? "{" ws? method* ws? "}"
+    class_name          = ~r'"[^"]*"|\'[^\']*\'|[^\s]+'
+
+    class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"
 
     name                = ~r'"?[A-Za-z_#[][A-Za-z0-9_.#\[\]]*"?'
 
+    method_name         = ws? ~r'"?[A-Za-z_#[(][A-Za-z0-9_.#\[\]()]*"?' ws?
+
     alias               = "as" ws name       
 
-    method              = ((visibility? ws ~"[^\n]+"? ws) / comment)
+    body                =  method / comment / method_name 
+
+    method              = visibility ws? ~"[^\n]+" ws?
 
     visibility          = ("+" / "-" / "#")        
 
@@ -38,8 +42,6 @@ grammar = Grammar(
     relationship        = name ws* relationship_type ws* name ws?
 
     comment             = ws? "'" ~"[^\n]*"
-    
-    directive           = ~r"set\s+\S+\s+\S+" ws?  
     
     other               = ~r".*\n?"  
 
@@ -68,16 +70,33 @@ class Parsimonius(NodeVisitor):
             self.visit(tree)
             self.observer.close_observer()
 
+    def visit_package(self, node: Node, visited_children: list) -> None:
+        """
+        Extract package name
+        """
+        package_name = visited_children[3]
+        classes = []
+        for declaration in visited_children[7]:
+            classes.append(declaration)
+        self.observer.on_package_found(package_name, classes, self.label)
+
     def visit_namespace(self, node: Node, visited_children: list) -> None:
         """
         Extract namespace name
         """
+        namespace_name = visited_children[3]
+        classes = []
+        for declaration in visited_children[7]:
+            classes.append(declaration)
+        self.observer.on_package_found(namespace_name, classes, self.label)
 
     def visit_class_definition(self, node: Node, visited_children: list) -> str:
         """
         Identify class declarations with or without aliases
         """
         class_type = visited_children[1][0]
+        if class_type == "abstract class":
+            class_type = "abstract"
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
             alias = visited_children[5][0]
@@ -92,6 +111,13 @@ class Parsimonius(NodeVisitor):
         Extract class name without quotes
         """
         return node.text.strip('"')
+
+    def visit_class_name(self, node: Node, visited_children: list) -> str:
+        """
+        Extract class name without quotes and spaces
+        """
+        node.text.strip('"')
+        return node.text.strip(' ')
 
     def visit_alias(self, node: Node, visited_children: list) -> str:
         """

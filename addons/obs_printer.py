@@ -40,6 +40,13 @@ class Printer(Observer):
         """
         print(f"Relationship found: ({relation}) {label}_{class1} --> {label}_{class2}")
 
+    @override
+    def on_package_found(self, package_name: str, classes: list, label: str) -> None:
+        """
+        Print the package found
+        """
+        print(f"Package found: {label}_{package_name} with classes: {classes}")
+
 
 def init_module(api: CddeAPI) -> None:
     """

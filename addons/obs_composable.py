@@ -48,6 +48,14 @@ class Composable(Observer):
         for observer in self.observers:
             observer.on_relation_found(class1, class2, relation, label)
 
+    @override
+    def on_package_found(self, package_name: str, classes: list, label: str) -> None:
+        """
+        Notifies the observers that a package was found.
+        """
+        for observer in self.observers:
+            observer.on_package_found(package_name, classes, label)
+
 
 def init_module(api: CddeAPI) -> None:
     """
