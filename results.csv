@@ -1,122 +1,87 @@
-Data,classes,[beforeAdmin, beforeCreditCardProcessor, beforeCustomer, beforeOrder, beforePayPalProcessor, beforePaymentProcessor, beforeShoppingCart, beforeUser, afterAdmin, afterCreditCardProcessor, afterCustomer, afterOrder, afterPayPalProcessor, afterPaymentProcessor, afterShoppingCart, afterUser]
-total,classes,16
-before_nodes,before_classes,8
-before_classes,before_classes,6
-before_abstracts,before_classes,2
-after_nodes,after_classes,8
-after_classes,after_classes,6
-after_abstracts,after_classes,2
-deleted_nodes,class_differences,0
-added_nodes,class_differences,0
-deleted_classes,class_differences,0
-added_classes,class_differences,0
-deleted_abstracts,class_differences,0
-added_abstracts,class_differences,0
-base_class_change,class_differences,2
-added_relationships,class_differences,2
-deleted_relationships,class_differences,2
-inheritance_to_composition,class_differences,0
-composition_to_inheritance,class_differences,0
-class_to_abs,class_differences,0
-abs_to_class,class_differences,0
-Data,inheritance,beforeAdmin --> beforeUser
-beforeAdmin,abstracts_deps_count,1
-beforeAdmin,concrete_deps_count,0
-beforeAdmin,afferent_count,0
-beforeAdmin,efferent_count,1
-beforeAdmin,instability_class,1.0
-Data,inheritance,beforeCreditCardProcessor --> beforePaymentProcessor
-beforeCreditCardProcessor,abstracts_deps_count,1
-beforeCreditCardProcessor,concrete_deps_count,0
-beforeCreditCardProcessor,afferent_count,0
-beforeCreditCardProcessor,efferent_count,1
-beforeCreditCardProcessor,instability_class,1.0
-Data,inheritance,beforeCustomer --> beforeUser
-Data,composition,beforeCustomer --> beforeOrder
-Data,composition,beforeCustomer --> beforeShoppingCart
-beforeCustomer,abstracts_deps_count,1
-beforeCustomer,concrete_deps_count,2
-beforeCustomer,afferent_count,0
-beforeCustomer,efferent_count,3
-beforeCustomer,instability_class,1.0
-beforeOrder,abstracts_deps_count,0
-beforeOrder,concrete_deps_count,0
-beforeOrder,afferent_count,2
-beforeOrder,efferent_count,0
-beforeOrder,instability_class,0.0
-Data,inheritance,beforePayPalProcessor --> beforePaymentProcessor
-beforePayPalProcessor,abstracts_deps_count,1
-beforePayPalProcessor,concrete_deps_count,0
-beforePayPalProcessor,afferent_count,0
-beforePayPalProcessor,efferent_count,1
-beforePayPalProcessor,instability_class,1.0
-Data,composition,beforePaymentProcessor --> beforeOrder
-beforePaymentProcessor,abstracts_deps_count,0
-beforePaymentProcessor,concrete_deps_count,1
-beforePaymentProcessor,afferent_count,2
-beforePaymentProcessor,efferent_count,1
-beforePaymentProcessor,instability_class,0.3333333333333333
-beforeShoppingCart,abstracts_deps_count,0
-beforeShoppingCart,concrete_deps_count,0
-beforeShoppingCart,afferent_count,1
-beforeShoppingCart,efferent_count,0
-beforeShoppingCart,instability_class,0.0
-beforeUser,abstracts_deps_count,0
-beforeUser,concrete_deps_count,0
-beforeUser,afferent_count,2
-beforeUser,efferent_count,0
-beforeUser,instability_class,0.0
-Data,inheritance,afterAdmin --> afterCustomer
-afterAdmin,abstracts_deps_count,0
-afterAdmin,concrete_deps_count,1
-afterAdmin,afferent_count,0
-afterAdmin,efferent_count,1
-afterAdmin,instability_class,1.0
-Data,inheritance,afterCreditCardProcessor --> afterPaymentProcessor
-afterCreditCardProcessor,abstracts_deps_count,1
-afterCreditCardProcessor,concrete_deps_count,0
-afterCreditCardProcessor,afferent_count,0
-afterCreditCardProcessor,efferent_count,1
-afterCreditCardProcessor,instability_class,1.0
-Data,inheritance,afterCustomer --> afterUser
-Data,composition,afterCustomer --> afterOrder
-Data,composition,afterCustomer --> afterShoppingCart
-afterCustomer,abstracts_deps_count,1
-afterCustomer,concrete_deps_count,2
-afterCustomer,afferent_count,2
-afterCustomer,efferent_count,3
-afterCustomer,instability_class,0.6
-afterOrder,abstracts_deps_count,0
-afterOrder,concrete_deps_count,0
-afterOrder,afferent_count,1
-afterOrder,efferent_count,0
-afterOrder,instability_class,0.0
-Data,inheritance,afterPayPalProcessor --> afterPaymentProcessor
-afterPayPalProcessor,abstracts_deps_count,1
-afterPayPalProcessor,concrete_deps_count,0
-afterPayPalProcessor,afferent_count,0
-afterPayPalProcessor,efferent_count,1
-afterPayPalProcessor,instability_class,1.0
-Data,composition,afterPaymentProcessor --> afterCustomer
-afterPaymentProcessor,abstracts_deps_count,0
-afterPaymentProcessor,concrete_deps_count,1
-afterPaymentProcessor,afferent_count,2
-afterPaymentProcessor,efferent_count,1
-afterPaymentProcessor,instability_class,0.3333333333333333
-afterShoppingCart,abstracts_deps_count,0
-afterShoppingCart,concrete_deps_count,0
-afterShoppingCart,afferent_count,1
-afterShoppingCart,efferent_count,0
-afterShoppingCart,instability_class,0.0
-afterUser,abstracts_deps_count,0
-afterUser,concrete_deps_count,0
-afterUser,afferent_count,1
-afterUser,efferent_count,0
-afterUser,instability_class,0.0
+Data,classes,[beforeAuto, beforeMoto, beforeVehiculo, afterAuto, afterMoto, afterVehiculo]
+total,classes,6
+before_nodes,before-metrics,3
+before_classes,before-metrics,3
+before_abstracts,before-metrics,0
+after_nodes,after-metrics,3
+after_classes,after-metrics,3
+after_abstracts,after-metrics,0
+deleted_nodes,general-metrics,0
+added_nodes,general-metrics,0
+deleted_classes,general-metrics,0
+added_classes,general-metrics,0
+deleted_abstracts,general-metrics,0
+added_abstracts,general-metrics,0
+base_class_change,general-metrics,1
+added_relationships,general-metrics,1
+deleted_relationships,general-metrics,1
+inheritance_to_composition,general-metrics,0
+composition_to_inheritance,general-metrics,0
+class_to_abs,general-metrics,0
+abs_to_class,general-metrics,0
+number_of_classes_that_change_package,general-metrics,3
+Data,composition,beforeAuto --> beforeVehiculo
+beforeAuto_abstracts_deps_count,per-class-metrics,0
+beforeAuto_concrete_deps_count,per-class-metrics,1
+beforeAuto_afferent_count,per-class-metrics,0
+beforeAuto_efferent_count,per-class-metrics,1
+beforeAuto_instability_class,per-class-metrics,1.0
+Data,composition,beforeMoto --> beforeVehiculo
+beforeMoto_abstracts_deps_count,per-class-metrics,0
+beforeMoto_concrete_deps_count,per-class-metrics,1
+beforeMoto_afferent_count,per-class-metrics,0
+beforeMoto_efferent_count,per-class-metrics,1
+beforeMoto_instability_class,per-class-metrics,1.0
+beforeVehiculo_abstracts_deps_count,per-class-metrics,0
+beforeVehiculo_concrete_deps_count,per-class-metrics,0
+beforeVehiculo_afferent_count,per-class-metrics,2
+beforeVehiculo_efferent_count,per-class-metrics,0
+beforeVehiculo_instability_class,per-class-metrics,0.0
+Data,composition,afterAuto --> afterVehiculo
+afterAuto_abstracts_deps_count,per-class-metrics,0
+afterAuto_concrete_deps_count,per-class-metrics,1
+afterAuto_afferent_count,per-class-metrics,1
+afterAuto_efferent_count,per-class-metrics,1
+afterAuto_instability_class,per-class-metrics,0.5
+Data,composition,afterMoto --> afterAuto
+afterMoto_abstracts_deps_count,per-class-metrics,0
+afterMoto_concrete_deps_count,per-class-metrics,1
+afterMoto_afferent_count,per-class-metrics,0
+afterMoto_efferent_count,per-class-metrics,1
+afterMoto_instability_class,per-class-metrics,1.0
+afterVehiculo_abstracts_deps_count,per-class-metrics,0
+afterVehiculo_concrete_deps_count,per-class-metrics,0
+afterVehiculo_afferent_count,per-class-metrics,1
+afterVehiculo_efferent_count,per-class-metrics,0
+afterVehiculo_instability_class,per-class-metrics,0.0
+before_main_nodes,per-package-metrics,3
+before_main_classes,per-package-metrics,3
+before_main_abstracts,per-package-metrics,0
+before_main_efferent,per-package-metrics,0
+before_main_afferent,per-package-metrics,0
+before_main_instability,per-package-metrics,0.0
+after_main_nodes,per-package-metrics,3
+after_main_classes,per-package-metrics,3
+after_main_abstracts,per-package-metrics,0
+after_main_efferent,per-package-metrics,0
+after_main_afferent,per-package-metrics,0
+after_main_instability,per-package-metrics,0.0
 delta_classes,derivate_metrics,0
 delta_relationships,derivate_metrics,0
 delta_nodes,derivate_metrics,0
 delta_abstracts,derivate_metrics,0
-all_abstractness_before,derivate_metrics,0.25
-all_abstractness_after,derivate_metrics,0.25
+all_abstractness_before,derivate_metrics,0.0
+all_abstractness_after,derivate_metrics,0.0
 abstractness_delta,derivate_metrics,0.0
+before_main_package_abstractness_before,per-package-derivate-metrics,0.0
+after_main_package_abstractness_after,per-package-derivate-metrics,0.0
+before_main_package_abstractness_delta,per-package-derivate-metrics,0.0
+after_main_package_abstractness_delta,per-package-derivate-metrics,0.0
+before_main_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
+after_main_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
+before_main_package_abstractness_before,per-package-derivate-metrics,0.0
+after_main_package_abstractness_after,per-package-derivate-metrics,0.0
+before_main_package_abstractness_delta,per-package-derivate-metrics,0.0
+after_main_package_abstractness_delta,per-package-derivate-metrics,0.0
+before_main_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
+after_main_package_distance_from_main_sequence,per-package-derivate-metrics,1.0

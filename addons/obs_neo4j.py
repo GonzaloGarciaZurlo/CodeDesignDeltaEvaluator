@@ -38,11 +38,13 @@ class Neo4j(Observer):
         )
         query_check_or_create_a = (
             "MERGE (a {name: $class1}) "
+            "SET a.package = 'library'"
             "RETURN a"
         )
 
         query_check_or_create_b = (
             "MERGE (b {name: $class2}) "
+            "SET b.package = 'library'"
             "RETURN b"
         )
         tx.run(query_check_or_create_a, class1=class1)
@@ -91,6 +93,23 @@ class Neo4j(Observer):
         with self.driver.session() as session:
             session.execute_write(self._create_relation,
                                   class1, class2, relation, label)
+
+    @override
+    def on_package_found(self, package_name: str, classes: list,  label: str) -> None:
+        """
+        Set the package name to the classes.
+        """
+        package_name = label + '_' + package_name
+        with self.driver.session() as session:
+            for class_name in classes:
+                class_name = label + class_name
+                query = (
+                    "MATCH (a) "
+                    "WHERE a.name = $class_name "
+                    "SET a.package = $package_name"
+                )
+                session.run(query, class_name=class_name,
+                            package_name=package_name)
 
 
 def init_module(api: CddeAPI) -> None:

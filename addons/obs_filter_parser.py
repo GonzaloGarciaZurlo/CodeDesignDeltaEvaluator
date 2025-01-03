@@ -18,6 +18,7 @@ class Filter(Observer):
         self.observer_to_send = observer_to_send
         self.classes = []
         self.relationships = []
+        self.packages = []
 
     @override
     def open_observer(self) -> None:
@@ -47,12 +48,20 @@ class Filter(Observer):
         """
         self.relationships.append([class1, class2, relation, label])
 
+    @override
+    def on_package_found(self, package_name: str, classes: list,  label: str) -> None:
+        """
+        Print the package found
+        """
+        self.packages.append([package_name, classes, label])
+
     def filter(self) -> None:
         """
         Filter the information received
         """
         self.filter_classes()
         self.filter_relationships()
+        self.filter_packages()
 
     def filter_relationships(self) -> None:
         """
@@ -74,6 +83,13 @@ class Filter(Observer):
         self._remove_special_characters("classes")
         self._remove_one_duplicate_classname()
 
+    def filter_packages(self) -> None:
+        """
+        Filter the classes in thepackages
+        """
+        self._delete_ns_or_pkg("packages")
+        self._remove_special_characters("packages")
+
     def _delete_ns_or_pkg(self, option: str) -> None:
         """
         Delete the namespace or package of the class names
@@ -90,6 +106,12 @@ class Filter(Observer):
                     self.relationships[i][0] = class1.split('.')[-1]
                 if '.' in class2:
                     self.relationships[i][1] = class2.split('.')[-1]
+        elif option == "packages":
+            for i in range(len(self.packages)):
+                package_name, classes, label = self.packages[i]
+                for j in range(len(classes)):
+                    if '.' in classes[j]:
+                        self.packages[i][1][j] = classes[j].split('.')[-1]
 
     def _remove_special_characters(self, option: str) -> None:
         """
@@ -102,6 +124,10 @@ class Filter(Observer):
             for i in range(len(self.relationships)):
                 re.sub(r'[^A-Za-z0-9\s]', '', self.relationships[i][0])
                 re.sub(r'[^A-Za-z0-9\s]', '', self.relationships[i][1])
+        elif option == "packages":
+            for i in range(len(self.packages)):
+                for j in range(len(self.packages[i][1])):
+                    re.sub(r'[^A-Za-z0-9\s]', '', self.packages[i][1][j])
 
     def _remove_one_duplicate_classname(self) -> None:
         """
@@ -114,18 +140,39 @@ class Filter(Observer):
                 count[class_name] -= 1
                 self.classes.remove([class_name, kind, label])
 
-
     def send(self) -> None:
         """
         Send the filtered information to the next observer
         """
+        self._send_classes()
+        self._send_relationships()
+        self._send_packages()
+
+    def _send_classes(self) -> None:
+        """
+        Send the filtered classes to the next observer
+        """
         for classes in self.classes:
             class_name, kind, label = classes
             self.observer_to_send.on_class_found(class_name, kind, label)
+
+    def _send_relationships(self) -> None:
+        """
+        Send the filtered relationships to the next observer
+        """
         for relationship in self.relationships:
             class1, class2, relation, label = relationship
             self.observer_to_send.on_relation_found(
                 class1, class2, relation, label)
+
+    def _send_packages(self) -> None:
+        """
+        Send the filtered packages to the next observer
+        """
+        for package in self.packages:
+            package_name, classes, label = package
+            self.observer_to_send.on_package_found(
+                package_name, classes, label)
 
 
 def init_module(api: CddeAPI) -> None:

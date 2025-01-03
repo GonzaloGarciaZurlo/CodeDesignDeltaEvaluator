@@ -12,8 +12,9 @@ import yaml
 
 QUERIES_WITHOUT_PARAMETERS = [
     'before-metrics', 'after-metrics', 'general-metrics']
-QUERIES_WITH_ONE_PARAMETER = ['per-class-metrics']
-DERIVATE_METRICS = ['derivate_metrics']
+PER_CLASS_METRICS = ['per-class-metrics']
+PER_PACKAGE_METRICS = ['per-package-metrics']
+DERIVATE_METRICS = ['derivate_metrics', 'per-package-derivate-metrics']
 
 
 class QueriesCypher(ResultQueries):
@@ -26,6 +27,7 @@ class QueriesCypher(ResultQueries):
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
+        self.packages = []
         self.queries = {}
         self.derivate_queries = {}
         self.results = {}
@@ -45,8 +47,11 @@ class QueriesCypher(ResultQueries):
 
         for class_name in classes:
             self.get_all_relations(class_name)
-            self.metrics_with_one_parameter(class_name)
+            self.metrics_per_class(class_name)
+            self._set_packages(class_name)
 
+        for package in self.packages:
+            self.metrics_per_package(package)
         self.derivate_metrics()
         self.observer.close_observer()
 
@@ -90,32 +95,56 @@ class QueriesCypher(ResultQueries):
             self.observer.on_result_metric_found(
                 result, kind, query)
 
-    def metrics_with_one_parameter(self, parameter: str) -> None:
+    def metrics_per_class(self, parameter: str) -> None:
         """
-        Iterates through all types of queries with one parameter
+        Iterates through all types of queries with one parameter (class name)
         """
-        for kind in QUERIES_WITH_ONE_PARAMETER:
+        for kind in PER_CLASS_METRICS:
             for query in self.queries[kind]:
-                self._execute_metrics_with_one_parameter(
+                self._execute_metrics_per_class(
                     kind, query, parameter)
 
-    def _execute_metrics_with_one_parameter(self, kind: str, query: str, parameter: str) -> None:
+    def _execute_metrics_per_class(self, kind: str, query: str, parameter: str) -> None:
         """
-        Executes all metrics with one parameter.
+        Executes all metrics for a class.
         """
         with self.driver.session() as session:
             result = session.read_transaction(
                 lambda tx: tx.run(self.queries[kind][query], class_name=parameter).single()[0])
             self.results[query] = result
             self.observer.on_result_metric_found(
-                result, query, parameter)
+                result, kind, parameter + '_' + query)
+
+    def metrics_per_package(self, parameter: str) -> None:
+        """
+        Iterates through all types of queries with one parameter (package name)
+        """
+        for kind in PER_PACKAGE_METRICS:
+            for query in self.queries[kind]:
+                self._execute_metrics_per_package(
+                    kind, query, parameter)
+
+    def _execute_metrics_per_package(self, kind: str, query: str, parameter: str) -> None:
+        """
+        Executes all metrics for a package.
+        """
+        with self.driver.session() as session:
+            result = session.read_transaction(
+                lambda tx: tx.run(self.queries[kind][query], package_name=parameter).single()[0])
+            self.results[parameter + query] = result
+            self.observer.on_result_metric_found(
+                result, kind, parameter + '_' + query)
 
     def derivate_metrics(self) -> None:
         """
         Iterates through all types of derivate metrics
         """
         for kind in DERIVATE_METRICS:
-            self._execute_derivate_metrics(kind)
+            if kind == 'derivate_metrics':
+                self._execute_derivate_metrics(kind)
+            elif kind == 'per-package-derivate-metrics':
+                for package in self.packages:
+                    self.per_packages_derivate_metrics(kind, package)
 
     def _execute_derivate_metrics(self, kind: str) -> None:
         """
@@ -124,8 +153,31 @@ class QueriesCypher(ResultQueries):
         for metric in self.derivate_queries[kind]:
             formula = self.derivate_queries[kind][metric]
             result = safe_eval(formula, self.results)
+            self.results[metric] = result
             self.observer.on_result_metric_found(
                 result, kind, metric)
+
+    def per_packages_derivate_metrics(self, kind: str, package: str) -> None:
+        """
+        Executes all derivate metrics for a package.
+        """
+        for metric in self.derivate_queries[kind]:
+            formula = self.derivate_queries[kind][metric]
+            for package in self.packages:
+                self.results['package'] = package
+                if 'before' in metric and 'before' in package:
+                    result = safe_eval(formula, self.results)
+                    self.observer.on_result_metric_found(
+                        result, kind, package + '_' + metric)
+                elif 'after' in metric and 'after' in package:
+                    result = safe_eval(formula, self.results)
+                    self.observer.on_result_metric_found(
+                        result, kind, package + '_' + metric)
+                elif 'after' not in metric and 'before' not in metric:
+                    result = safe_eval(formula, self.results)
+                    self.observer.on_result_metric_found(
+                        result, kind, package + '_' + metric)
+                self.results[package + metric] = result
 
     def get_all_classes(self) -> list:
         """
@@ -168,6 +220,29 @@ class QueriesCypher(ResultQueries):
             self.observer.on_result_data_found(
                 str(class_name)+' --> '+str(record['dependent']), str(record["relation"]))
 
+    def _set_packages(self, class_name: str) -> None:
+        """
+        Sets all of the packages in the database.
+        """
+        with self.driver.session() as session:
+            session.read_transaction(self._get_packages, class_name)
+
+    def _get_packages(self, tx: Transaction, class_name: str) -> None:
+        """
+        Helper function to get all of the packages in the database.
+        """
+        query = """
+                MATCH (c {name: $class_name})
+                RETURN c.package AS package
+                """
+        result = tx.run(query, class_name=class_name).single()[0]
+        if result not in self.packages:
+            self.packages.append(result)
+
+
+def concat_left(a, b):
+    return str(a) + str(b)
+
 
 _operations = {
     ast.Add: operator.add,
@@ -175,6 +250,7 @@ _operations = {
     ast.Mult: operator.mul,
     ast.Div: operator.truediv,
     ast.Pow: operator.pow,
+    '.': concat_left,
     'abs': abs
 }
 
@@ -201,6 +277,14 @@ def _safe_eval(node, variables, functions):
         func = functions[node.func.id]  # KeyError -> Unsafe function
         args = [_safe_eval(arg, variables, functions) for arg in node.args]
         return func(*args)
+    elif isinstance(node, ast.Attribute):
+        # Manejo del operador de concatenación (A.B)
+        left = _safe_eval(node.value, variables, functions)
+        right = node.attr
+        result = _operations['.'](left, right)
+        if result in variables:
+            return variables[result]
+        return result
 
     assert False, 'Unsafe operation'
 

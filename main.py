@@ -57,20 +57,20 @@ class Main:
 
     # Git examples
     # git_clone_go = GitClone(
-    #    "https://github.com/jfeliu007/goplantuml", 168)  # GO (none changes)
+   #     "https://github.com/jfeliu007/goplantuml", 168)  # GO (none changes)
     # git_clone_cpp = GitClone(
     #   "https://github.com/jfeliu007/goplantuml", 145) # GO (many changes)
 
     # git_clone_go.run()
     # Temporal directories
-    # before = git_clone_go.before_dir
+   # before = git_clone_go.before_dir
     # after = git_clone_go.after_dir
 
     # Generate the plantuml file
-    archivo_plantuml_before = cpp_generator.generate_plantuml(
-        complex_example_before)
-    archivo_plantuml_after = cpp_generator.generate_plantuml(
-        complex_example_after)
+    archivo_plantuml_before = go_generator.generate_plantuml(
+        double_derivative_before)
+    archivo_plantuml_after = go_generator.generate_plantuml(
+        double_derivative_after)
 
     # Parse the plantuml file
     parsimonious_before.parse_uml(archivo_plantuml_before)
@@ -90,11 +90,11 @@ class Main:
     cypher.resolve_query()
 
     # Delete the plantuml file
-    cpp_generator.delete_plantuml(archivo_plantuml_before)
-    cpp_generator.delete_plantuml(archivo_plantuml_after)
+    # go_generator.delete_plantuml(archivo_plantuml_before)
+    # go_generator.delete_plantuml(archivo_plantuml_after)
 
     # Delete the temporary directories
-    #git_clone_go._delete_dir()
+   # git_clone_go._delete_dir()
 
 
 # Execute the main logic
