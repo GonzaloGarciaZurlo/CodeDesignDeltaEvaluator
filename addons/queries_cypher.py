@@ -153,6 +153,7 @@ class QueriesCypher(ResultQueries):
         for metric in self.derivate_queries[kind]:
             formula = self.derivate_queries[kind][metric]
             result = safe_eval(formula, self.results)
+            self.results[metric] = result
             self.observer.on_result_metric_found(
                 result, kind, metric)
 
@@ -164,9 +165,19 @@ class QueriesCypher(ResultQueries):
             formula = self.derivate_queries[kind][metric]
             for package in self.packages:
                 self.results['package'] = package
-                result = safe_eval(formula, self.results)
-                self.observer.on_result_metric_found(
-                    result, kind, package + metric)
+                if 'before' in metric and 'before' in package:
+                    result = safe_eval(formula, self.results)
+                    self.observer.on_result_metric_found(
+                        result, kind, package + '_' + metric)
+                elif 'after' in metric and 'after' in package:
+                    result = safe_eval(formula, self.results)
+                    self.observer.on_result_metric_found(
+                        result, kind, package + '_' + metric)
+                elif 'after' not in metric and 'before' not in metric:
+                    result = safe_eval(formula, self.results)
+                    self.observer.on_result_metric_found(
+                        result, kind, package + '_' + metric)
+                self.results[package + metric] = result
 
     def get_all_classes(self) -> list:
         """

@@ -68,18 +68,18 @@
         "afterVehiculo_instability_class": 0.0
     },
     "per-package-metrics": {
-        "beforemain_nodes": 3,
-        "beforemain_classes": 3,
-        "beforemain_abstracts": 0,
-        "beforemain_efferent": 0,
-        "beforemain_afferent": 0,
-        "beforemain_instability": 0.0,
-        "aftermain_nodes": 3,
-        "aftermain_classes": 3,
-        "aftermain_abstracts": 0,
-        "aftermain_efferent": 0,
-        "aftermain_afferent": 0,
-        "aftermain_instability": 0.0
+        "before_main_nodes": 3,
+        "before_main_classes": 3,
+        "before_main_abstracts": 0,
+        "before_main_efferent": 0,
+        "before_main_afferent": 0,
+        "before_main_instability": 0.0,
+        "after_main_nodes": 3,
+        "after_main_classes": 3,
+        "after_main_abstracts": 0,
+        "after_main_efferent": 0,
+        "after_main_afferent": 0,
+        "after_main_instability": 0.0
     },
     "derivate_metrics": {
         "delta_classes": 0,
@@ -91,13 +91,11 @@
         "abstractness_delta": 0.0
     },
     "per-package-derivate-metrics": {
-        "beforemainpackage_abstractness_before": 0.0,
-        "aftermainpackage_abstractness_before": 0.0,
-        "beforemainpackage_abstractness_after": 0.0,
-        "aftermainpackage_abstractness_after": 0.0,
-        "beforemainpackage_abstractness_delta": 0.0,
-        "aftermainpackage_abstractness_delta": 0.0,
-        "beforemainpackage_distance_from_main_sequence": 1.0,
-        "aftermainpackage_distance_from_main_sequence": 1.0
+        "before_main_package_abstractness_before": 0.0,
+        "after_main_package_abstractness_after": 0.0,
+        "before_main_package_abstractness_delta": 0.0,
+        "after_main_package_abstractness_delta": 0.0,
+        "before_main_package_distance_from_main_sequence": 1.0,
+        "after_main_package_distance_from_main_sequence": 1.0
     }
 }
