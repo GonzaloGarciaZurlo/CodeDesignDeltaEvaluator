@@ -67,10 +67,10 @@ class Main:
     # after = git_clone_go.after_dir
 
     # Generate the plantuml file
-    archivo_plantuml_before = cpp_generator.generate_plantuml(
-        derivate_to_composition_before)
-    archivo_plantuml_after = cpp_generator.generate_plantuml(
-        derivate_to_composition_after)
+    archivo_plantuml_before = go_generator.generate_plantuml(
+        double_derivative_before)
+    archivo_plantuml_after = go_generator.generate_plantuml(
+        double_derivative_after)
 
     # Parse the plantuml file
     parsimonious_before.parse_uml(archivo_plantuml_before)

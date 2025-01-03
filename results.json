@@ -1,16 +1,16 @@
 {
     "classes": {
-        "['beforeAuto', 'beforeVehiculo', 'afterAuto', 'afterVehiculo']": "Data",
-        "total": 4
+        "['beforeAuto', 'beforeMoto', 'beforeVehiculo', 'afterAuto', 'afterMoto', 'afterVehiculo']": "Data",
+        "total": 6
     },
     "before-metrics": {
-        "before_nodes": 2,
-        "before_classes": 2,
+        "before_nodes": 3,
+        "before_classes": 3,
         "before_abstracts": 0
     },
     "after-metrics": {
-        "after_nodes": 2,
-        "after_classes": 2,
+        "after_nodes": 3,
+        "after_classes": 3,
         "after_abstracts": 0
     },
     "general-metrics": {
@@ -26,43 +26,60 @@
         "inheritance_to_composition": 0,
         "composition_to_inheritance": 0,
         "class_to_abs": 0,
-        "abs_to_class": 0
-    },
-    "inheritance": {
-        "beforeAuto --> beforeVehiculo": "Data"
-    },
-    "abstracts_deps_count": {
-        "beforeAuto": 0,
-        "beforeVehiculo": 0,
-        "afterAuto": 0,
-        "afterVehiculo": 0
-    },
-    "concrete_deps_count": {
-        "beforeAuto": 1,
-        "beforeVehiculo": 0,
-        "afterAuto": 0,
-        "afterVehiculo": 1
-    },
-    "afferent_count": {
-        "beforeAuto": 0,
-        "beforeVehiculo": 1,
-        "afterAuto": 1,
-        "afterVehiculo": 0
-    },
-    "efferent_count": {
-        "beforeAuto": 1,
-        "beforeVehiculo": 0,
-        "afterAuto": 0,
-        "afterVehiculo": 1
-    },
-    "instability_class": {
-        "beforeAuto": 1.0,
-        "beforeVehiculo": 0.0,
-        "afterAuto": 0.0,
-        "afterVehiculo": 1.0
+        "abs_to_class": 0,
+        "number_of_classes_that_change_package": 3
     },
     "composition": {
-        "afterVehiculo --> afterAuto": "Data"
+        "beforeAuto --> beforeVehiculo": "Data",
+        "beforeMoto --> beforeVehiculo": "Data",
+        "afterAuto --> afterVehiculo": "Data",
+        "afterMoto --> afterAuto": "Data"
+    },
+    "per-class-metrics": {
+        "beforeAuto_abstracts_deps_count": 0,
+        "beforeAuto_concrete_deps_count": 1,
+        "beforeAuto_afferent_count": 0,
+        "beforeAuto_efferent_count": 1,
+        "beforeAuto_instability_class": 1.0,
+        "beforeMoto_abstracts_deps_count": 0,
+        "beforeMoto_concrete_deps_count": 1,
+        "beforeMoto_afferent_count": 0,
+        "beforeMoto_efferent_count": 1,
+        "beforeMoto_instability_class": 1.0,
+        "beforeVehiculo_abstracts_deps_count": 0,
+        "beforeVehiculo_concrete_deps_count": 0,
+        "beforeVehiculo_afferent_count": 2,
+        "beforeVehiculo_efferent_count": 0,
+        "beforeVehiculo_instability_class": 0.0,
+        "afterAuto_abstracts_deps_count": 0,
+        "afterAuto_concrete_deps_count": 1,
+        "afterAuto_afferent_count": 1,
+        "afterAuto_efferent_count": 1,
+        "afterAuto_instability_class": 0.5,
+        "afterMoto_abstracts_deps_count": 0,
+        "afterMoto_concrete_deps_count": 1,
+        "afterMoto_afferent_count": 0,
+        "afterMoto_efferent_count": 1,
+        "afterMoto_instability_class": 1.0,
+        "afterVehiculo_abstracts_deps_count": 0,
+        "afterVehiculo_concrete_deps_count": 0,
+        "afterVehiculo_afferent_count": 1,
+        "afterVehiculo_efferent_count": 0,
+        "afterVehiculo_instability_class": 0.0
+    },
+    "per-package-metrics": {
+        "beforemain_nodes": 3,
+        "beforemain_classes": 3,
+        "beforemain_abstracts": 0,
+        "beforemain_efferent": 2,
+        "beforemain_afferent": 2,
+        "beforemain_instability": 1.0,
+        "aftermain_nodes": 3,
+        "aftermain_classes": 3,
+        "aftermain_abstracts": 0,
+        "aftermain_efferent": 2,
+        "aftermain_afferent": 2,
+        "aftermain_instability": 0.5
     },
     "derivate_metrics": {
         "delta_classes": 0,
@@ -72,5 +89,15 @@
         "all_abstractness_before": 0.0,
         "all_abstractness_after": 0.0,
         "abstractness_delta": 0.0
+    },
+    "per-package-derivate-metrics": {
+        "beforemainpackage_abstractness_before": 0.0,
+        "aftermainpackage_abstractness_before": 0.0,
+        "beforemainpackage_abstractness_after": 0.0,
+        "aftermainpackage_abstractness_after": 0.0,
+        "beforemainpackage_abstractness_delta": 0.0,
+        "aftermainpackage_abstractness_delta": 0.0,
+        "beforemainpackage_distance_from_main_sequence": 0.0,
+        "aftermainpackage_distance_from_main_sequence": 0.5
     }
 }

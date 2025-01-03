@@ -14,3 +14,12 @@ derivate_metrics:
     query: after_abstracts / after_nodes
   - metric: abstractness_delta
     query: abs((after_abstracts / after_nodes) - (before_abstracts / before_nodes))
+per-package-derivate-metrics:
+  - metric: package_abstractness_before
+    query: package.abstracts / package.nodes
+  - metric: package_abstractness_after
+    query: package.abstracts / package.nodes
+  - metric: package_abstractness_delta
+    query: abs((package.abstracts / package.nodes) - (package.abstracts/ package.nodes))
+  - metric: package_distance_from_main_sequence
+    query: abs(abs((package.abstracts / package.nodes) - (package.abstracts/ package.nodes)) + package.instability - 1)

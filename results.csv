@@ -1,10 +1,10 @@
-Data,classes,[beforeAuto, beforeVehiculo, afterAuto, afterVehiculo]
-total,classes,4
-before_nodes,before-metrics,2
-before_classes,before-metrics,2
+Data,classes,[beforeAuto, beforeMoto, beforeVehiculo, afterAuto, afterMoto, afterVehiculo]
+total,classes,6
+before_nodes,before-metrics,3
+before_classes,before-metrics,3
 before_abstracts,before-metrics,0
-after_nodes,after-metrics,2
-after_classes,after-metrics,2
+after_nodes,after-metrics,3
+after_classes,after-metrics,3
 after_abstracts,after-metrics,0
 deleted_nodes,general-metrics,0
 added_nodes,general-metrics,0
@@ -19,28 +19,53 @@ inheritance_to_composition,general-metrics,0
 composition_to_inheritance,general-metrics,0
 class_to_abs,general-metrics,0
 abs_to_class,general-metrics,0
-Data,inheritance,beforeAuto --> beforeVehiculo
-beforeAuto,abstracts_deps_count,0
-beforeAuto,concrete_deps_count,1
-beforeAuto,afferent_count,0
-beforeAuto,efferent_count,1
-beforeAuto,instability_class,1.0
-beforeVehiculo,abstracts_deps_count,0
-beforeVehiculo,concrete_deps_count,0
-beforeVehiculo,afferent_count,1
-beforeVehiculo,efferent_count,0
-beforeVehiculo,instability_class,0.0
-afterAuto,abstracts_deps_count,0
-afterAuto,concrete_deps_count,0
-afterAuto,afferent_count,1
-afterAuto,efferent_count,0
-afterAuto,instability_class,0.0
-Data,composition,afterVehiculo --> afterAuto
-afterVehiculo,abstracts_deps_count,0
-afterVehiculo,concrete_deps_count,1
-afterVehiculo,afferent_count,0
-afterVehiculo,efferent_count,1
-afterVehiculo,instability_class,1.0
+number_of_classes_that_change_package,general-metrics,3
+Data,composition,beforeAuto --> beforeVehiculo
+beforeAuto_abstracts_deps_count,per-class-metrics,0
+beforeAuto_concrete_deps_count,per-class-metrics,1
+beforeAuto_afferent_count,per-class-metrics,0
+beforeAuto_efferent_count,per-class-metrics,1
+beforeAuto_instability_class,per-class-metrics,1.0
+Data,composition,beforeMoto --> beforeVehiculo
+beforeMoto_abstracts_deps_count,per-class-metrics,0
+beforeMoto_concrete_deps_count,per-class-metrics,1
+beforeMoto_afferent_count,per-class-metrics,0
+beforeMoto_efferent_count,per-class-metrics,1
+beforeMoto_instability_class,per-class-metrics,1.0
+beforeVehiculo_abstracts_deps_count,per-class-metrics,0
+beforeVehiculo_concrete_deps_count,per-class-metrics,0
+beforeVehiculo_afferent_count,per-class-metrics,2
+beforeVehiculo_efferent_count,per-class-metrics,0
+beforeVehiculo_instability_class,per-class-metrics,0.0
+Data,composition,afterAuto --> afterVehiculo
+afterAuto_abstracts_deps_count,per-class-metrics,0
+afterAuto_concrete_deps_count,per-class-metrics,1
+afterAuto_afferent_count,per-class-metrics,1
+afterAuto_efferent_count,per-class-metrics,1
+afterAuto_instability_class,per-class-metrics,0.5
+Data,composition,afterMoto --> afterAuto
+afterMoto_abstracts_deps_count,per-class-metrics,0
+afterMoto_concrete_deps_count,per-class-metrics,1
+afterMoto_afferent_count,per-class-metrics,0
+afterMoto_efferent_count,per-class-metrics,1
+afterMoto_instability_class,per-class-metrics,1.0
+afterVehiculo_abstracts_deps_count,per-class-metrics,0
+afterVehiculo_concrete_deps_count,per-class-metrics,0
+afterVehiculo_afferent_count,per-class-metrics,1
+afterVehiculo_efferent_count,per-class-metrics,0
+afterVehiculo_instability_class,per-class-metrics,0.0
+beforemain_nodes,per-package-metrics,3
+beforemain_classes,per-package-metrics,3
+beforemain_abstracts,per-package-metrics,0
+beforemain_efferent,per-package-metrics,2
+beforemain_afferent,per-package-metrics,2
+beforemain_instability,per-package-metrics,1.0
+aftermain_nodes,per-package-metrics,3
+aftermain_classes,per-package-metrics,3
+aftermain_abstracts,per-package-metrics,0
+aftermain_efferent,per-package-metrics,2
+aftermain_afferent,per-package-metrics,2
+aftermain_instability,per-package-metrics,0.5
 delta_classes,derivate_metrics,0
 delta_relationships,derivate_metrics,0
 delta_nodes,derivate_metrics,0
@@ -48,3 +73,19 @@ delta_abstracts,derivate_metrics,0
 all_abstractness_before,derivate_metrics,0.0
 all_abstractness_after,derivate_metrics,0.0
 abstractness_delta,derivate_metrics,0.0
+beforemainpackage_abstractness_before,per-package-derivate-metrics,0.0
+aftermainpackage_abstractness_before,per-package-derivate-metrics,0.0
+beforemainpackage_abstractness_after,per-package-derivate-metrics,0.0
+aftermainpackage_abstractness_after,per-package-derivate-metrics,0.0
+beforemainpackage_abstractness_delta,per-package-derivate-metrics,0.0
+aftermainpackage_abstractness_delta,per-package-derivate-metrics,0.0
+beforemainpackage_distance_from_main_sequence,per-package-derivate-metrics,0.0
+aftermainpackage_distance_from_main_sequence,per-package-derivate-metrics,0.5
+beforemainpackage_abstractness_before,per-package-derivate-metrics,0.0
+aftermainpackage_abstractness_before,per-package-derivate-metrics,0.0
+beforemainpackage_abstractness_after,per-package-derivate-metrics,0.0
+aftermainpackage_abstractness_after,per-package-derivate-metrics,0.0
+beforemainpackage_abstractness_delta,per-package-derivate-metrics,0.0
+aftermainpackage_abstractness_delta,per-package-derivate-metrics,0.0
+beforemainpackage_distance_from_main_sequence,per-package-derivate-metrics,0.0
+aftermainpackage_distance_from_main_sequence,per-package-derivate-metrics,0.5

@@ -27,7 +27,47 @@ per-class-metrics:
           WHEN (salidas + entradas) = 0 THEN 0 // Manejar casos de división por 0
           ELSE toFloat(salidas) / toFloat(salidas + entradas) 
         END AS metric
-
+per-package-metrics:
+  - metric: nodes
+    query: |
+      MATCH (n)
+      WHERE n.package = $package_name
+      RETURN count(n) AS metric
+  - metric: classes
+    query: |
+      MATCH (c:class)
+      WHERE c.package = $package_name
+      RETURN count(c) AS metric
+  - metric: abstracts
+    query: |
+      MATCH (a:abstract)
+      WHERE a.package = $package_name
+      RETURN count(a) AS metric
+  - metric: efferent
+    query: |
+      MATCH (c:class)
+      WHERE c.package = $package_name
+      MATCH (c)-[r]->(external)
+      RETURN count(r) AS metric
+  - metric: afferent
+    query: |
+      MATCH (c:class)
+      WHERE c.package = $package_name
+      MATCH (external)-[r]->(c)
+      RETURN count(r) AS metric
+  - metric: instability
+    query: |
+      MATCH (c:class)
+      WHERE c.package = $package_name
+      OPTIONAL MATCH (c)-[r]->(external)
+      WITH c, count(r) AS salidas
+      OPTIONAL MATCH (external2)-[r2]->(c)
+      WITH salidas, count(r2) AS entradas
+      RETURN
+        CASE 
+          WHEN (salidas + entradas) = 0 THEN 0
+          ELSE toFloat(salidas) / toFloat(salidas + entradas) 
+        END AS metric
 before-metrics:
   - metric: before_nodes
     query: |
@@ -195,5 +235,15 @@ general-metrics:
       AND EXISTS {
         MATCH (b:abstract)
         WHERE b.name = 'before' + substring(a.name, 5)
+      }
+      RETURN count(a) AS metric
+  - metric: number_of_classes_that_change_package
+    query: |
+      MATCH (a:class)
+      WHERE a.name STARTS WITH 'after'
+      AND EXISTS {
+        MATCH (b:class)
+        WHERE b.name = 'before' + substring(a.name, 5)
+          AND a.package <> b.package
       }
       RETURN count(a) AS metric
