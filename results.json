@@ -71,15 +71,15 @@
         "beforemain_nodes": 3,
         "beforemain_classes": 3,
         "beforemain_abstracts": 0,
-        "beforemain_efferent": 2,
-        "beforemain_afferent": 2,
-        "beforemain_instability": 1.0,
+        "beforemain_efferent": 0,
+        "beforemain_afferent": 0,
+        "beforemain_instability": 0.0,
         "aftermain_nodes": 3,
         "aftermain_classes": 3,
         "aftermain_abstracts": 0,
-        "aftermain_efferent": 2,
-        "aftermain_afferent": 2,
-        "aftermain_instability": 0.5
+        "aftermain_efferent": 0,
+        "aftermain_afferent": 0,
+        "aftermain_instability": 0.0
     },
     "derivate_metrics": {
         "delta_classes": 0,
@@ -97,7 +97,7 @@
         "aftermainpackage_abstractness_after": 0.0,
         "beforemainpackage_abstractness_delta": 0.0,
         "aftermainpackage_abstractness_delta": 0.0,
-        "beforemainpackage_distance_from_main_sequence": 0.0,
-        "aftermainpackage_distance_from_main_sequence": 0.5
+        "beforemainpackage_distance_from_main_sequence": 1.0,
+        "aftermainpackage_distance_from_main_sequence": 1.0
     }
 }

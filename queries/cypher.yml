@@ -47,26 +47,30 @@ per-package-metrics:
     query: |
       MATCH (c:class)
       WHERE c.package = $package_name
-      MATCH (c)-[r]->(external)
+      MATCH (c)-[r]->(external:class)
+      WHERE external.package <> $package_name
       RETURN count(r) AS metric
   - metric: afferent
     query: |
       MATCH (c:class)
       WHERE c.package = $package_name
-      MATCH (external)-[r]->(c)
+      MATCH (external:class)-[r]->(c)
+      WHERE external.package <> $package_name
       RETURN count(r) AS metric
   - metric: instability
     query: |
       MATCH (c:class)
       WHERE c.package = $package_name
       OPTIONAL MATCH (c)-[r]->(external)
-      WITH c, count(r) AS salidas
+      WHERE external.package <> $package_name
+      WITH count(r) AS total_salidas
       OPTIONAL MATCH (external2)-[r2]->(c)
-      WITH salidas, count(r2) AS entradas
+      WHERE external2.package <> $package_name
+      WITH total_salidas, count(r2) AS total_entradas
       RETURN
         CASE 
-          WHEN (salidas + entradas) = 0 THEN 0
-          ELSE toFloat(salidas) / toFloat(salidas + entradas) 
+          WHEN (total_salidas + total_entradas) = 0 THEN 0
+          ELSE toFloat(total_salidas) / toFloat(total_salidas + total_entradas)
         END AS metric
 before-metrics:
   - metric: before_nodes
