@@ -176,6 +176,8 @@ class QueriesCypher(ResultQueries):
                     result = safe_eval(formula, self.results)
                     self.observer.on_result_metric_found(
                         result, kind, package + '_' + metric)
+                else:
+                    result = 0
                 self.results[package + metric] = result
 
     def get_all_classes(self) -> list:

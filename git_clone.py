@@ -1,10 +1,6 @@
-"""
-This module handles the git clone logic, for obtaining the before and after directories of a PR.
-"""
 import os
 import subprocess
 import shutil
-
 
 class GitClone:
     """
@@ -50,36 +46,38 @@ class GitClone:
         Clones the repo and saves the before directory.
         """
         os.makedirs(self.repo_dir, exist_ok=True)
-        subprocess.run(["git", "clone", self.repo_url, self.repo_dir,],
+        subprocess.run(["git", "clone", self.repo_url, self.repo_dir],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _before_dir(self):
         """
-        Sets the before directory.
+        Creates the before directory snapshot using git archive.
         """
         os.chdir(self.repo_dir)
         subprocess.run(["git", "fetch", "origin", self.branch],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(["git", "checkout", self.branch],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        # save repo before merge in before directory
-        subprocess.run(["cp", "-r", self.repo_dir, self.before_dir])
+        # Create the before snapshot using git archive
+        subprocess.run(f"git archive {self.branch} | tar -x -C {self.before_dir}",
+                       shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _after_dir(self):
         """
-        Checks out the PR and saves the after directory.
+        Creates the after directory snapshot using git archive.
         """
         os.chdir(self.repo_dir)
         subprocess.run(["git", "fetch", "origin",
                        f"pull/{self.pr_number}/head:pr-{self.pr_number}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         subprocess.run(["git", "checkout", f"pr-{self.pr_number}"],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        # save repo before merge in after directory
-        subprocess.run(["cp", "-r", self.repo_dir, self.after_dir])
+        # Create the after snapshot using git archive
+        subprocess.run(f"git archive pr-{self.pr_number} | tar -x -C {self.after_dir}",
+                       shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     def _return_paths(self):
         """
-        It brings me back to my workspace where I was at the beginning
+        Brings back to the initial working directory.
         """
         os.chdir(self.work_dir)
 
@@ -90,3 +88,4 @@ class GitClone:
         shutil.rmtree(self.before_dir)
         shutil.rmtree(self.after_dir)
         shutil.rmtree(self.repo_dir)
+
