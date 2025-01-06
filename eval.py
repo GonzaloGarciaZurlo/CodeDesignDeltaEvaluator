@@ -44,6 +44,9 @@ def _safe_eval(node, variables, functions):
         right = _safe_eval(node.right, variables, functions)
         if isinstance(node.op, ast.Pow):
             assert right < 100
+        if isinstance(node.op, ast.Div):
+            if right == 0:
+                return 0
         return op(left, right)
     elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'abs':
         # Manejar la función abs
