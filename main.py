@@ -94,7 +94,7 @@ class Main:
     # go_generator.delete_plantuml(archivo_plantuml_after)
 
     # Delete the temporary directories
-    git_clone_go._delete_dir()
+    git_clone_go.delete_dir()
 
 
 # Execute the main logic

@@ -2,20 +2,19 @@
 This module contains the Filter class,
 this class is an intermediate Observer that filters the information it receives.
 """
-from collections import Counter
 import re
+from typing import Final
 from overrides import override
 from api import CddeAPI
 from puml_observer import Observer
-from abc import abstractmethod
-from typing import Final
 
 
 class Filter(Observer):
     """
     Observer class that filters the information it receives.
     Contains the methods to filter the classes, relationships and packages.
-    Coordinates the creation of its subclasses and calls their corresponding methods to filter what is necessary
+    Coordinates the creation of its subclasses
+    and calls their corresponding methods to filter what is necessary
     """
 
     def __init__(self, observer_to_send: Observer) -> None:
@@ -87,7 +86,8 @@ class ClassFilter(Filter):
         """
         Filter the classes:
         - Removing duplicates
-        - If any class perteneces to a namespace or package, the namespace or package is removed from the class name
+        - If any class perteneces to a namespace or package, 
+        the namespace or package is removed from the class name
         - Removing special characters of the class names
         """
         self._delete_ns_or_pkg()
@@ -99,7 +99,7 @@ class ClassFilter(Filter):
         Delete the namespace or package of the class names
         """
         for i in range(len(self.classes)):
-            class_name, kind, label = self.classes[i]
+            class_name, _, _ = self.classes[i]
             if '.' in class_name:
                 self.classes[i][0] = class_name.split('.')[-1]
 
@@ -146,7 +146,8 @@ class RelationshipFilter(Filter):
     def filter(self) -> None:
         """
         Filter the relationships
-        - If any class perteneces to a namespace or package, the namespace or package is removed from the class name
+        - If any class perteneces to a namespace or package, 
+        the namespace or package is removed from the class name
         - Removing special characters of the class names
         """
         self._delete_ns_or_pkg()
@@ -157,7 +158,7 @@ class RelationshipFilter(Filter):
         Delete the namespace or package of the class names
         """
         for i in range(len(self.relationships)):
-            class1, class2, relation, label = self.relationships[i]
+            class1, class2, _, _ = self.relationships[i]
             if '.' in class1:
                 self.relationships[i][0] = class1.split('.')[-1]
             if '.' in class2:
@@ -205,7 +206,7 @@ class PackageFilter(Filter):
         Delete the namespace or package of the class names
         """
         for i in range(len(self.packages)):
-            package_name, classes, label = self.packages[i]
+            _, classes, _ = self.packages[i]
             for j in range(len(classes)):
                 if '.' in classes[j]:
                     self.packages[i][1][j] = classes[j].split('.')[-1]
@@ -224,7 +225,7 @@ class PackageFilter(Filter):
         Remove duplicate class names, keeping only the first occurrence.
         """
         for i in range(len(self.packages)):
-            package_name, classes, label = self.packages[i]
+            _, classes, _ = self.packages[i]
             seen = set()
             filtered_classes = []
 

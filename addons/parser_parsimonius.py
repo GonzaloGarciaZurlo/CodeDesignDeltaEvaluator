@@ -1,12 +1,13 @@
 """
 Module parser with parsimonius implementation
 """
+from typing import Any
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
 from api import CddeAPI
 from puml_observer import Observer
 import constants
-from typing import Any
+
 
 grammar = Grammar(
     r"""
@@ -103,9 +104,8 @@ class Parsimonius(NodeVisitor):
             alias = visited_children[5][0]
             self.observer.on_class_found(alias, class_type, self.label)
             return alias
-        else:
-            self.observer.on_class_found(class_name, class_type, self.label)
-            return class_name
+        self.observer.on_class_found(class_name, class_type, self.label)
+        return class_name
 
     def visit_name(self, node: Node, visited_children: list) -> str:
         """
@@ -150,7 +150,7 @@ class Parsimonius(NodeVisitor):
             self.observer.on_relation_found(
                 class_a, class_b, rel_type, self.label)
 
-    def generic_visit(self, node: Node, visited_children: list)-> list[Any] | Any:
+    def generic_visit(self, node: Node, visited_children: list) -> list[Any] | Any:
         """
         Fallback for any other nodes not explicitly visited
         """

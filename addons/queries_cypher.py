@@ -3,11 +3,12 @@ This module contains functions for handling database queries.
 """
 from neo4j import GraphDatabase, Transaction
 from overrides import override
+import yaml
 from result_queries import ResultQueries
 from api import CddeAPI
 from eval import safe_eval
 from result_observer import ResultObserver
-import yaml
+
 
 QUERIES_WITHOUT_PARAMETERS = [
     'before-metrics', 'after-metrics', 'general-metrics']

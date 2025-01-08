@@ -1,10 +1,15 @@
 """
-This module provides a function safe_eval(expr, variables={}, functions={}) that evaluates a mathematical expression
-safely. The function takes an expression expr, a dictionary of variables variables, and a dictionary of functions.
-The function returns the result of evaluating the expression expr using the variables and functions provided.
+This module provides a function safe_eval(expr, variables={}, functions={}) 
+that evaluates a mathematical expression safely. 
+The function takes an expression expr, a dictionary of variables variables, 
+and a dictionary of functions.
+The function returns the result of evaluating the expression expr
+using the variables and functions provided.
 
-This module belongs to Aleksi Torhamo (https://stackoverflow.com/users/680727/aleksi-torhamo)
-Obtained from the following stackoverflow discussion (https://stackoverflow.com/questions/26505420/evaluate-math-equations-from-unsafe-user-input-in-python)
+This module belongs to Aleksi Torhamo 
+(https://stackoverflow.com/users/680727/aleksi-torhamo),
+Obtained from the following stackoverflow discussion 
+(https://stackoverflow.com/questions/26505420/evaluate-math-equations-from-unsafe-user-input-in-python)
 """
 import ast
 import operator

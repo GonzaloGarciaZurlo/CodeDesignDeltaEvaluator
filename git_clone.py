@@ -1,6 +1,11 @@
+"""
+This module contains the GitClone class, 
+which is used to create the before and after directories of a PR.
+"""
 import os
 import subprocess
 import shutil
+
 
 class GitClone:
     """
@@ -37,9 +42,11 @@ class GitClone:
         """
         os.makedirs(self.work_dir, exist_ok=True)
         self.before_dir = subprocess.run(
-            ["mktemp", "-d", "before.XXXX", "-p", self.work_dir], capture_output=True).stdout.decode().strip()
+            ["mktemp", "-d", "before.XXXX", "-p", self.work_dir],
+            capture_output=True, check=True).stdout.decode().strip()
         self.after_dir = subprocess.run(
-            ["mktemp", "-d", "after.XXXX", "-p", self.work_dir], capture_output=True).stdout.decode().strip()
+            ["mktemp", "-d", "after.XXXX", "-p", self.work_dir],
+            capture_output=True, check=True).stdout.decode().strip()
 
     def _clone_repo(self):
         """
@@ -47,7 +54,7 @@ class GitClone:
         """
         os.makedirs(self.repo_dir, exist_ok=True)
         subprocess.run(["git", "clone", self.repo_url, self.repo_dir],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
     def _before_dir(self):
         """
@@ -55,12 +62,12 @@ class GitClone:
         """
         os.chdir(self.repo_dir)
         subprocess.run(["git", "fetch", "origin", self.branch],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
         subprocess.run(["git", "checkout", self.branch],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
         # Create the before snapshot using git archive
         subprocess.run(f"git archive {self.branch} | tar -x -C {self.before_dir}",
-                       shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                       shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
     def _after_dir(self):
         """
@@ -68,12 +75,13 @@ class GitClone:
         """
         os.chdir(self.repo_dir)
         subprocess.run(["git", "fetch", "origin",
-                       f"pull/{self.pr_number}/head:pr-{self.pr_number}"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                       f"pull/{self.pr_number}/head:pr-{self.pr_number}"],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
         subprocess.run(["git", "checkout", f"pr-{self.pr_number}"],
-                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
         # Create the after snapshot using git archive
         subprocess.run(f"git archive pr-{self.pr_number} | tar -x -C {self.after_dir}",
-                       shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                       shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
 
     def _return_paths(self):
         """
@@ -81,11 +89,10 @@ class GitClone:
         """
         os.chdir(self.work_dir)
 
-    def _delete_dir(self):
+    def delete_dir(self):
         """
         Deletes the before and after directories.
         """
         shutil.rmtree(self.before_dir)
         shutil.rmtree(self.after_dir)
         shutil.rmtree(self.repo_dir)
-
