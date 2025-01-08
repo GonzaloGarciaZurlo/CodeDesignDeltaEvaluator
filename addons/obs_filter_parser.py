@@ -20,9 +20,9 @@ class Filter(Observer):
 
     def __init__(self, observer_to_send: Observer) -> None:
         self.observer_to_send: Final = observer_to_send
-        self.classes = []
-        self.relationships = []
-        self.packages = []
+        self.classes: list = []
+        self.relationships: list = []
+        self.packages: list = []
 
     @override
     def open_observer(self) -> None:

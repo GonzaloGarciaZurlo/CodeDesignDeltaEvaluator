@@ -26,10 +26,10 @@ class QueriesCypher(ResultQueries):
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
-        self.packages = []
-        self.queries = {}
-        self.derivate_queries = {}
-        self.results = {}
+        self.packages: list = []
+        self.queries: dict = {}
+        self.derivate_queries: dict = {}
+        self.results: dict = {}
 
     @override
     def resolve_query(self) -> None:
@@ -189,7 +189,7 @@ class QueriesCypher(ResultQueries):
             result = session.read_transaction(self._get_all_classes)
             self.observer.on_result_data_found(str(result), "classes")
             self.observer.on_result_metric_found(
-                len(result), "classes", "total")
+                str(len(result)), "classes", "total")
         return result
 
     def _get_all_classes(self, tx: Transaction) -> list:

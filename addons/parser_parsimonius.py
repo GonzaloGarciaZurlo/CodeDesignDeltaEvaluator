@@ -6,6 +6,7 @@ from parsimonious.nodes import NodeVisitor, Node
 from api import CddeAPI
 from puml_observer import Observer
 import constants
+from typing import Any
 
 grammar = Grammar(
     r"""
@@ -149,7 +150,7 @@ class Parsimonius(NodeVisitor):
             self.observer.on_relation_found(
                 class_a, class_b, rel_type, self.label)
 
-    def generic_visit(self, node: Node, visited_children: list) -> str:
+    def generic_visit(self, node: Node, visited_children: list)-> list[Any] | Any:
         """
         Fallback for any other nodes not explicitly visited
         """
