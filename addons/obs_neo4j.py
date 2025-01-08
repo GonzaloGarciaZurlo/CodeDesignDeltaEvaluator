@@ -38,13 +38,13 @@ class Neo4j(Observer):
         )
         query_check_or_create_a = (
             "MERGE (a {name: $class1}) "
-            "SET a.package = 'library'"
+            "ON CREATE SET a.package = 'library'"
             "RETURN a"
         )
 
         query_check_or_create_b = (
             "MERGE (b {name: $class2}) "
-            "SET b.package = 'library'"
+            "ON CREATE SET b.package = 'library'"
             "RETURN b"
         )
         tx.run(query_check_or_create_a, class1=class1)

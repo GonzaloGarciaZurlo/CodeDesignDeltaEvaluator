@@ -130,6 +130,7 @@ class QueriesCypher(ResultQueries):
         with self.driver.session() as session:
             result = session.read_transaction(
                 lambda tx: tx.run(self.queries[kind][query], package_name=parameter).single()[0])
+
             self.results[parameter + query] = result
             self.observer.on_result_metric_found(
                 result, kind, parameter + '_' + query)
@@ -239,6 +240,8 @@ class QueriesCypher(ResultQueries):
         result = tx.run(query, class_name=class_name).single()[0]
         if result not in self.packages:
             self.packages.append(result)
+        if self.packages == [None]:
+            self.packages = []
 
 
 def init_module(api: CddeAPI) -> None:
