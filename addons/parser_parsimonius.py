@@ -23,7 +23,7 @@ grammar = Grammar(
 
     class_name          = ~r'"[^"]*"|\'[^\']*\'|[^\s]+'
 
-    class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"
+    class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"     # pylint: disable=line-too-long
 
     name                = ~r'"?[A-Za-z_#[][A-Za-z0-9_.#\[\]]*"?'
 
@@ -39,7 +39,7 @@ grammar = Grammar(
 
     stereotype          = "<<" ws? "(" ws? name ws? "," ws? name ws? ")" ws? ">>"
 
-    relationship_type   = '--|>' / '<|--' / '..|>' / '<|..' / '-->' / '<--' / '*--' / '--*' / 'o--' / '--o' / '--'
+    relationship_type   = '--|>' / '<|--' / '..|>' / '<|..' / '-->' / '<--' / '*--' / '--*' / 'o--' / '--o' / '--'      # pylint: disable=line-too-long
     
     relationship        = name ws* relationship_type ws* name ws?
 
@@ -72,7 +72,7 @@ class Parsimonius(NodeVisitor):
             self.visit(tree)
             self.observer.close_observer()
 
-    def visit_package(self, node: Node, visited_children: list) -> None:
+    def visit_package(self, _node: Node, visited_children: list) -> None:
         """
         Extract package name
         """
@@ -82,7 +82,7 @@ class Parsimonius(NodeVisitor):
             classes.append(declaration)
         self.observer.on_package_found(package_name, classes, self.label)
 
-    def visit_namespace(self, node: Node, visited_children: list) -> None:
+    def visit_namespace(self, _node: Node, visited_children: list) -> None:
         """
         Extract namespace name
         """
@@ -92,7 +92,7 @@ class Parsimonius(NodeVisitor):
             classes.append(declaration)
         self.observer.on_package_found(namespace_name, classes, self.label)
 
-    def visit_class_definition(self, node: Node, visited_children: list) -> str:
+    def visit_class_definition(self, _node: Node, visited_children: list) -> str:
         """
         Identify class declarations with or without aliases
         """
@@ -107,32 +107,32 @@ class Parsimonius(NodeVisitor):
         self.observer.on_class_found(class_name, class_type, self.label)
         return class_name
 
-    def visit_name(self, node: Node, visited_children: list) -> str:
+    def visit_name(self, node: Node, _visited_children: list) -> str:
         """
         Extract class name without quotes
         """
         return node.text.strip('"')
 
-    def visit_class_name(self, node: Node, visited_children: list) -> str:
+    def visit_class_name(self, node: Node, _visited_children: list) -> str:
         """
         Extract class name without quotes and spaces
         """
         node.text.strip('"')
         return node.text.strip(' ')
 
-    def visit_alias(self, node: Node, visited_children: list) -> str:
+    def visit_alias(self, _node: Node, visited_children: list) -> str:
         """
         Extract alias name
         """
         return visited_children[2]
 
-    def visit_relationship_type(self, node: Node, visited_children: list) -> str:
+    def visit_relationship_type(self, node: Node, _visited_children: list) -> str:
         """
         Extract relationship type
         """
         return str(node.text)
 
-    def visit_relationship(self, node: Node, visited_children: list) -> None:
+    def visit_relationship(self, _node: Node, visited_children: list) -> None:
         """
         Identify relationships between classes with different types of connectors
         """

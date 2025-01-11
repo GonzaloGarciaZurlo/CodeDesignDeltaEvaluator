@@ -1,7 +1,7 @@
 {
     "classes": {
         "['afterAliasSlice', 'afterClassDiagramOptions', 'afterClassParser', 'afterField', 'afterFunction', 'afterLineStringBuilder', 'afterRenderingOptions', 'afterStruct', 'afterRenderingOption', 'afterTest', 'afterTestInterfaceAsField', 'aftertest2', 'afterSubfolder2', 'afterSubfolderInterface', 'aftertest', 'afterTestComplicatedAlias', 'aftermyInt', 'afterfontcolorbluefuncfontstringsBuilderbool', 'afterDuration', 'afterBuilder', 'beforeAbstractInterface', 'beforeImplementsAbstractInterface', 'beforeAliasOfInt', 'beforeRenderingOptionSlice', 'beforeparserRenderingOption', 'beforeMyType', 'beforeBar', 'beforeFoo', 'beforeAlias', 'beforeAliasSlice', 'beforeClassDiagramOptions', 'beforeClassParser', 'beforeField', 'beforeFunction', 'beforeLineStringBuilder', 'beforeRenderingOptions', 'beforeStruct', 'beforeRenderingOption', 'beforeTest', 'beforeTestInterfaceAsField', 'beforetest2', 'beforeSubfolder2', 'beforeSubfolderInterface', 'beforetest', 'beforeTestComplicatedAlias', 'beforemyInt', 'beforefontcolorbluefuncfontstringsBuilderbool', 'beforeDuration', 'beforeBuilder', 'afterAbstractInterface', 'afterImplementsAbstractInterface', 'afterAliasOfInt', 'afterRenderingOptionSlice', 'afterparserRenderingOption', 'afterMyType', 'afterBar', 'afterFoo', 'afterAlias']": "Data",
-        "total": 58
+        "total": "58"
     },
     "before-metrics": {
         "before_nodes": 29,

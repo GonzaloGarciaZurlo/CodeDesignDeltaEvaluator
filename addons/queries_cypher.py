@@ -144,8 +144,7 @@ class QueriesCypher(ResultQueries):
             if kind == 'derivate_metrics':
                 self._execute_derivate_metrics(kind)
             elif kind == 'per-package-derivate-metrics':
-                for package in self.packages:
-                    self.per_packages_derivate_metrics(kind, package)
+                self.per_packages_derivate_metrics(kind)
 
     def _execute_derivate_metrics(self, kind: str) -> None:
         """
@@ -158,29 +157,29 @@ class QueriesCypher(ResultQueries):
             self.observer.on_result_metric_found(
                 result, kind, metric)
 
-    def per_packages_derivate_metrics(self, kind: str, package: str) -> None:
+    def per_packages_derivate_metrics(self, kind: str) -> None:
         """
         Executes all derivate metrics for a package.
         """
         for metric in self.derivate_queries[kind]:
             formula = self.derivate_queries[kind][metric]
-            for package in self.packages:
-                self.results['package'] = package
-                if 'before' in metric and 'before' in package:
+            for p in self.packages:
+                self.results['package'] = p
+                if 'before' in metric and 'before' in p:
                     result = safe_eval(formula, self.results)
                     self.observer.on_result_metric_found(
-                        result, kind, package + '_' + metric)
-                elif 'after' in metric and 'after' in package:
+                        result, kind, p + '_' + metric)
+                elif 'after' in metric and 'after' in p:
                     result = safe_eval(formula, self.results)
                     self.observer.on_result_metric_found(
-                        result, kind, package + '_' + metric)
+                        result, kind, p + '_' + metric)
                 elif 'after' not in metric and 'before' not in metric:
                     result = safe_eval(formula, self.results)
                     self.observer.on_result_metric_found(
-                        result, kind, package + '_' + metric)
+                        result, kind, p + '_' + metric)
                 else:
                     result = 0
-                self.results[package + metric] = result
+                self.results[p + metric] = result
 
     def get_all_classes(self) -> list:
         """

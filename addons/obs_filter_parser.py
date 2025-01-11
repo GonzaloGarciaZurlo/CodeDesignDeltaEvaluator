@@ -17,11 +17,12 @@ class Filter(Observer):
     and calls their corresponding methods to filter what is necessary
     """
 
-    def __init__(self, observer_to_send: Observer) -> None:
+    def __init__(self, observer_to_send: Observer,
+                 classes=None, relationships=None, packages=None) -> None:
         self.observer_to_send: Final = observer_to_send
-        self.classes: list = []
-        self.relationships: list = []
-        self.packages: list = []
+        self.classes: list = classes if classes is not None else []
+        self.relationships: list = relationships if relationships is not None else []
+        self.packages: list = packages if packages is not None else []
 
     @override
     def open_observer(self) -> None:
@@ -79,8 +80,7 @@ class ClassFilter(Filter):
     """
 
     def __init__(self, classes: list, observer_to_send: Observer) -> None:
-        self.classes = classes
-        self.observer_to_send: Final = observer_to_send
+        super().__init__(observer_to_send, classes=classes)
 
     def filter(self) -> None:
         """
@@ -98,8 +98,8 @@ class ClassFilter(Filter):
         """
         Delete the namespace or package of the class names
         """
-        for i in range(len(self.classes)):
-            class_name, _, _ = self.classes[i]
+        for i, c in enumerate(self.classes):
+            class_name, _, _ = c
             if '.' in class_name:
                 self.classes[i][0] = class_name.split('.')[-1]
 
@@ -107,9 +107,8 @@ class ClassFilter(Filter):
         """
         Remove special characters from the class name
         """
-        for i in range(len(self.classes)):
-            self.classes[i][0] = re.sub(
-                r'[^A-Za-z0-9\s]', '', self.classes[i][0])
+        for i, c in enumerate(self.classes):
+            self.classes[i][0] = re.sub(r'[^A-Za-z0-9\s]', '', c[0])
 
     def _remove_duplicates(self) -> None:
         """
@@ -140,8 +139,7 @@ class RelationshipFilter(Filter):
     """
 
     def __init__(self, relationships: list, observer_to_send: Observer) -> None:
-        self.relationships = relationships
-        self.observer_to_send: Final = observer_to_send
+        super().__init__(observer_to_send, relationships=relationships)
 
     def filter(self) -> None:
         """
@@ -157,8 +155,8 @@ class RelationshipFilter(Filter):
         """
         Delete the namespace or package of the class names
         """
-        for i in range(len(self.relationships)):
-            class1, class2, _, _ = self.relationships[i]
+        for i, relation in enumerate(self.relationships):
+            class1, class2, _, _ = relation
             if '.' in class1:
                 self.relationships[i][0] = class1.split('.')[-1]
             if '.' in class2:
@@ -168,11 +166,11 @@ class RelationshipFilter(Filter):
         """
         Remove special characters from the class name
         """
-        for i in range(len(self.relationships)):
+        for i, relation in enumerate(self.relationships):
             self.relationships[i][0] = re.sub(
-                r'[^A-Za-z0-9\s]', '', self.relationships[i][0])
+                r'[^A-Za-z0-9\s]', '', relation[0])
             self.relationships[i][1] = re.sub(
-                r'[^A-Za-z0-9\s]', '', self.relationships[i][1])
+                r'[^A-Za-z0-9\s]', '', relation[1])
 
     def send(self) -> None:
         """
@@ -190,8 +188,7 @@ class PackageFilter(Filter):
     """
 
     def __init__(self, packages: list, observer_to_send: Observer) -> None:
-        self.packages = packages
-        self.observer_to_send: Final = observer_to_send
+        super().__init__(observer_to_send, packages=packages)
 
     def filter(self) -> None:
         """
@@ -205,27 +202,26 @@ class PackageFilter(Filter):
         """
         Delete the namespace or package of the class names
         """
-        for i in range(len(self.packages)):
-            _, classes, _ = self.packages[i]
-            for j in range(len(classes)):
-                if '.' in classes[j]:
-                    self.packages[i][1][j] = classes[j].split('.')[-1]
+        for i, package in enumerate(self.packages):
+            _, classes, _ = package
+            for j, c in enumerate(classes):
+                if '.' in c:
+                    self.packages[i][1][j] = c.split('.')[-1]
 
     def _remove_special_characters(self) -> None:
         """
         Remove special characters from the class name
         """
-        for i in range(len(self.packages)):
-            for j in range(len(self.packages[i][1])):
-                self.packages[i][1][j] = re.sub(
-                    r'[^A-Za-z0-9\s]', '', self.packages[i][1][j])
+        for i, package in enumerate(self.packages):
+            for j, c in enumerate(package[1]):
+                self.packages[i][1][j] = re.sub(r'[^A-Za-z0-9\s]', '', c)
 
     def _remove_duplicates(self) -> None:
         """
         Remove duplicate class names, keeping only the first occurrence.
         """
-        for i in range(len(self.packages)):
-            _, classes, _ = self.packages[i]
+        for i, package in enumerate(self.packages):
+            _, classes, _ = package
             seen = set()
             filtered_classes = []
 

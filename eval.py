@@ -13,6 +13,7 @@ Obtained from the following stackoverflow discussion
 """
 import ast
 import operator
+from typing import Any, Callable, Dict, Union
 
 
 # Dictionary of safe operations
@@ -26,8 +27,10 @@ _operations = {
     'abs': abs
 }
 
+EvalResult = Union[int, float, complex, Any]
 
-def safe_eval(expr, variables={}, functions={}):
+
+def safe_eval(expr: Any, variables: dict = {}, functions: dict = {}) -> EvalResult:
     """
     Evaluate a mathematical expression safely.
     """
@@ -35,41 +38,54 @@ def safe_eval(expr, variables={}, functions={}):
     return _safe_eval(node, variables, functions)
 
 
-def _safe_eval(node, variables, functions):
+def _safe_eval(node: Any, variables: Dict[str, EvalResult],
+               functions: Dict[str, Callable]) -> EvalResult:
     """
-    The main function that evaluates the expression safely.
+    Safely evaluate an AST expression.
     """
     if isinstance(node, ast.Constant):
+        # Return literal values like integers, floats, strings, etc.
         return node.n
-    elif isinstance(node, ast.Name):
-        return variables[node.id]  # KeyError -> Unsafe variable
-    elif isinstance(node, ast.BinOp):
-        op = _operations[node.op.__class__]  # KeyError -> Unsafe operation
+
+    if isinstance(node, ast.Name):
+        # Get the value of a variable, or raise KeyError if not defined
+        return variables[node.id]
+
+    if isinstance(node, ast.BinOp):
+        # Binary operations: addition, subtraction, multiplication, division, etc.
+        op = _operations.get(node.op.__class__)
+        if not op:
+            raise ValueError(f"Operation not allowed: {node.op}")
         left = _safe_eval(node.left, variables, functions)
         right = _safe_eval(node.right, variables, functions)
-        if isinstance(node.op, ast.Pow):
-            assert right < 100
-        if isinstance(node.op, ast.Div):
-            if right == 0:
-                return 0
+        # Specific rules for exponents and divisions
+        if isinstance(node.op, ast.Pow) and right >= 100:
+            raise ValueError(
+                "Exponents greater than or equal to 100 are not allowed")
+        if isinstance(node.op, ast.Div) and right == 0:
+            return 0
         return op(left, right)
-    elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'abs':
-        # Manejar la función abs
-        arg = _safe_eval(node.args[0], variables, functions)
-        return abs(arg)
-    elif isinstance(node, ast.Call):
-        assert not node.keywords and not node.starargs and not node.kwargs
-        assert isinstance(node.func, ast.Name), 'Unsafe function derivation'
-        func = functions[node.func.id]  # KeyError -> Unsafe function
-        args = [_safe_eval(arg, variables, functions) for arg in node.args]
-        return func(*args)
-    elif isinstance(node, ast.Attribute):
-        # Manejo del operador de concatenación (A.B)
-        left = _safe_eval(node.value, variables, functions)
-        right = node.attr
-        result = _operations['.'](left, right)
-        if result in variables:
-            return variables[result]
-        return result
 
-    assert False, 'Unsafe operation'
+    if isinstance(node, ast.Call):
+        # Call user-defined functions or safe functions like abs
+        if not isinstance(node.func, ast.Name):
+            raise ValueError("Unsafe function call")
+        func_name = node.func.id
+        if func_name == 'abs':
+            # Explicit support for abs
+            if len(node.args) != 1:
+                raise ValueError("abs requires exactly one argument")
+            arg = _safe_eval(node.args[0], variables, functions)
+            return abs(arg)
+        if func_name not in functions:
+            raise ValueError(f"Function not allowed: {func_name}")
+        args = [_safe_eval(arg, variables, functions) for arg in node.args]
+        return functions[func_name](*args)
+
+    if isinstance(node, ast.Attribute):
+        # Handle attributes (concatenation, property access)
+        left = _safe_eval(node.value, variables, functions)
+        result = _operations.get('.')(left, node.attr)
+        return variables.get(result, result)
+
+    raise ValueError(f"Unsafe or unsupported operation: {node}")
