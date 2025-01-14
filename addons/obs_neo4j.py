@@ -28,6 +28,8 @@ class Neo4j(Observer):
                          str, relation: str, label: str) -> None:
         """
         Query to create a relationship between two nodes.
+        If the nodes do not exist, they are created, 
+        with the package attribute set to 'library'.
         """
         class1 = label + class1
         class2 = label + class2
@@ -38,13 +40,13 @@ class Neo4j(Observer):
         )
         query_check_or_create_a = (
             "MERGE (a {name: $class1}) "
-            "SET a.package = 'library'"
+            "ON CREATE SET a.package = 'library'"
             "RETURN a"
         )
 
         query_check_or_create_b = (
             "MERGE (b {name: $class2}) "
-            "SET b.package = 'library'"
+            "ON CREATE SET b.package = 'library'"
             "RETURN b"
         )
         tx.run(query_check_or_create_a, class1=class1)

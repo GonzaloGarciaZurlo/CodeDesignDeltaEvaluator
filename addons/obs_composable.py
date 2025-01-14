@@ -1,6 +1,6 @@
 """
 This module contains the composable observer, 
-Selected from 1 or more of the possible observers
+Selected from 1 or more of the possible observers.
 """
 from typing import List
 from overrides import override
@@ -10,7 +10,7 @@ from puml_observer import Observer
 
 class Composable(Observer):
     """
-    Selected from 1 or more of the possible observers
+    Selected from 1 or more of the possible observers.
     """
 
     def __init__(self, observers: List[Observer]) -> None:
@@ -19,7 +19,7 @@ class Composable(Observer):
     @override
     def open_observer(self) -> None:
         """
-        Event triggered when the observer is opened
+        Event triggered when the observer is opened.
         """
         for observer in self.observers:
             observer.open_observer()
@@ -27,7 +27,7 @@ class Composable(Observer):
     @override
     def close_observer(self) -> None:
         """
-        Event triggered when the observer is closed
+        Event triggered when the observer is closed.
         """
         for observer in self.observers:
             observer.close_observer()

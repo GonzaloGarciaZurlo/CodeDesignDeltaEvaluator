@@ -10,7 +10,7 @@ from result_observer import ResultObserver
 
 class ResultCSV(ResultObserver):
     """
-    Observer that saves the information it receives in a CSV file
+    Observer that saves the information it receives in a CSV file.
     """
     @override
     def open_observer(self) -> None:
@@ -29,7 +29,7 @@ class ResultCSV(ResultObserver):
         # self._delete_csv()
 
     @override
-    def on_result_metric_found(self, result: str, kind: str, class_name: str) -> None:
+    def on_result_metric_found(self, result: int, kind: str, class_name: str) -> None:
         """
         Save the result found in the CSV file.
         with the format: kind, result, without spaces.
@@ -51,7 +51,7 @@ class ResultCSV(ResultObserver):
         subprocess.run("rm -f results.csv && touch results.csv",
                        shell=True, check=True)
 
-    def _write_csv(self, result: str, kind: str, class_name: str) -> None:
+    def _write_csv(self, result: int | str, kind: str, class_name: str) -> None:
         """
         Write the result in the CSV file.
         """

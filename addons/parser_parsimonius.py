@@ -1,11 +1,15 @@
 """
-Module parser with parsimonius implementation
+Module parser with parsimonius implementation.
+In this module we define the parser with parsimonius to parse the plantuml file.
+Contains the grammar and the class that implements the parser.
 """
+from typing import Any
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
 from api import CddeAPI
 from puml_observer import Observer
 import constants
+
 
 grammar = Grammar(
     r"""
@@ -21,7 +25,7 @@ grammar = Grammar(
 
     class_name          = ~r'"[^"]*"|\'[^\']*\'|[^\s]+'
 
-    class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"
+    class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"     # pylint: disable=line-too-long
 
     name                = ~r'"?[A-Za-z_#[][A-Za-z0-9_.#\[\]]*"?'
 
@@ -37,7 +41,7 @@ grammar = Grammar(
 
     stereotype          = "<<" ws? "(" ws? name ws? "," ws? name ws? ")" ws? ">>"
 
-    relationship_type   = '--|>' / '<|--' / '..|>' / '<|..' / '-->' / '<--' / '*--' / '--*' / 'o--' / '--o' / '--'
+    relationship_type   = '--|>' / '<|--' / '..|>' / '<|..' / '-->' / '<--' / '*--' / '--*' / 'o--' / '--o' / '--'      # pylint: disable=line-too-long
     
     relationship        = name ws* relationship_type ws* name ws?
 
@@ -52,7 +56,7 @@ grammar = Grammar(
 
 class Parsimonius(NodeVisitor):
     """
-    Class that implements parser with parsimonius to parse the plantuml file
+    Class that implements parser with parsimonius to parse the plantuml file.
     """
 
     def __init__(self, observer: Observer, label: str) -> None:
@@ -61,7 +65,7 @@ class Parsimonius(NodeVisitor):
 
     def parse_uml(self, file: str) -> None:
         """ 
-        Parse the plantuml file
+        Main method to parse the plantuml file.
         """
         with open(file, 'r', encoding='utf-8') as filename:
             self.observer.open_observer()
@@ -70,9 +74,9 @@ class Parsimonius(NodeVisitor):
             self.visit(tree)
             self.observer.close_observer()
 
-    def visit_package(self, node: Node, visited_children: list) -> None:
+    def visit_package(self, _node: Node, visited_children: list) -> None:
         """
-        Extract package name
+        Extract package name.
         """
         package_name = visited_children[3]
         classes = []
@@ -80,9 +84,9 @@ class Parsimonius(NodeVisitor):
             classes.append(declaration)
         self.observer.on_package_found(package_name, classes, self.label)
 
-    def visit_namespace(self, node: Node, visited_children: list) -> None:
+    def visit_namespace(self, _node: Node, visited_children: list) -> None:
         """
-        Extract namespace name
+        Extract namespace name.
         """
         namespace_name = visited_children[3]
         classes = []
@@ -90,9 +94,10 @@ class Parsimonius(NodeVisitor):
             classes.append(declaration)
         self.observer.on_package_found(namespace_name, classes, self.label)
 
-    def visit_class_definition(self, node: Node, visited_children: list) -> str:
+    def visit_class_definition(self, _node: Node, visited_children: list) -> str:
         """
-        Identify class declarations with or without aliases
+        Identify class declarations with or without aliases,
+        after that, notify the observer about the class found.
         """
         class_type = visited_children[1][0]
         if class_type == "abstract class":
@@ -102,38 +107,38 @@ class Parsimonius(NodeVisitor):
             alias = visited_children[5][0]
             self.observer.on_class_found(alias, class_type, self.label)
             return alias
-        else:
-            self.observer.on_class_found(class_name, class_type, self.label)
-            return class_name
+        self.observer.on_class_found(class_name, class_type, self.label)
+        return class_name
 
-    def visit_name(self, node: Node, visited_children: list) -> str:
+    def visit_name(self, node: Node, _visited_children: list) -> str:
         """
-        Extract class name without quotes
+        Extract class name without quotes.
         """
         return node.text.strip('"')
 
-    def visit_class_name(self, node: Node, visited_children: list) -> str:
+    def visit_class_name(self, node: Node, _visited_children: list) -> str:
         """
-        Extract class name without quotes and spaces
+        Extract class name without quotes and spaces.
         """
         node.text.strip('"')
         return node.text.strip(' ')
 
-    def visit_alias(self, node: Node, visited_children: list) -> str:
+    def visit_alias(self, _node: Node, visited_children: list) -> str:
         """
-        Extract alias name
+        Extract alias name.
         """
         return visited_children[2]
 
-    def visit_relationship_type(self, node: Node, visited_children: list) -> str:
+    def visit_relationship_type(self, node: Node, _visited_children: list) -> str:
         """
-        Extract relationship type
+        Extract relationship type.
         """
         return str(node.text)
 
-    def visit_relationship(self, node: Node, visited_children: list) -> None:
+    def visit_relationship(self, _node: Node, visited_children: list) -> None:
         """
-        Identify relationships between classes with different types of connectors
+        Identify relationships between classes with different types of connectors.
+        After that, notify the observer about the relationship found.
         """
         class_a = str(visited_children[0])
         rel_type = str(visited_children[2])
@@ -149,15 +154,15 @@ class Parsimonius(NodeVisitor):
             self.observer.on_relation_found(
                 class_a, class_b, rel_type, self.label)
 
-    def generic_visit(self, node: Node, visited_children: list) -> str:
+    def generic_visit(self, node: Node, visited_children: list) -> list[Any] | Any:
         """
-        Fallback for any other nodes not explicitly visited
+        Fallback for any other nodes not explicitly visited.
         """
         return visited_children or node.text
 
 
 def init_module(api: CddeAPI) -> None:
     """
-    Initialize the module on the API
+    Initialize the module on the API.
     """
     api.register_puml_parser('parsimonius', Parsimonius)

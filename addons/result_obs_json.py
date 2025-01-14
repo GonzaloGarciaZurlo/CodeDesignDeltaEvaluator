@@ -12,7 +12,7 @@ from result_observer import ResultObserver
 
 class ResultJson(ResultObserver):
     """
-    Observer that saves the information it receives in a Json file
+    Observer that saves the information it receives in a Json file.
     """
     @override
     def open_observer(self) -> None:
@@ -31,7 +31,7 @@ class ResultJson(ResultObserver):
         # self._delete_json()
 
     @override
-    def on_result_metric_found(self, result: str, kind: str, class_name) -> None:
+    def on_result_metric_found(self, result: int, kind: str, class_name) -> None:
         """
         Save the result found in the Json file.
         with the format: kind, result, without spaces.
@@ -52,27 +52,31 @@ class ResultJson(ResultObserver):
         subprocess.run("rm -rf results.json && touch results.json",
                        shell=True, check=True)
 
-    def _write_json(self, result: str, kind: str, class_name: str) -> None:
+    def _write_json(self, result: int | str, kind: str, class_name: str) -> None:
         """
         Write the result in the Json file.
         """
         file_path = 'results.json'
 
-        # Leer el contenido actual del archivo JSON si existe y no está vacío
+        data = self._open_json(file_path)
+
+        if kind not in data:
+            data[kind] = {}
+        data[kind][class_name] = result
+
+        with open(file_path, 'w', encoding="utf-8") as file:
+            json.dump(data, file, indent=4)
+
+    def _open_json(self, file_path: str) -> dict:
+        """
+        Open the json file.
+        """
         if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
             with open(file_path, 'r', encoding="utf-8") as file:
                 data = json.load(file)
         else:
             data = {}
-
-        # Actualizar el contenido con los nuevos datos
-        if kind not in data:
-            data[kind] = {}
-        data[kind][class_name] = result
-
-        # Escribir el contenido actualizado de nuevo en el archivo JSON
-        with open(file_path, 'w', encoding="utf-8") as file:
-            json.dump(data, file, indent=4)
+        return data
 
     def _delete_json(self) -> None:
         """

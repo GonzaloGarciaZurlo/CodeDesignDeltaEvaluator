@@ -11,18 +11,18 @@ package "RelationshipDB" <<Database>> {
 }
 
 package "MetricsDB" <<Database>> {
-
 }
 
 [Src] -> [Puml Generator] : RE-Tool 1
 [Puml Generator] -> [file.puml] : 2
 [file.puml] -> [Parser] : 3
-[Parser] -> [Observer] : 4
-[Observer] --> [RelationshipDB] : 5
-[Result Queries] --> [RelationshipDB] : queries 6
-[Result Queries] -> [Result Observer] : 7
-[Result Observer] -> [MetricsDB] : 8
-[MetricsDB] <-- [Metrics Evaluator] : 9
-[Metrics Evaluator] --> [Veredict] : 10
+[Parser] -> [Filter Parser] : 4
+[Filter Parser] -> [Observer] : 5
+[Observer] --> [RelationshipDB] : 6
+[Result Queries] --> [RelationshipDB] : queries 7
+[Result Queries] -> [Result Observer] : 8
+[Result Observer] -> [MetricsDB] : 9
+[MetricsDB] <-- [Metrics Evaluator] : 10
+[Metrics Evaluator] --> [Veredict] : 11
 
 @enduml

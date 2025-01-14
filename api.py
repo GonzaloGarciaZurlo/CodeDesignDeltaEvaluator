@@ -1,5 +1,10 @@
 """
 API for CodeDesignDeltaEvaluator
+In this module we define the API for CodeDesignDeltaEvaluator. 
+This API is used to register the different components of the system, such as generators, parsers,
+observers, and queries. 
+The API also provides a method to load modules from a directory,
+which can be used to load custom components from external modules.
 """
 from abc import ABC, abstractmethod
 import importlib
@@ -7,6 +12,7 @@ from types import ModuleType
 from typing import Type, Optional
 from importlib.machinery import ModuleSpec
 import os
+import sys
 from overrides import override
 from puml_generator import PumlGenerator
 from puml_parser import PumlParser
@@ -121,7 +127,7 @@ class CddeAPI(CddeAPIAbstract):
                               name}' at path '{path}'")
 
         rule_module: ModuleType = importlib.util.module_from_spec(spec)
-        os.sys.modules[unique_name] = rule_module
+        sys.modules[unique_name] = rule_module
 
         if spec.loader is None:
             raise ImportError(f"Loader is not defined for module '{name}'")

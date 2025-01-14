@@ -1,14 +1,14 @@
 """
 This module contains functions for handling database queries.
 """
-import ast
-import operator
 from neo4j import GraphDatabase, Transaction
 from overrides import override
+import yaml
 from result_queries import ResultQueries
 from api import CddeAPI
+from eval import safe_eval
 from result_observer import ResultObserver
-import yaml
+
 
 QUERIES_WITHOUT_PARAMETERS = [
     'before-metrics', 'after-metrics', 'general-metrics']
@@ -27,10 +27,10 @@ class QueriesCypher(ResultQueries):
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
-        self.packages = []
-        self.queries = {}
-        self.derivate_queries = {}
-        self.results = {}
+        self.packages: list = []
+        self.queries: dict = {}
+        self.derivate_queries: dict = {}
+        self.results: dict = {}
 
     @override
     def resolve_query(self) -> None:
@@ -131,6 +131,7 @@ class QueriesCypher(ResultQueries):
         with self.driver.session() as session:
             result = session.read_transaction(
                 lambda tx: tx.run(self.queries[kind][query], package_name=parameter).single()[0])
+
             self.results[parameter + query] = result
             self.observer.on_result_metric_found(
                 result, kind, parameter + '_' + query)
@@ -143,8 +144,7 @@ class QueriesCypher(ResultQueries):
             if kind == 'derivate_metrics':
                 self._execute_derivate_metrics(kind)
             elif kind == 'per-package-derivate-metrics':
-                for package in self.packages:
-                    self.per_packages_derivate_metrics(kind, package)
+                self.per_packages_derivate_metrics(kind)
 
     def _execute_derivate_metrics(self, kind: str) -> None:
         """
@@ -155,29 +155,31 @@ class QueriesCypher(ResultQueries):
             result = safe_eval(formula, self.results)
             self.results[metric] = result
             self.observer.on_result_metric_found(
-                result, kind, metric)
+                int(result), kind, metric)
 
-    def per_packages_derivate_metrics(self, kind: str, package: str) -> None:
+    def per_packages_derivate_metrics(self, kind: str) -> None:
         """
         Executes all derivate metrics for a package.
         """
         for metric in self.derivate_queries[kind]:
             formula = self.derivate_queries[kind][metric]
-            for package in self.packages:
-                self.results['package'] = package
-                if 'before' in metric and 'before' in package:
+            for p in self.packages:
+                self.results['package'] = p
+                if 'before' in metric and 'before' in p:
                     result = safe_eval(formula, self.results)
                     self.observer.on_result_metric_found(
-                        result, kind, package + '_' + metric)
-                elif 'after' in metric and 'after' in package:
+                        result, kind, p + '_' + metric)
+                elif 'after' in metric and 'after' in p:
                     result = safe_eval(formula, self.results)
                     self.observer.on_result_metric_found(
-                        result, kind, package + '_' + metric)
+                        result, kind, p + '_' + metric)
                 elif 'after' not in metric and 'before' not in metric:
                     result = safe_eval(formula, self.results)
                     self.observer.on_result_metric_found(
-                        result, kind, package + '_' + metric)
-                self.results[package + metric] = result
+                        result, kind, p + '_' + metric)
+                else:
+                    result = 0
+                self.results[p + metric] = result
 
     def get_all_classes(self) -> list:
         """
@@ -238,60 +240,8 @@ class QueriesCypher(ResultQueries):
         result = tx.run(query, class_name=class_name).single()[0]
         if result not in self.packages:
             self.packages.append(result)
-
-
-def concat_left(a, b):
-    return str(a) + str(b)
-
-
-_operations = {
-    ast.Add: operator.add,
-    ast.Sub: operator.sub,
-    ast.Mult: operator.mul,
-    ast.Div: operator.truediv,
-    ast.Pow: operator.pow,
-    '.': concat_left,
-    'abs': abs
-}
-
-
-def _safe_eval(node, variables, functions):
-    if isinstance(node, ast.Constant):
-        return node.n
-    elif isinstance(node, ast.Name):
-        return variables[node.id]  # KeyError -> Unsafe variable
-    elif isinstance(node, ast.BinOp):
-        op = _operations[node.op.__class__]  # KeyError -> Unsafe operation
-        left = _safe_eval(node.left, variables, functions)
-        right = _safe_eval(node.right, variables, functions)
-        if isinstance(node.op, ast.Pow):
-            assert right < 100
-        return op(left, right)
-    elif isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == 'abs':
-        # Manejar la función abs
-        arg = _safe_eval(node.args[0], variables, functions)
-        return abs(arg)
-    elif isinstance(node, ast.Call):
-        assert not node.keywords and not node.starargs and not node.kwargs
-        assert isinstance(node.func, ast.Name), 'Unsafe function derivation'
-        func = functions[node.func.id]  # KeyError -> Unsafe function
-        args = [_safe_eval(arg, variables, functions) for arg in node.args]
-        return func(*args)
-    elif isinstance(node, ast.Attribute):
-        # Manejo del operador de concatenación (A.B)
-        left = _safe_eval(node.value, variables, functions)
-        right = node.attr
-        result = _operations['.'](left, right)
-        if result in variables:
-            return variables[result]
-        return result
-
-    assert False, 'Unsafe operation'
-
-
-def safe_eval(expr, variables={}, functions={}):
-    node = ast.parse(expr, '<string>', 'eval').body
-    return _safe_eval(node, variables, functions)
+        if self.packages == [None]:
+            self.packages = []
 
 
 def init_module(api: CddeAPI) -> None:
