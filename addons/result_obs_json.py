@@ -12,7 +12,7 @@ from result_observer import ResultObserver
 
 class ResultJson(ResultObserver):
     """
-    Observer that saves the information it receives in a Json file
+    Observer that saves the information it receives in a Json file.
     """
     @override
     def open_observer(self) -> None:

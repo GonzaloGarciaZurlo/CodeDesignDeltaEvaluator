@@ -14,7 +14,7 @@ class Filter(Observer):
     Observer class that filters the information it receives.
     Contains the methods to filter the classes, relationships and packages.
     Coordinates the creation of its subclasses
-    and calls their corresponding methods to filter what is necessary
+    and calls their corresponding methods to filter what is necessary.
     """
 
     def __init__(self, observer_to_send: Observer,
@@ -32,13 +32,13 @@ class Filter(Observer):
     def open_observer(self) -> None:
         """
         Event triggered when the observer is opened
-        This method creates the childs filters
+        This method creates the childs filters.
         """
 
     @override
     def close_observer(self) -> None:
         """
-        Event triggered when the observer is closed
+        Event triggered when the observer is closed.
         """
         class_filter = ClassFilter(
             self.classes, self.observer_to_send)
@@ -59,28 +59,28 @@ class Filter(Observer):
     @override
     def on_class_found(self, class_name: str, kind, label: str) -> None:
         """
-        Create a list with the class found
+        Create a list with the class found.
         """
         self.classes.append([class_name, kind, label])
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: str, label: str) -> None:
         """
-        Create a list with the relationship found
+        Create a list with the relationship found.
         """
         self.relationships.append([class1, class2, relation, label])
 
     @override
     def on_package_found(self, package_name: str, classes: list,  label: str) -> None:
         """
-        Create a list with the package found
+        Create a list with the package found.
         """
         self.packages.append([package_name, classes, label])
 
 
 class ClassFilter(Filter):
     """
-    Filter the classes 
+    Filter the classes.
     """
 
     def __init__(self, classes: list, observer_to_send: Observer) -> None:
@@ -89,10 +89,10 @@ class ClassFilter(Filter):
     def filter(self) -> None:
         """
         Filter the classes:
-        - Removing duplicates
+        - Removing duplicates.
         - If any class perteneces to a namespace or package, 
-        the namespace or package is removed from the class name
-        - Removing special characters of the class names
+        the namespace or package is removed from the class name.
+        - Removing special characters of the class names.
         """
         self._delete_ns_or_pkg()
         self._remove_special_characters()
@@ -100,7 +100,7 @@ class ClassFilter(Filter):
 
     def _delete_ns_or_pkg(self) -> None:
         """
-        Delete the namespace or package of the class names
+        Delete the namespace or package of the class names.
         """
         for i, c in enumerate(self.classes):
             class_name, _, _ = c
@@ -108,13 +108,13 @@ class ClassFilter(Filter):
 
     def __delete_before_last_dot(self, class_name: str) -> str:
         """
-        Delete the string before the last dot
+        Delete the string before the last dot.
         """
         return class_name.split('.')[-1] if '.' in class_name else class_name
 
     def _remove_special_characters(self) -> None:
         """
-        Remove special characters from the class name
+        Remove special characters from the class name.
         """
         for i, c in enumerate(self.classes):
             self.classes[i][0] = re.sub(r'[^A-Za-z0-9\s]', '', c[0])
@@ -135,7 +135,7 @@ class ClassFilter(Filter):
 
     def send(self) -> None:
         """
-        Send the filtered classes to the next observer
+        Send the filtered classes to the next observer.
         """
         for classes in self.classes:
             class_name, kind, label = classes
@@ -144,7 +144,7 @@ class ClassFilter(Filter):
 
 class RelationshipFilter(Filter):
     """
-    Class that filters the relationships
+    Class that filters the relationships.
     """
 
     def __init__(self, relationships: list, observer_to_send: Observer) -> None:
@@ -154,15 +154,15 @@ class RelationshipFilter(Filter):
         """
         Filter the relationships
         - If any class perteneces to a namespace or package, 
-        the namespace or package is removed from the class name
-        - Removing special characters of the class names
+        the namespace or package is removed from the class name.
+        - Removing special characters of the class names.
         """
         self._delete_ns_or_pkg()
         self._remove_special_characters()
 
     def _delete_ns_or_pkg(self) -> None:
         """
-        Delete the namespace or package of the class names
+        Delete the namespace or package of the class names.
         """
         for i, relation in enumerate(self.relationships):
             class1, class2, _, _ = relation
@@ -171,13 +171,13 @@ class RelationshipFilter(Filter):
 
     def __delete_before_last_dot(self, class_name: str) -> str:
         """
-        Delete the string before the last dot
+        Delete the string before the last dot.
         """
         return class_name.split('.')[-1] if '.' in class_name else class_name
 
     def _remove_special_characters(self) -> None:
         """
-        Remove special characters from the class name
+        Remove special characters from the class name.
         """
         for i, relation in enumerate(self.relationships):
             self.relationships[i][0] = re.sub(
@@ -187,7 +187,7 @@ class RelationshipFilter(Filter):
 
     def send(self) -> None:
         """
-        Send the filtered relationships to the next observer
+        Send the filtered relationships to the next observer.
         """
         for relationship in self.relationships:
             class1, class2, relation, label = relationship
@@ -197,7 +197,7 @@ class RelationshipFilter(Filter):
 
 class PackageFilter(Filter):
     """
-    Class that filters the packages
+    Class that filters the packages.
     """
 
     def __init__(self, packages: list, observer_to_send: Observer) -> None:
@@ -205,7 +205,7 @@ class PackageFilter(Filter):
 
     def filter(self) -> None:
         """
-        Filter the classes in the packages
+        Filter the classes in the packages.
         """
         self._delete_ns_or_pkg()
         self._remove_special_characters()
@@ -213,7 +213,7 @@ class PackageFilter(Filter):
 
     def _delete_ns_or_pkg(self) -> None:
         """
-        Delete the namespace or package of the class names
+        Delete the namespace or package of the class names.
         """
         for i, package in enumerate(self.packages):
             _, classes, _ = package
@@ -222,13 +222,13 @@ class PackageFilter(Filter):
 
     def __delete_before_last_dot(self, class_name: str) -> str:
         """
-        Delete the string before the last dot
+        Delete the string before the last dot.
         """
         return class_name.split('.')[-1] if '.' in class_name else class_name
 
     def _remove_special_characters(self) -> None:
         """
-        Remove special characters from the class name
+        Remove special characters from the class name.
         """
         for i, package in enumerate(self.packages):
             for j, c in enumerate(package[1]):
@@ -259,7 +259,7 @@ class PackageFilter(Filter):
 
     def send(self) -> None:
         """
-        Send the filtered packages to the next observer
+        Send the filtered packages to the next observer.
         """
         for package in self.packages:
             package_name, classes, label = package

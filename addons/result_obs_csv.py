@@ -10,7 +10,7 @@ from result_observer import ResultObserver
 
 class ResultCSV(ResultObserver):
     """
-    Observer that saves the information it receives in a CSV file
+    Observer that saves the information it receives in a CSV file.
     """
     @override
     def open_observer(self) -> None:

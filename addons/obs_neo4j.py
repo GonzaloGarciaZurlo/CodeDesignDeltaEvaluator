@@ -28,6 +28,8 @@ class Neo4j(Observer):
                          str, relation: str, label: str) -> None:
         """
         Query to create a relationship between two nodes.
+        If the nodes do not exist, they are created, 
+        with the package attribute set to 'library'.
         """
         class1 = label + class1
         class2 = label + class2

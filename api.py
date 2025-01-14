@@ -1,5 +1,10 @@
 """
 API for CodeDesignDeltaEvaluator
+In this module we define the API for CodeDesignDeltaEvaluator. 
+This API is used to register the different components of the system, such as generators, parsers,
+observers, and queries. 
+The API also provides a method to load modules from a directory,
+which can be used to load custom components from external modules.
 """
 from abc import ABC, abstractmethod
 import importlib

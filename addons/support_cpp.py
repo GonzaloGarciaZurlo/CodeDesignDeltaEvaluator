@@ -32,7 +32,7 @@ class CppPumlGenerator(PumlGenerator):
 
     def _hpp2plantuml(self, directory: str) -> str:
         """
-        run hpp2plantuml
+        Run hpp2plantuml.
         """
         file_path = os.path.join(directory, 'UML.plantuml')
         subprocess.run(['hpp2plantuml', '-o', file_path,

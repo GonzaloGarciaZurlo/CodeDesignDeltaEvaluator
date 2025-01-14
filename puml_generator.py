@@ -17,7 +17,7 @@ class PumlGenerator(ABC):
 
     def delete_plantuml(self, uml_path: str) -> None:
         """
-        delete the plantuml file
+        Delete the plantuml file.
         """
         try:
             subprocess.run(['rm', '-rf', uml_path], check=True)

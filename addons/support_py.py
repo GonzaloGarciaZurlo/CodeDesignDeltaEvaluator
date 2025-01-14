@@ -30,7 +30,7 @@ class PyPumlGenerator(PumlGenerator):
 
     def __ends_with_slash(self, directory: str) -> str:
         """
-        Check if the directory ends with a slash
+        Check if the directory ends with a slash.
         """
         if directory[-1] != '/':
             directory += '/'
@@ -38,7 +38,7 @@ class PyPumlGenerator(PumlGenerator):
 
     def _py_files(self, directory: str) -> list:
         """
-        Get the python files in the directory and return them as a string
+        Get the python files in the directory and return them as a string.
         """
         files = []
         for root, _, files_in_dir in os.walk(directory):
@@ -47,7 +47,7 @@ class PyPumlGenerator(PumlGenerator):
 
     def _search_py_files(self, files: list[str], root: str) -> list:
         """
-        Search for python files in the list of files
+        Search for python files in the list of files.
         """
         py_files = []
         for file in files:
@@ -57,7 +57,7 @@ class PyPumlGenerator(PumlGenerator):
 
     def _pyreverse(self, directory: str) -> str:
         """
-        run pyreverse
+        Run pyreverse
         """
         files = self._py_files(directory)
         subprocess.run(['pyreverse', '-o', 'plantuml', '-p',
@@ -74,6 +74,6 @@ class PyPumlGenerator(PumlGenerator):
 
 def init_module(api: CddeAPI) -> None:
     """
-    Initialize the module of the API
+    Initialize the module of the API.
     """
     api.register_puml_generator('.py', PyPumlGenerator)

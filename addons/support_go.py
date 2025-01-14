@@ -10,7 +10,7 @@ from puml_generator import PumlGenerator
 
 class GoPumlGenerator(PumlGenerator):
     """
-    PlantUML generator for go files.
+    PlantUML generator for Go files.
     """
     @override
     def generate_plantuml(self, directory: str) -> str:
@@ -32,7 +32,7 @@ class GoPumlGenerator(PumlGenerator):
 
     def _goplantuml(self, directory: str) -> str:
         """
-        run goplantuml
+        Run goplantuml
         """
         file_path = directory + 'UML.plantuml'
         with open(file_path, 'w', encoding="utf-8") as output_file:

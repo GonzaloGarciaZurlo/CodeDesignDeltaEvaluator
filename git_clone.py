@@ -39,7 +39,8 @@ class GitClone:
 
     def _create_dirs(self) -> None:
         """
-        Creates the before and after directories.
+        Creates the before and after directories,
+        using mktemp to create a temporary directory.
         """
         os.makedirs(self.work_dir, exist_ok=True)
         self.before_dir = subprocess.run(
@@ -51,14 +52,16 @@ class GitClone:
 
     def _clone_repo(self) -> None:
         """
-        Clones the repo and saves the before directory.
+        Clones the repository into the repo directory,
+        using the gitpython library.
         """
         os.makedirs(self.repo_dir, exist_ok=True)
         self.repo = Repo.clone_from(self.repo_url, self.repo_dir)
 
     def _before_dir(self) -> None:
         """
-        Creates the before directory snapshot using git archive.
+        Move repo snapshot using fetch and checkout.
+        Later, it copies the repo to the before directory.
         """
         os.chdir(self.repo_dir)
         self.repo.git.fetch("origin", self.branch)
@@ -67,7 +70,8 @@ class GitClone:
 
     def _after_dir(self) -> None:
         """
-        Creates the after directory snapshot using git archive.
+        Move repo snapshot using fetch and checkout.
+        Later, it copies the repo to the after directory.
         """
         os.chdir(self.repo_dir)
         self.repo.git.fetch(

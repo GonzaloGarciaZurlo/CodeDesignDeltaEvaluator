@@ -1,6 +1,6 @@
 """
-This module contains the composable observer, 
-Selected from 1 or more of the possible observers
+This module contains the ResultComposable observer, 
+Selected from 1 or more of the possible observers.
 """
 from typing import List
 from overrides import override
@@ -10,7 +10,7 @@ from result_observer import ResultObserver
 
 class ResultComposable(ResultObserver):
     """
-    Selected from 1 or more of the possible observers
+    Selected from 1 or more of the possible observers.
     """
 
     def __init__(self, observers: List[ResultObserver]) -> None:
@@ -35,7 +35,7 @@ class ResultComposable(ResultObserver):
     @override
     def open_observer(self) -> None:
         """
-        Event triggered when the observer is opened
+        Event triggered when the observer is opened.
         """
         for observer in self.observers:
             observer.open_observer()
@@ -43,7 +43,7 @@ class ResultComposable(ResultObserver):
     @override
     def close_observer(self) -> None:
         """
-        Event triggered when the observer is closed
+        Event triggered when the observer is closed.
         """
         for observer in self.observers:
             observer.close_observer()
