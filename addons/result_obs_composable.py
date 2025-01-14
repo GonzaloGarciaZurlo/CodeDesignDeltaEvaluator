@@ -17,7 +17,7 @@ class ResultComposable(ResultObserver):
         self.observers = observers
 
     @override
-    def on_result_metric_found(self, result: str, kind: str, class_name) -> None:
+    def on_result_metric_found(self, result: int, kind: str, class_name) -> None:
         """
         Notifies the observers that a result was found.
         """

@@ -7,6 +7,7 @@ from types import ModuleType
 from typing import Type, Optional
 from importlib.machinery import ModuleSpec
 import os
+import sys
 from overrides import override
 from puml_generator import PumlGenerator
 from puml_parser import PumlParser
@@ -121,7 +122,7 @@ class CddeAPI(CddeAPIAbstract):
                               name}' at path '{path}'")
 
         rule_module: ModuleType = importlib.util.module_from_spec(spec)
-        os.sys.modules[unique_name] = rule_module
+        sys.modules[unique_name] = rule_module
 
         if spec.loader is None:
             raise ImportError(f"Loader is not defined for module '{name}'")

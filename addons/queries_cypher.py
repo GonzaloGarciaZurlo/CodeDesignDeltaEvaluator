@@ -155,7 +155,7 @@ class QueriesCypher(ResultQueries):
             result = safe_eval(formula, self.results)
             self.results[metric] = result
             self.observer.on_result_metric_found(
-                result, kind, metric)
+                int(result), kind, metric)
 
     def per_packages_derivate_metrics(self, kind: str) -> None:
         """
@@ -187,9 +187,9 @@ class QueriesCypher(ResultQueries):
         """
         with self.driver.session() as session:
             result = session.read_transaction(self._get_all_classes)
-            self.observer.on_result_data_found(str(result), "classes")
+            self.observer.on_result_data_found(result, "classes")
             self.observer.on_result_metric_found(
-                str(len(result)), "classes", "total")
+                len(result), "classes", "total")
         return result
 
     def _get_all_classes(self, tx: Transaction) -> list:

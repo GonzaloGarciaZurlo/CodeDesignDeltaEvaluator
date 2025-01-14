@@ -27,7 +27,7 @@ _operations = {
     'abs': abs
 }
 
-EvalResult = Union[int, float, complex, Any]
+EvalResult = Union[int, float, Any]
 
 
 def safe_eval(expr: Any, variables: dict = {}, functions: dict = {}) -> EvalResult:

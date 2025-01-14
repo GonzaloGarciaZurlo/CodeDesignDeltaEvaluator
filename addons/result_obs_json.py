@@ -31,7 +31,7 @@ class ResultJson(ResultObserver):
         # self._delete_json()
 
     @override
-    def on_result_metric_found(self, result: str, kind: str, class_name) -> None:
+    def on_result_metric_found(self, result: int, kind: str, class_name) -> None:
         """
         Save the result found in the Json file.
         with the format: kind, result, without spaces.
@@ -52,7 +52,7 @@ class ResultJson(ResultObserver):
         subprocess.run("rm -rf results.json && touch results.json",
                        shell=True, check=True)
 
-    def _write_json(self, result: str, kind: str, class_name: str) -> None:
+    def _write_json(self, result: int | str, kind: str, class_name: str) -> None:
         """
         Write the result in the Json file.
         """
