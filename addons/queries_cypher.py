@@ -187,7 +187,7 @@ class QueriesCypher(ResultQueries):
         """
         with self.driver.session() as session:
             result = session.read_transaction(self._get_all_classes)
-            self.observer.on_result_data_found(result, "classes")
+            self.observer.on_result_data_found(str(result), "classes")
             self.observer.on_result_metric_found(
                 len(result), "classes", "total")
         return result

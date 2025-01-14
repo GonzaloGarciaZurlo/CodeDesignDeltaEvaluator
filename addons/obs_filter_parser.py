@@ -20,9 +20,13 @@ class Filter(Observer):
     def __init__(self, observer_to_send: Observer,
                  classes=None, relationships=None, packages=None) -> None:
         self.observer_to_send: Final = observer_to_send
-        self.classes: list = classes if classes is not None else []
-        self.relationships: list = relationships if relationships is not None else []
-        self.packages: list = packages if packages is not None else []
+        self.classes: list = self._default_list(classes)
+        self.relationships: list = self._default_list(relationships)
+        self.packages: list = self._default_list(packages)
+
+    @staticmethod
+    def _default_list(value):
+        return value if value is not None else []
 
     @override
     def open_observer(self) -> None:
@@ -100,8 +104,13 @@ class ClassFilter(Filter):
         """
         for i, c in enumerate(self.classes):
             class_name, _, _ = c
-            if '.' in class_name:
-                self.classes[i][0] = class_name.split('.')[-1]
+            self.classes[i][0] = self.__delete_before_last_dot(class_name)
+
+    def __delete_before_last_dot(self, class_name: str) -> str:
+        """
+        Delete the string before the last dot
+        """
+        return class_name.split('.')[-1] if '.' in class_name else class_name
 
     def _remove_special_characters(self) -> None:
         """
@@ -157,10 +166,14 @@ class RelationshipFilter(Filter):
         """
         for i, relation in enumerate(self.relationships):
             class1, class2, _, _ = relation
-            if '.' in class1:
-                self.relationships[i][0] = class1.split('.')[-1]
-            if '.' in class2:
-                self.relationships[i][1] = class2.split('.')[-1]
+            self.relationships[i][0] = self.__delete_before_last_dot(class1)
+            self.relationships[i][1] = self.__delete_before_last_dot(class2)
+
+    def __delete_before_last_dot(self, class_name: str) -> str:
+        """
+        Delete the string before the last dot
+        """
+        return class_name.split('.')[-1] if '.' in class_name else class_name
 
     def _remove_special_characters(self) -> None:
         """
@@ -205,8 +218,13 @@ class PackageFilter(Filter):
         for i, package in enumerate(self.packages):
             _, classes, _ = package
             for j, c in enumerate(classes):
-                if '.' in c:
-                    self.packages[i][1][j] = c.split('.')[-1]
+                self.packages[i][1][j] = self.__delete_before_last_dot(c)
+
+    def __delete_before_last_dot(self, class_name: str) -> str:
+        """
+        Delete the string before the last dot
+        """
+        return class_name.split('.')[-1] if '.' in class_name else class_name
 
     def _remove_special_characters(self) -> None:
         """
@@ -222,15 +240,22 @@ class PackageFilter(Filter):
         """
         for i, package in enumerate(self.packages):
             _, classes, _ = package
-            seen = set()
-            filtered_classes = []
-
-            for class_name in classes:
-                if class_name not in seen:
-                    seen.add(class_name)
-                    filtered_classes.append(class_name)
-
+            filtered_classes = self.__list_without_duplicates(classes)
             self.packages[i][1] = filtered_classes
+
+    def __list_without_duplicates(self, classes: list) -> list:
+        """
+        Remove duplicate class names, keeping only the first occurrence.
+        """
+        seen = set()
+        filtered_classes = []
+
+        for class_name in classes:
+            if class_name not in seen:
+                seen.add(class_name)
+                filtered_classes.append(class_name)
+
+        return filtered_classes
 
     def send(self) -> None:
         """

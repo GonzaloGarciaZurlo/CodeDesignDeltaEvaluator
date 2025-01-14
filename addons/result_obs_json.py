@@ -58,21 +58,25 @@ class ResultJson(ResultObserver):
         """
         file_path = 'results.json'
 
-        # Leer el contenido actual del archivo JSON si existe y no está vacío
+        data = self._open_json(file_path)
+
+        if kind not in data:
+            data[kind] = {}
+        data[kind][class_name] = result
+
+        with open(file_path, 'w', encoding="utf-8") as file:
+            json.dump(data, file, indent=4)
+
+    def _open_json(self, file_path: str) -> dict:
+        """
+        Open the json file.
+        """
         if os.path.exists(file_path) and os.path.getsize(file_path) > 0:
             with open(file_path, 'r', encoding="utf-8") as file:
                 data = json.load(file)
         else:
             data = {}
-
-        # Actualizar el contenido con los nuevos datos
-        if kind not in data:
-            data[kind] = {}
-        data[kind][class_name] = result
-
-        # Escribir el contenido actualizado de nuevo en el archivo JSON
-        with open(file_path, 'w', encoding="utf-8") as file:
-            json.dump(data, file, indent=4)
+        return data
 
     def _delete_json(self) -> None:
         """

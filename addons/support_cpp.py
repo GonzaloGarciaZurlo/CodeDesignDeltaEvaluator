@@ -17,21 +17,27 @@ class CppPumlGenerator(PumlGenerator):
         """
         Generate the PlantUML file.
         """
+        self._check_directory(directory)
+        return self._hpp2plantuml(directory)
+
+    def _check_directory(self, directory: str) -> None:
+        """
+        Check if the directory exists.
+        """
         if not os.path.isdir(directory):
-            return "Error: The specified directory does not exist."
+            raise ValueError("The specified directory does not exist.")
+
         if directory[-1] != '/':
             directory += '/'
-        return _hpp2plantuml(directory)
 
-
-def _hpp2plantuml(directory: str) -> str:
-    """
-    run hpp2plantuml
-    """
-    file_path = os.path.join(directory, 'UML.plantuml')
-    subprocess.run(['hpp2plantuml', '-o', file_path,
-                   '-i', directory + '**/*.hpp'], check=True)
-    return file_path
+    def _hpp2plantuml(self, directory: str) -> str:
+        """
+        run hpp2plantuml
+        """
+        file_path = os.path.join(directory, 'UML.plantuml')
+        subprocess.run(['hpp2plantuml', '-o', file_path,
+                        '-i', directory + '**/*.hpp'], check=True)
+        return file_path
 
 
 def init_module(api: CddeAPI) -> None:
