@@ -16,23 +16,24 @@ class Neo4j(Observer):
         self.uri = "bolt://localhost:7687"
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
+        self.mode = None
 
-    def _create_class(self, tx: Transaction, name: str, kind: str, label: str) -> None:
+    def _create_class(self, tx: Transaction, name: str, kind: str) -> None:
         """
         Query to create a node with the class name.
         """
-        name = label + name
+        name = self.mode + name
         tx.run(f"CREATE (p:{kind} {{name: $name}})", name=name)
 
     def _create_relation(self, tx: Transaction, class1: str, class2:
-                         str, relation: str, label: str) -> None:
+                         str, relation: str) -> None:
         """
         Query to create a relationship between two nodes.
         If the nodes do not exist, they are created, 
         with the package attribute set to 'library'.
         """
-        class1 = label + class1
-        class2 = label + class2
+        class1 = self.mode + class1
+        class2 = self.mode + class2
         query = (
             f"MATCH (a), (b) "
             f"WHERE a.name = $class1 AND b.name = $class2 "
@@ -67,6 +68,13 @@ class Neo4j(Observer):
         self.driver.close()
 
     @override
+    def set_mode(self, mode: str) -> None:
+        """
+        Set the mode of the observer.
+        """
+        self.mode = mode
+
+    @override
     def open_observer(self) -> None:
         """
         Event triggered when the observer is opened.
@@ -80,31 +88,31 @@ class Neo4j(Observer):
         self.close()
 
     @override
-    def on_class_found(self, class_name: str, kind: str, label: str) -> None:
+    def on_class_found(self, class_name: str, kind: str) -> None:
         """
         Create a node with the class name.
         """
         with self.driver.session() as session:
-            session.execute_write(self._create_class, class_name, kind, label)
+            session.execute_write(self._create_class, class_name, kind)
 
     @override
-    def on_relation_found(self, class1: str, class2: str, relation: str, label: str) -> None:
+    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
         """
         Create a relationship between two nodes.
         """
         with self.driver.session() as session:
             session.execute_write(self._create_relation,
-                                  class1, class2, relation, label)
+                                  class1, class2, relation)
 
     @override
-    def on_package_found(self, package_name: str, classes: list,  label: str) -> None:
+    def on_package_found(self, package_name: str, classes: list) -> None:
         """
         Set the package name to the classes.
         """
-        package_name = label + '_' + package_name
+        package_name = self.mode + '_' + package_name
         with self.driver.session() as session:
             for class_name in classes:
-                class_name = label + class_name
+                class_name = self.mode + class_name
                 query = (
                     "MATCH (a) "
                     "WHERE a.name = $class_name "

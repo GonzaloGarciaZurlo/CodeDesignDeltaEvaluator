@@ -46,10 +46,11 @@ afterFunction_afferent_count,per-class-metrics,0
 afterFunction_efferent_count,per-class-metrics,0
 afterFunction_instability_class,per-class-metrics,0
 Data,composition,afterLineStringBuilder --> afterBuilder
+Data,composition,afterLineStringBuilder --> afterBuilder
 afterLineStringBuilder_abstracts_deps_count,per-class-metrics,0
 afterLineStringBuilder_concrete_deps_count,per-class-metrics,0
 afterLineStringBuilder_afferent_count,per-class-metrics,0
-afterLineStringBuilder_efferent_count,per-class-metrics,1
+afterLineStringBuilder_efferent_count,per-class-metrics,2
 afterLineStringBuilder_instability_class,per-class-metrics,1.0
 afterRenderingOptions_abstracts_deps_count,per-class-metrics,0
 afterRenderingOptions_concrete_deps_count,per-class-metrics,0
@@ -73,31 +74,34 @@ afterTest_efferent_count,per-class-metrics,0
 afterTest_instability_class,per-class-metrics,0
 afterTestInterfaceAsField_abstracts_deps_count,per-class-metrics,0
 afterTestInterfaceAsField_concrete_deps_count,per-class-metrics,0
-afterTestInterfaceAsField_afferent_count,per-class-metrics,1
+afterTestInterfaceAsField_afferent_count,per-class-metrics,2
 afterTestInterfaceAsField_efferent_count,per-class-metrics,0
 afterTestInterfaceAsField_instability_class,per-class-metrics,0.0
 Data,composition,aftertest2 --> afterTestInterfaceAsField
+Data,composition,aftertest2 --> afterTestInterfaceAsField
 aftertest2_abstracts_deps_count,per-class-metrics,0
 aftertest2_concrete_deps_count,per-class-metrics,0
-aftertest2_afferent_count,per-class-metrics,1
-aftertest2_efferent_count,per-class-metrics,1
+aftertest2_afferent_count,per-class-metrics,2
+aftertest2_efferent_count,per-class-metrics,2
 aftertest2_instability_class,per-class-metrics,0.5
+Data,inheritance,afterSubfolder2 --> afterSubfolderInterface
 Data,inheritance,afterSubfolder2 --> afterSubfolderInterface
 afterSubfolder2_abstracts_deps_count,per-class-metrics,0
 afterSubfolder2_concrete_deps_count,per-class-metrics,0
 afterSubfolder2_afferent_count,per-class-metrics,0
-afterSubfolder2_efferent_count,per-class-metrics,1
+afterSubfolder2_efferent_count,per-class-metrics,2
 afterSubfolder2_instability_class,per-class-metrics,1.0
 afterSubfolderInterface_abstracts_deps_count,per-class-metrics,0
 afterSubfolderInterface_concrete_deps_count,per-class-metrics,0
-afterSubfolderInterface_afferent_count,per-class-metrics,1
+afterSubfolderInterface_afferent_count,per-class-metrics,2
 afterSubfolderInterface_efferent_count,per-class-metrics,0
 afterSubfolderInterface_instability_class,per-class-metrics,0.0
+Data,inheritance,aftertest --> aftertest2
 Data,inheritance,aftertest --> aftertest2
 aftertest_abstracts_deps_count,per-class-metrics,0
 aftertest_concrete_deps_count,per-class-metrics,0
 aftertest_afferent_count,per-class-metrics,0
-aftertest_efferent_count,per-class-metrics,1
+aftertest_efferent_count,per-class-metrics,2
 aftertest_instability_class,per-class-metrics,1.0
 afterTestComplicatedAlias_abstracts_deps_count,per-class-metrics,0
 afterTestComplicatedAlias_concrete_deps_count,per-class-metrics,0
@@ -116,12 +120,12 @@ afterfontcolorbluefuncfontstringsBuilderbool_efferent_count,per-class-metrics,0
 afterfontcolorbluefuncfontstringsBuilderbool_instability_class,per-class-metrics,0
 afterDuration_abstracts_deps_count,per-class-metrics,0
 afterDuration_concrete_deps_count,per-class-metrics,0
-afterDuration_afferent_count,per-class-metrics,1
+afterDuration_afferent_count,per-class-metrics,2
 afterDuration_efferent_count,per-class-metrics,0
 afterDuration_instability_class,per-class-metrics,0.0
 afterBuilder_abstracts_deps_count,per-class-metrics,0
 afterBuilder_concrete_deps_count,per-class-metrics,0
-afterBuilder_afferent_count,per-class-metrics,1
+afterBuilder_afferent_count,per-class-metrics,2
 afterBuilder_efferent_count,per-class-metrics,0
 afterBuilder_instability_class,per-class-metrics,0.0
 beforeAbstractInterface_abstracts_deps_count,per-class-metrics,0
@@ -278,19 +282,21 @@ beforeBuilder_efferent_count,per-class-metrics,0
 beforeBuilder_instability_class,per-class-metrics,0.0
 afterAbstractInterface_abstracts_deps_count,per-class-metrics,0
 afterAbstractInterface_concrete_deps_count,per-class-metrics,0
-afterAbstractInterface_afferent_count,per-class-metrics,1
+afterAbstractInterface_afferent_count,per-class-metrics,2
 afterAbstractInterface_efferent_count,per-class-metrics,0
 afterAbstractInterface_instability_class,per-class-metrics,0.0
 Data,composition,afterImplementsAbstractInterface --> afterAliasOfInt
 Data,inheritance,afterImplementsAbstractInterface --> afterAbstractInterface
+Data,composition,afterImplementsAbstractInterface --> afterAliasOfInt
+Data,inheritance,afterImplementsAbstractInterface --> afterAbstractInterface
 afterImplementsAbstractInterface_abstracts_deps_count,per-class-metrics,0
-afterImplementsAbstractInterface_concrete_deps_count,per-class-metrics,1
+afterImplementsAbstractInterface_concrete_deps_count,per-class-metrics,2
 afterImplementsAbstractInterface_afferent_count,per-class-metrics,0
-afterImplementsAbstractInterface_efferent_count,per-class-metrics,2
+afterImplementsAbstractInterface_efferent_count,per-class-metrics,4
 afterImplementsAbstractInterface_instability_class,per-class-metrics,1.0
 afterAliasOfInt_abstracts_deps_count,per-class-metrics,0
 afterAliasOfInt_concrete_deps_count,per-class-metrics,0
-afterAliasOfInt_afferent_count,per-class-metrics,1
+afterAliasOfInt_afferent_count,per-class-metrics,2
 afterAliasOfInt_efferent_count,per-class-metrics,0
 afterAliasOfInt_instability_class,per-class-metrics,0.0
 afterRenderingOptionSlice_abstracts_deps_count,per-class-metrics,0
@@ -304,10 +310,11 @@ afterparserRenderingOption_afferent_count,per-class-metrics,0
 afterparserRenderingOption_efferent_count,per-class-metrics,0
 afterparserRenderingOption_instability_class,per-class-metrics,0
 Data,composition,afterMyType --> afterDuration
+Data,composition,afterMyType --> afterDuration
 afterMyType_abstracts_deps_count,per-class-metrics,0
 afterMyType_concrete_deps_count,per-class-metrics,0
 afterMyType_afferent_count,per-class-metrics,0
-afterMyType_efferent_count,per-class-metrics,1
+afterMyType_efferent_count,per-class-metrics,2
 afterMyType_instability_class,per-class-metrics,1.0
 afterBar_abstracts_deps_count,per-class-metrics,0
 afterBar_concrete_deps_count,per-class-metrics,0
@@ -329,7 +336,7 @@ after_parser_classes,per-package-metrics,10
 after_parser_abstracts,per-package-metrics,0
 after_parser_efferent,per-package-metrics,0
 after_parser_afferent,per-package-metrics,0
-after_parser_instability,per-package-metrics,0.07142857142857142
+after_parser_instability,per-package-metrics,0.09523809523809523
 after_renderingoptions_nodes,per-package-metrics,1
 after_renderingoptions_classes,per-package-metrics,1
 after_renderingoptions_abstracts,per-package-metrics,0
@@ -347,7 +354,7 @@ after_subfolder2_classes,per-package-metrics,1
 after_subfolder2_abstracts,per-package-metrics,0
 after_subfolder2_efferent,per-package-metrics,0
 after_subfolder2_afferent,per-package-metrics,0
-after_subfolder2_instability,per-package-metrics,0.07142857142857142
+after_subfolder2_instability,per-package-metrics,0.09523809523809523
 after_subfolder3_nodes,per-package-metrics,1
 after_subfolder3_classes,per-package-metrics,0
 after_subfolder3_abstracts,per-package-metrics,0
@@ -359,7 +366,7 @@ after_testingsupport_classes,per-package-metrics,4
 after_testingsupport_abstracts,per-package-metrics,0
 after_testingsupport_efferent,per-package-metrics,0
 after_testingsupport_afferent,per-package-metrics,0
-after_testingsupport_instability,per-package-metrics,0.07142857142857142
+after_testingsupport_instability,per-package-metrics,0.09523809523809523
 library_nodes,per-package-metrics,4
 library_classes,per-package-metrics,0
 library_abstracts,per-package-metrics,0
@@ -383,7 +390,7 @@ before_namedimports_classes,per-package-metrics,1
 before_namedimports_abstracts,per-package-metrics,0
 before_namedimports_efferent,per-package-metrics,0
 before_namedimports_afferent,per-package-metrics,0
-before_namedimports_instability,per-package-metrics,0.07142857142857142
+before_namedimports_instability,per-package-metrics,0.047619047619047616
 before_parenthesizedtypedeclarations_nodes,per-package-metrics,2
 before_parenthesizedtypedeclarations_classes,per-package-metrics,0
 before_parenthesizedtypedeclarations_abstracts,per-package-metrics,0
@@ -395,7 +402,7 @@ before_parser_classes,per-package-metrics,10
 before_parser_abstracts,per-package-metrics,0
 before_parser_efferent,per-package-metrics,0
 before_parser_afferent,per-package-metrics,0
-before_parser_instability,per-package-metrics,0.07142857142857142
+before_parser_instability,per-package-metrics,0.047619047619047616
 before_renderingoptions_nodes,per-package-metrics,1
 before_renderingoptions_classes,per-package-metrics,1
 before_renderingoptions_abstracts,per-package-metrics,0
@@ -413,7 +420,7 @@ before_subfolder2_classes,per-package-metrics,1
 before_subfolder2_abstracts,per-package-metrics,0
 before_subfolder2_efferent,per-package-metrics,0
 before_subfolder2_afferent,per-package-metrics,0
-before_subfolder2_instability,per-package-metrics,0.07142857142857142
+before_subfolder2_instability,per-package-metrics,0.047619047619047616
 before_subfolder3_nodes,per-package-metrics,1
 before_subfolder3_classes,per-package-metrics,0
 before_subfolder3_abstracts,per-package-metrics,0
@@ -425,7 +432,7 @@ before_testingsupport_classes,per-package-metrics,4
 before_testingsupport_abstracts,per-package-metrics,0
 before_testingsupport_efferent,per-package-metrics,0
 before_testingsupport_afferent,per-package-metrics,0
-before_testingsupport_instability,per-package-metrics,0.07142857142857142
+before_testingsupport_instability,per-package-metrics,0.047619047619047616
 after_connectionlabels_nodes,per-package-metrics,3
 after_connectionlabels_classes,per-package-metrics,2
 after_connectionlabels_abstracts,per-package-metrics,0
@@ -443,7 +450,7 @@ after_namedimports_classes,per-package-metrics,1
 after_namedimports_abstracts,per-package-metrics,0
 after_namedimports_efferent,per-package-metrics,0
 after_namedimports_afferent,per-package-metrics,0
-after_namedimports_instability,per-package-metrics,0.07142857142857142
+after_namedimports_instability,per-package-metrics,0.09523809523809523
 after_parenthesizedtypedeclarations_nodes,per-package-metrics,2
 after_parenthesizedtypedeclarations_classes,per-package-metrics,0
 after_parenthesizedtypedeclarations_abstracts,per-package-metrics,0
@@ -498,24 +505,24 @@ after_connectionlabels_package_abstractness_delta,per-package-derivate-metrics,0
 after_main_package_abstractness_delta,per-package-derivate-metrics,0.0
 after_namedimports_package_abstractness_delta,per-package-derivate-metrics,0.0
 after_parenthesizedtypedeclarations_package_abstractness_delta,per-package-derivate-metrics,0.0
-after_parser_package_distance_from_main_sequence,per-package-derivate-metrics,0.9285714285714286
+after_parser_package_distance_from_main_sequence,per-package-derivate-metrics,0.9047619047619048
 after_renderingoptions_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
 after_subfolder_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
-after_subfolder2_package_distance_from_main_sequence,per-package-derivate-metrics,0.9285714285714286
+after_subfolder2_package_distance_from_main_sequence,per-package-derivate-metrics,0.9047619047619048
 after_subfolder3_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
-after_testingsupport_package_distance_from_main_sequence,per-package-derivate-metrics,0.9285714285714286
+after_testingsupport_package_distance_from_main_sequence,per-package-derivate-metrics,0.9047619047619048
 library_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
 before_connectionlabels_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
 before_main_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
-before_namedimports_package_distance_from_main_sequence,per-package-derivate-metrics,0.9285714285714286
+before_namedimports_package_distance_from_main_sequence,per-package-derivate-metrics,0.9523809523809523
 before_parenthesizedtypedeclarations_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
-before_parser_package_distance_from_main_sequence,per-package-derivate-metrics,0.9285714285714286
+before_parser_package_distance_from_main_sequence,per-package-derivate-metrics,0.9523809523809523
 before_renderingoptions_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
 before_subfolder_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
-before_subfolder2_package_distance_from_main_sequence,per-package-derivate-metrics,0.9285714285714286
+before_subfolder2_package_distance_from_main_sequence,per-package-derivate-metrics,0.9523809523809523
 before_subfolder3_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
-before_testingsupport_package_distance_from_main_sequence,per-package-derivate-metrics,0.9285714285714286
+before_testingsupport_package_distance_from_main_sequence,per-package-derivate-metrics,0.9523809523809523
 after_connectionlabels_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
 after_main_package_distance_from_main_sequence,per-package-derivate-metrics,1.0
-after_namedimports_package_distance_from_main_sequence,per-package-derivate-metrics,0.9285714285714286
+after_namedimports_package_distance_from_main_sequence,per-package-derivate-metrics,0.9047619047619048
 after_parenthesizedtypedeclarations_package_distance_from_main_sequence,per-package-derivate-metrics,1.0

@@ -29,6 +29,13 @@ class Filter(Observer):
         return value if value is not None else []
 
     @override
+    def set_mode(self, mode: str) -> None:
+        """
+        Set the mode of the observer.
+        """
+        self.observer_to_send.set_mode(mode)
+
+    @override
     def open_observer(self) -> None:
         """
         Event triggered when the observer is opened
@@ -57,25 +64,25 @@ class Filter(Observer):
         package_filter.send()
 
     @override
-    def on_class_found(self, class_name: str, kind, label: str) -> None:
+    def on_class_found(self, class_name: str, kind) -> None:
         """
         Create a list with the class found.
         """
-        self.classes.append([class_name, kind, label])
+        self.classes.append([class_name, kind])
 
     @override
-    def on_relation_found(self, class1: str, class2: str, relation: str, label: str) -> None:
+    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
         """
         Create a list with the relationship found.
         """
-        self.relationships.append([class1, class2, relation, label])
+        self.relationships.append([class1, class2, relation])
 
     @override
-    def on_package_found(self, package_name: str, classes: list,  label: str) -> None:
+    def on_package_found(self, package_name: str, classes: list) -> None:
         """
         Create a list with the package found.
         """
-        self.packages.append([package_name, classes, label])
+        self.packages.append([package_name, classes])
 
 
 class ClassFilter(Filter):
@@ -103,7 +110,7 @@ class ClassFilter(Filter):
         Delete the namespace or package of the class names.
         """
         for i, c in enumerate(self.classes):
-            class_name, _, _ = c
+            class_name, _ = c
             self.classes[i][0] = self.__delete_before_last_dot(class_name)
 
     def __delete_before_last_dot(self, class_name: str) -> str:
@@ -126,10 +133,10 @@ class ClassFilter(Filter):
         seen = set()
         filtered_classes = []
 
-        for class_name, kind, label in self.classes:
+        for class_name, kind in self.classes:
             if class_name not in seen:
                 seen.add(class_name)
-                filtered_classes.append([class_name, kind, label])
+                filtered_classes.append([class_name, kind])
 
         self.classes = filtered_classes
 
@@ -138,8 +145,8 @@ class ClassFilter(Filter):
         Send the filtered classes to the next observer.
         """
         for classes in self.classes:
-            class_name, kind, label = classes
-            self.observer_to_send.on_class_found(class_name, kind, label)
+            class_name, kind = classes
+            self.observer_to_send.on_class_found(class_name, kind)
 
 
 class RelationshipFilter(Filter):
@@ -165,7 +172,7 @@ class RelationshipFilter(Filter):
         Delete the namespace or package of the class names.
         """
         for i, relation in enumerate(self.relationships):
-            class1, class2, _, _ = relation
+            class1, class2, _ = relation
             self.relationships[i][0] = self.__delete_before_last_dot(class1)
             self.relationships[i][1] = self.__delete_before_last_dot(class2)
 
@@ -190,9 +197,9 @@ class RelationshipFilter(Filter):
         Send the filtered relationships to the next observer.
         """
         for relationship in self.relationships:
-            class1, class2, relation, label = relationship
+            class1, class2, relation = relationship
             self.observer_to_send.on_relation_found(
-                class1, class2, relation, label)
+                class1, class2, relation)
 
 
 class PackageFilter(Filter):
@@ -216,7 +223,7 @@ class PackageFilter(Filter):
         Delete the namespace or package of the class names.
         """
         for i, package in enumerate(self.packages):
-            _, classes, _ = package
+            _, classes = package
             for j, c in enumerate(classes):
                 self.packages[i][1][j] = self.__delete_before_last_dot(c)
 
@@ -239,7 +246,7 @@ class PackageFilter(Filter):
         Remove duplicate class names, keeping only the first occurrence.
         """
         for i, package in enumerate(self.packages):
-            _, classes, _ = package
+            _, classes = package
             filtered_classes = self.__list_without_duplicates(classes)
             self.packages[i][1] = filtered_classes
 
@@ -262,9 +269,9 @@ class PackageFilter(Filter):
         Send the filtered packages to the next observer.
         """
         for package in self.packages:
-            package_name, classes, label = package
+            package_name, classes = package
             self.observer_to_send.on_package_found(
-                package_name, classes, label)
+                package_name, classes)
 
 
 def init_module(api: CddeAPI) -> None:

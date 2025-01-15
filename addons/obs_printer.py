@@ -11,6 +11,18 @@ class Printer(Observer):
     """
     Observer that prints the information it receives.
     """
+
+    def __init__(self) -> None:
+        self.mode = None
+
+    @override
+    def set_mode(self, mode: str) -> None:
+        """
+        Set the mode of the observer.
+        """
+        print(f"Mode set to: {mode}")
+        self.mode = mode
+
     @override
     def open_observer(self) -> None:
         """
@@ -27,25 +39,27 @@ class Printer(Observer):
         print("--------------------------------")
 
     @override
-    def on_class_found(self, class_name: str, kind, label: str) -> None:
+    def on_class_found(self, class_name: str, kind) -> None:
         """
         Print the class found.
         """
-        print(f"{kind} found: {label}_{class_name}")
+        print(f"{kind} found: {self.mode}_{class_name}")
 
     @override
-    def on_relation_found(self, class1: str, class2: str, relation: str, label: str) -> None:
+    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
         """
         Print the relationship found.
         """
-        print(f"Relationship found: ({relation}) {label}_{class1} --> {label}_{class2}")
+        print(f"Relationship found: ({relation}) {
+              self.mode}_{class1} --> {self.mode}_{class2}")
 
     @override
-    def on_package_found(self, package_name: str, classes: list, label: str) -> None:
+    def on_package_found(self, package_name: str, classes: list) -> None:
         """
         Print the package found.
         """
-        print(f"Package found: {label}_{package_name} with classes: {classes}")
+        print(f"Package found: {self.mode}_{
+              package_name} with classes: {classes}")
 
 
 def init_module(api: CddeAPI) -> None:
