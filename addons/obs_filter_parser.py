@@ -41,6 +41,7 @@ class Filter(Observer):
         Event triggered when the observer is opened
         This method creates the childs filters.
         """
+        self.observer_to_send.open_observer()
 
     @override
     def close_observer(self) -> None:
@@ -62,6 +63,8 @@ class Filter(Observer):
         class_filter.send()
         relationship_filter.send()
         package_filter.send()
+
+        self.observer_to_send.close_observer()
 
     @override
     def on_class_found(self, class_name: str, kind) -> None:
