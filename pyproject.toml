@@ -1,0 +1,27 @@
+[project]
+name = "cdde"
+version = "0.1.0"
+description = "Code Desing Delta Evaluator"
+authors = [
+    {name = "Gonzalo Garia Zurlo"}
+]
+readme = "README.md"
+requires-python = "3.12"
+dependencies = [
+    "parsimonious (>=0.10.0,<0.11.0)",
+    "gitpython (>=3.1.44,<4.0.0)",
+    "pylint (>=3.3.3,<4.0.0)",
+    "hpp2plantuml (>=0.8.6,<0.9.0)",
+    "neo4j (>=5.27.0,<6.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+radon = "^6.0.1"
+pylint = "^3.3.3"
+mypy = "^1.14.1"
+
