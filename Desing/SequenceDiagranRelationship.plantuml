@@ -30,6 +30,8 @@ PumlGenerator -> main: file.puml
 
 main -> Observer: create_observer()
 
+main -> Observer: set_mode(MODE)
+
 main -> Parser: parse(file.puml, observer)
 
 activate Parser

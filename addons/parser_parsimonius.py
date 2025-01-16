@@ -59,9 +59,8 @@ class Parsimonius(NodeVisitor):
     Class that implements parser with parsimonius to parse the plantuml file.
     """
 
-    def __init__(self, observer: Observer, label: str) -> None:
+    def __init__(self, observer: Observer) -> None:
         self.observer = observer
-        self.label = label
 
     def parse_uml(self, file: str) -> None:
         """ 
@@ -82,7 +81,7 @@ class Parsimonius(NodeVisitor):
         classes = []
         for declaration in visited_children[7]:
             classes.append(declaration)
-        self.observer.on_package_found(package_name, classes, self.label)
+        self.observer.on_package_found(package_name, classes)
 
     def visit_namespace(self, _node: Node, visited_children: list) -> None:
         """
@@ -92,7 +91,7 @@ class Parsimonius(NodeVisitor):
         classes = []
         for declaration in visited_children[7]:
             classes.append(declaration)
-        self.observer.on_package_found(namespace_name, classes, self.label)
+        self.observer.on_package_found(namespace_name, classes)
 
     def visit_class_definition(self, _node: Node, visited_children: list) -> str:
         """
@@ -105,9 +104,9 @@ class Parsimonius(NodeVisitor):
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
             alias = visited_children[5][0]
-            self.observer.on_class_found(alias, class_type, self.label)
+            self.observer.on_class_found(alias, class_type)
             return alias
-        self.observer.on_class_found(class_name, class_type, self.label)
+        self.observer.on_class_found(class_name, class_type)
         return class_name
 
     def visit_name(self, node: Node, _visited_children: list) -> str:
@@ -149,10 +148,10 @@ class Parsimonius(NodeVisitor):
         if "2" in rel_type:
             rel_type = rel_type.replace("2", "")
             self.observer.on_relation_found(
-                class_b, class_a, rel_type, self.label)
+                class_b, class_a, rel_type)
         else:
             self.observer.on_relation_found(
-                class_a, class_b, rel_type, self.label)
+                class_a, class_b, rel_type)
 
     def generic_visit(self, node: Node, visited_children: list) -> list[Any] | Any:
         """

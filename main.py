@@ -1,8 +1,14 @@
 """
 This module handles the main execution flow of the application.
 """
+from enum import Enum, auto
 from api import CddeAPI
 from git_clone import GitClone
+
+
+class Modes(Enum):
+    Before = "before"
+    After = "after"
 
 
 class Main:
@@ -32,11 +38,9 @@ class Main:
 
     # Get Filter
     filter = api.observers['filter'](composable)
-    filter2 = api.observers['filter'](composable)
 
     # Get parsers
-    parsimonious_before = api.parsers['parsimonius'](filter, "before")
-    parsimonius_after = api.parsers['parsimonius'](filter2, "after")
+    parsimonious = api.parsers['parsimonius'](filter)
 
     # go examples
     double_derivative_before = "Samples/Simple/double-derivative/before"
@@ -73,8 +77,10 @@ class Main:
         after)
 
     # Parse the plantuml file
-    parsimonious_before.parse_uml(archivo_plantuml_before)
-    parsimonius_after.parse_uml(archivo_plantuml_after)
+    filter.set_mode(Modes.Before.value)
+    parsimonious.parse_uml(archivo_plantuml_before)
+    filter.set_mode(Modes.After.value)
+    parsimonious.parse_uml(archivo_plantuml_after)
 
     # Get results observers
     result_printer = api.results_observers['printer']()
