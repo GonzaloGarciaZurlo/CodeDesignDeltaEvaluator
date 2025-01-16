@@ -12,6 +12,7 @@ abstract class PUML_Parser {
     parse_uml()
 }
 abstract class PUML_Obs {
+    set_mode(MODE)
     open_observer()
     close_observer()
     on_class_found()
