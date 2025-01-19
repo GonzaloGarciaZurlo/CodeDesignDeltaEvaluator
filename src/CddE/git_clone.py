@@ -56,6 +56,7 @@ class GitClone:
         using the gitpython library.
         """
         os.makedirs(self.repo_dir, exist_ok=True)
+        shutil.rmtree(self.repo_dir)
         self.repo = Repo.clone_from(self.repo_url, self.repo_dir)
 
     def _before_dir(self) -> None:
@@ -92,3 +93,14 @@ class GitClone:
         shutil.rmtree(self.before_dir)
         shutil.rmtree(self.after_dir)
         shutil.rmtree(self.repo_dir)
+
+
+def clone_repo(repo_url: str, pr_number: int):
+    """
+    Clone the repository and generate the plantuml files.
+    """
+    git_clone = GitClone(repo_url, pr_number)
+    git_clone.run()
+    before = git_clone.before_dir
+    after = git_clone.after_dir
+    return before, after, git_clone

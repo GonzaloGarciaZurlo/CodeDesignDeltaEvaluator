@@ -3,8 +3,8 @@ This module contains the ResultPrinter class,
 which is an Observer that prints the information it receives.
 """
 from overrides import override
-from api import CddeAPI
-from result_observer import ResultObserver
+from src.CddE.api import CddeAPI
+from src.CddE.result_observer import ResultObserver
 
 
 class ResultPrinter(ResultObserver):
@@ -45,4 +45,4 @@ def init_module(api: CddeAPI) -> None:
     """
     Initialize the module on the API.
     """
-    api.register_result_observer('printer', ResultPrinter)
+    api.register_result_observer('res_printer', ResultPrinter)

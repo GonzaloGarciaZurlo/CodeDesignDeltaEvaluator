@@ -4,10 +4,10 @@ This module contains functions for handling database queries.
 from neo4j import GraphDatabase, Transaction
 from overrides import override
 import yaml
-from result_queries import ResultQueries
-from api import CddeAPI
-from eval import safe_eval
-from result_observer import ResultObserver
+from src.CddE.result_queries import ResultQueries
+from src.CddE.api import CddeAPI
+from src.CddE.eval import safe_eval
+from src.CddE.result_observer import ResultObserver
 
 
 QUERIES_WITHOUT_PARAMETERS = [
@@ -37,9 +37,9 @@ class QueriesCypher(ResultQueries):
         """
         Resolves all queries.
         """
-        self.queries = self._load_queries("queries/cypher.yml")
+        self.queries = self._load_queries("src/queries/cypher.yml")
         self.derivate_queries = self._load_queries(
-            "queries/derivate_metrics.yml")
+            "src/queries/derivate_metrics.yml")
         self.observer.open_observer()
 
         classes = self.get_all_classes()

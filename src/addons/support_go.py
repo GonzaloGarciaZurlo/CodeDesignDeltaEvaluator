@@ -1,16 +1,16 @@
 """
-Support for C++ files to generate PlantUML files.
+Support for Go files to generate PlantUML files.
 """
 import subprocess
 import os
 from overrides import override
-from api import CddeAPI
-from puml_generator import PumlGenerator
+from src.CddE.api import CddeAPI
+from src.CddE.puml_generator import PumlGenerator
 
 
-class CppPumlGenerator(PumlGenerator):
+class GoPumlGenerator(PumlGenerator):
     """
-    PlantUML generator for C++ files.
+    PlantUML generator for Go files.
     """
     @override
     def generate_plantuml(self, directory: str) -> str:
@@ -18,7 +18,7 @@ class CppPumlGenerator(PumlGenerator):
         Generate the PlantUML file.
         """
         self._check_directory(directory)
-        return self._hpp2plantuml(directory)
+        return self._goplantuml(directory)
 
     def _check_directory(self, directory: str) -> None:
         """
@@ -30,13 +30,14 @@ class CppPumlGenerator(PumlGenerator):
         if directory[-1] != '/':
             directory += '/'
 
-    def _hpp2plantuml(self, directory: str) -> str:
+    def _goplantuml(self, directory: str) -> str:
         """
-        Run hpp2plantuml.
+        Run goplantuml
         """
-        file_path = os.path.join(directory, 'UML.plantuml')
-        subprocess.run(['hpp2plantuml', '-o', file_path,
-                        '-i', directory + '**/*.hpp'], check=True)
+        file_path = directory + 'UML.plantuml'
+        with open(file_path, 'w', encoding="utf-8") as output_file:
+            subprocess.run(['goplantuml', '-recursive', directory],
+                           stdout=output_file, check=True)
         return file_path
 
 
@@ -44,4 +45,4 @@ def init_module(api: CddeAPI) -> None:
     """
     Initialize the module of the API.
     """
-    api.register_puml_generator('.cpp', CppPumlGenerator)
+    api.register_puml_generator('.go', GoPumlGenerator)
