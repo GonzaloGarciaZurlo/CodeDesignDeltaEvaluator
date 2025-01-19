@@ -94,20 +94,20 @@ def add_result_observer(result_observer: List[FormatResult], main: Main) -> None
 
 @app.command()
 def CddE(
-    repo_git: str = typer.Argument(..., help="Repository to evaluate"),
+    repo_git: str = typer.Argument(..., help="Link to the repository to evaluate"),
     pr_number: int = typer.Argument(..., help="Pull request number"),
     leng: Leng = typer.Option(
-        ".py", help="Selected lenguage of the repository"),
+        ".py", help="Select lenguage of the repository"),
     queryl: Queryleng = typer.Option("cypher",
-                                     help="Selected query lenguage of the repository"),
+                                     help="Select query lenguage"),
     store: List[Store] = typer.Option(
-        ["Neo4j"], help="Selected graph database"),
+        ["Neo4j"], help="Select graph database"),
     visual: bool = typer.Option(
         False, "--visual", "--v", help="Visualize the class and relations of the repository on the console"),
     format_result: List[FormatResult] = typer.Option(
-        ["json"], help="Selected the format of the result")
+        ["json"], help="Select the format of the result")
 ):
-    """Run the evaluation of the repository."""
+    """Run the tool CddE"""
     main = Main()
     main.set_api()
     set_lenguage(leng, main)
