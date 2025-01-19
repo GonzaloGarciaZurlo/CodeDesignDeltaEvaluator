@@ -2,7 +2,7 @@
 Module that contains the PUML_Parser abstract class
 """
 from abc import ABC, abstractmethod
-from puml_observer import Observer
+from .puml_observer import Observer
 
 
 class PumlParser(ABC):

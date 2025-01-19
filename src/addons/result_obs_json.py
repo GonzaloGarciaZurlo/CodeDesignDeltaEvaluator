@@ -6,8 +6,8 @@ import subprocess
 import json
 import os
 from overrides import override
-from api import CddeAPI
-from result_observer import ResultObserver
+from src.CddE.api import CddeAPI
+from src.CddE.result_observer import ResultObserver
 
 
 class ResultJson(ResultObserver):

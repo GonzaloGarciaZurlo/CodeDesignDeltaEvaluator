@@ -4,6 +4,7 @@ Abstract class for PlantUML generators.
 from abc import ABC, abstractmethod
 import subprocess
 
+
 class PumlGenerator(ABC):
     """
     Abstract class for PlantUML generators.

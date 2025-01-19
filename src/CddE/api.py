@@ -14,11 +14,11 @@ from importlib.machinery import ModuleSpec
 import os
 import sys
 from overrides import override
-from puml_generator import PumlGenerator
-from puml_parser import PumlParser
-from puml_observer import Observer
-from result_observer import ResultObserver
-from result_queries import ResultQueries
+from .puml_generator import PumlGenerator
+from .puml_parser import PumlParser
+from .puml_observer import Observer
+from .result_observer import ResultObserver
+from .result_queries import ResultQueries
 
 
 class CddeAPIAbstract(ABC):
@@ -30,22 +30,22 @@ class CddeAPIAbstract(ABC):
         """
         Register a PlantUML generator.
         """
-
+    @abstractmethod
     def register_puml_parser(self, extension: str, parser: Type[PumlParser]) -> None:
         """
         Register a PlantUML parser.
         """
-
+    @abstractmethod
     def register_puml_observer(self, extension: str, observer: Type[Observer]) -> None:
         """
         Register a PlantUML observer.
         """
-
+    @abstractmethod
     def register_result_observer(self, extension: str, observer: Type[ResultObserver]) -> None:
         """
         Register a result observer.
         """
-
+    @abstractmethod
     def register_result_queries(self, extension: str, queries: Type[ResultQueries]) -> None:
         """
         Register result queries.
@@ -136,3 +136,12 @@ class CddeAPI(CddeAPIAbstract):
 
         if hasattr(rule_module, 'init_module'):
             rule_module.init_module(self)
+
+
+def load_addons() -> CddeAPI:
+    """
+    Load the addons from the directory "addons".
+    """
+    api = CddeAPI()
+    api.load_modules_from_directory("src/addons")
+    return api

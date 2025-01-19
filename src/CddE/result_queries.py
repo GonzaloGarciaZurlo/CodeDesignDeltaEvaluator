@@ -2,7 +2,7 @@
 Module that contains the ResultQueries abstract class
 """
 from abc import ABC, abstractmethod
-from result_observer import ResultObserver
+from .result_observer import ResultObserver
 
 
 class ResultQueries(ABC):
