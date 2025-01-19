@@ -6,7 +6,7 @@ authors = [
     {name = "Gonzalo Garia Zurlo"}
 ]
 packages = [
-    { include = "CddE", from = "src" }
+    { include = "CddE"}
 ]
 readme = "README.md"
 requires-python = "3.12"
