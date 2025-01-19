@@ -7,8 +7,8 @@ parser_tatsu.py
 parser_pyparsing.py
 support_java.py
 parser_regex.py
-#.csv
+.csv
 
-#*.json
+*.json
 
 .vscode/

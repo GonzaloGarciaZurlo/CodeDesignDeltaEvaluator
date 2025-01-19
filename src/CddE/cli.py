@@ -3,6 +3,7 @@ This module is the CLI of the tool.
 It uses the Typer library to create the CLI. 
 """
 import typer
+from typing import List
 from .main import Main
 from enum import StrEnum
 
@@ -35,7 +36,6 @@ class Store(StrEnum):
     StrEnum for the database.
     """
     Neo4j = "Neo4j"
-    console = "console"
 
 
 class FormatResult(StrEnum):
@@ -63,12 +63,13 @@ def set_querylenguage(querylenguage: Queryleng, main: Main) -> None:
         main.set_queryl(querylenguage.value)
 
 
-def add_observer(observer: Store, main: Main) -> None:
+def add_observer(observer: List[Store], main: Main) -> None:
     """
     Set the options of the tool.
     """
-    if observer is not None:
-        main.set_observers(observer.value)
+    for obs in observer:
+        if obs is not None:
+            main.set_observers(obs.value)
 
 
 def add_visual_mode(visual: bool, main: Main) -> None:
@@ -79,12 +80,16 @@ def add_visual_mode(visual: bool, main: Main) -> None:
         main.set_observers('printer')
 
 
-def add_result_observer(result_observer: FormatResult, main: Main) -> None:
+def add_result_observer(result_observer: List[FormatResult], main: Main) -> None:
     """
     Set the options of the tool.
     """
-    if result_observer is not None:
-        main.set_result_observers(result_observer.value)
+    for res_obs in result_observer:
+        if res_obs is not None:
+            if res_obs.value == "console":
+                main.set_result_observers("res_printer")
+            else:
+                main.set_result_observers(res_obs.value)
 
 
 @app.command()
@@ -95,11 +100,12 @@ def CddE(
         ".py", help="Selected lenguage of the repository"),
     queryl: Queryleng = typer.Option("cypher",
                                      help="Selected query lenguage of the repository"),
-    store: Store = typer.Option("Neo4j", help="Selected graph database"),
+    store: List[Store] = typer.Option(
+        ["Neo4j"], help="Selected graph database"),
     visual: bool = typer.Option(
-        False, help="Visualize the class and relations of the repository on the console"),
-    format_result: FormatResult = typer.Option(
-        "json", help="Selected the format of the result")
+        False, "--visual", "--v", help="Visualize the class and relations of the repository on the console"),
+    format_result: List[FormatResult] = typer.Option(
+        ["json"], help="Selected the format of the result")
 ):
     """Run the evaluation of the repository."""
     main = Main()

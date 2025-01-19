@@ -45,4 +45,4 @@ def init_module(api: CddeAPI) -> None:
     """
     Initialize the module on the API.
     """
-    api.register_result_observer('printer', ResultPrinter)
+    api.register_result_observer('res_printer', ResultPrinter)
