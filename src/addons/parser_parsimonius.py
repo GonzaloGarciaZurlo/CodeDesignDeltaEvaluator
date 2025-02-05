@@ -7,7 +7,7 @@ from typing import Any
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
 from src.CddE.api import CddeAPI
-from src.CddE.puml_observer import Observer
+from src.CddE.puml_observer import Observer, Modes, ClassKind, Relationship
 import src.CddE.constants as constants
 
 
@@ -99,8 +99,8 @@ class Parsimonius(NodeVisitor):
         after that, notify the observer about the class found.
         """
         class_type = visited_children[1][0]
-        if class_type == "abstract class":
-            class_type = "abstract"
+        class_type = constants.convert_class_kind(class_type)
+
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
             alias = visited_children[5][0]
@@ -144,9 +144,8 @@ class Parsimonius(NodeVisitor):
         class_b = str(visited_children[4])
 
         # Convert relationship type to standard names
-        rel_type = constants.convert_relation(rel_type)
-        if "2" in rel_type:
-            rel_type = rel_type.replace("2", "")
+        rel_type, reverse = constants.convert_relation(rel_type)
+        if reverse:
             self.observer.on_relation_found(
                 class_b, class_a, rel_type)
         else:

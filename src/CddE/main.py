@@ -4,13 +4,9 @@ This module handles the main execution flow of the application.
 from enum import Enum, auto, StrEnum
 from .api import load_addons
 from .git_clone import clone_repo
-from .puml_observer import Observer
+from .puml_observer import Observer, Modes
 from .result_observer import ResultObserver
 
-
-class Modes(StrEnum):
-    Before = "before"
-    After = "after"
 
 
 class Main:
@@ -62,7 +58,7 @@ class Main:
         """
         return self.api.generators[self.lenguage]().generate_plantuml(directory)
 
-    def parse(self, file: str, mode: str) -> None:
+    def parse(self, file: str, mode: Modes) -> None:
         """
         Parse the PlantUML file.
         """
@@ -123,8 +119,8 @@ class Main:
         self.cleanDB()
 
         # Parse the plantuml file
-        self.parse(archivo_plantuml_before, Modes.Before.value)
-        self.parse(archivo_plantuml_after, Modes.After.value)
+        self.parse(archivo_plantuml_before, Modes.Before)
+        self.parse(archivo_plantuml_after, Modes.After)
 
         # Run the queries
         self.run_queries()

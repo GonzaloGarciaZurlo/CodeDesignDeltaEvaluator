@@ -24,7 +24,7 @@ class QueriesCypher(ResultQueries):
 
     def __init__(self, observer: ResultObserver) -> None:
         super().__init__(observer)
-        self.uri = "bolt://localhost:7687"
+        self.uri = "bolt://localhost:7689"
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
         self.packages: list = []
