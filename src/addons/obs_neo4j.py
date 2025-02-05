@@ -13,7 +13,7 @@ class Neo4j(Observer):
     """
 
     def __init__(self) -> None:
-        self.uri = "bolt://localhost:7687"
+        self.uri = "bolt://localhost:7689"
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
         self.mode = None

@@ -1,253 +1,256 @@
-per-class-metrics:
-  - metric: abstracts_deps_count
-    query: |
-      MATCH (c {name: $class_name})-[r]->(dependent:Abstract)
-      RETURN count(r) AS metric
-  - metric: concrete_deps_count
-    query: |
-      MATCH (c {name: $class_name})-[r]->(dependent:class)
-      RETURN count(r) AS metric
-  - metric: afferent_count
-    query: |
-      MATCH (external)-[r]->(c {name: $class_name})
-      RETURN count(r) AS metric
-  - metric: efferent_count
-    query: |
-      MATCH (c {name: $class_name})-[r]->(external)
-      RETURN count(r) AS metric
-  - metric: instability_class
-    query: |
-      MATCH (c {name: $class_name}) // Nodo actual
-      OPTIONAL MATCH (c)-[r]->(external) // Relación saliente
-      WITH c, count(r) AS salidas
-      OPTIONAL MATCH (external2)-[r2]->(c) // Relación entrante
-      WITH salidas, count(r2) AS entradas
-      RETURN
-        CASE 
-          WHEN (salidas + entradas) = 0 THEN 0 // Manejar casos de división por 0
-          ELSE toFloat(salidas) / toFloat(salidas + entradas) 
-        END AS metric
-per-package-metrics:
-  - metric: nodes
-    query: |
-      MATCH (n)
-      WHERE n.package = $package_name
-      RETURN count(n) AS metric
-  - metric: classes
-    query: |
-      MATCH (c:class)
-      WHERE c.package = $package_name
-      RETURN count(c) AS metric
-  - metric: abstracts
-    query: |
-      MATCH (a:abstract)
-      WHERE a.package = $package_name
-      RETURN count(a) AS metric
-  - metric: efferent
-    query: |
-      MATCH (c:class)
-      WHERE c.package = $package_name
-      MATCH (c)-[r]->(external:class)
-      WHERE external.package <> $package_name
-      RETURN count(r) AS metric
-  - metric: afferent
-    query: |
-      MATCH (c:class)
-      WHERE c.package = $package_name
-      MATCH (external:class)-[r]->(c)
-      WHERE external.package <> $package_name
-      RETURN count(r) AS metric
-  - metric: instability
-    query: |
-      MATCH (c:class)
-      WHERE c.package = $package_name
-      OPTIONAL MATCH (c)-[r]->(external)
-      WHERE external.package <> $package_name
-      WITH count(r) AS total_salidas
-      OPTIONAL MATCH (external2)-[r2]->(c)
-      WHERE external2.package <> $package_name
-      WITH total_salidas, count(r2) AS total_entradas
-      RETURN
-        CASE 
-          WHEN (total_salidas + total_entradas) = 0 THEN 0
-          ELSE toFloat(total_salidas) / toFloat(total_salidas + total_entradas)
-        END AS metric
-before-metrics:
-  - metric: before_nodes
-    query: |
-      MATCH (b)
-      WHERE b.name STARTS WITH 'before'
-      RETURN count(b) AS metric
-  - metric: before_classes
-    query: |
-      MATCH (b:class)
-      WHERE b.name STARTS WITH 'before'
-      RETURN count(b) AS metric
-  - metric: before_abstracts
-    query: |
-      MATCH (b:abstract)
-      WHERE b.name STARTS WITH 'before'
-      RETURN count(b) AS metric
-
-after-metrics:
-  - metric: after_nodes
-    query: |
-      MATCH (a)
-      WHERE a.name STARTS WITH 'after'
-      RETURN count(a) AS metric
-  - metric: after_classes
-    query: |
-      MATCH (a:class)
-      WHERE a.name STARTS WITH 'after'
-      RETURN count(a) AS metric
-  - metric: after_abstracts
-    query: |
-      MATCH (a:abstract)
-      WHERE a.name STARTS WITH 'after'
-      RETURN count(a) AS metric
-
-general-metrics:
-  - metric: deleted_nodes
-    query: |
-      MATCH (b)
-      WHERE b.name STARTS WITH 'before'
+snapshot-metrics:
+  global:
+    - metric: before_nodes
+      query: |
+        MATCH (b)
+        WHERE b.name STARTS WITH 'before'
+        RETURN count(b) AS metric
+    - metric: before_classes
+      query: |
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'before'
+        RETURN count(b) AS metric
+    - metric: before_abstracts
+      query: |
+        MATCH (b:abstract)
+        WHERE b.name STARTS WITH 'before'
+        RETURN count(b) AS metric
+    - metric: after_nodes
+      query: |
+        MATCH (b)
+        WHERE b.name STARTS WITH 'after'
+        RETURN count(b) AS metric
+    - metric: after_classes
+      query: |
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'after'
+        RETURN count(b) AS metric
+    - metric: after_abstracts
+      query: |
+        MATCH (b:abstract)
+        WHERE b.name STARTS WITH 'after'
+        RETURN count(b) AS metric
+    - metric: deleted_nodes
+      query: |
+        MATCH (b)
+        WHERE b.name STARTS WITH 'before'
         AND NOT EXISTS {
-          MATCH (a)
-          WHERE a.name = 'after' + substring(b.name, 6)
+            MATCH (a)
+            WHERE a.name = 'after' + substring(b.name, 6)
         }
-      RETURN count(b) AS deleted_nodes_count
-  - metric: added_nodes
-    query: |
-      MATCH (a)
-      WHERE a.name STARTS WITH 'after'
+        RETURN count(b) AS metric
+    - metric: added_nodes
+      query: |
+        MATCH (a)
+        WHERE a.name STARTS WITH 'after'
         AND NOT EXISTS {
           MATCH (b)
           WHERE b.name = 'before' + substring(a.name, 5)
         }
-      RETURN count(a) AS added_nodes_count
-  - metric: deleted_classes
-    query: |
-      MATCH (b:class)
-      WHERE b.name STARTS WITH 'before'
+        RETURN count(a) AS metric
+    - metric: deleted_classes
+      query: |
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'before'
         AND NOT EXISTS {
           MATCH (a:class)
           WHERE a.name = 'after' + substring(b.name, 6)
         }
-      RETURN count(b) AS deleted_classes_count
-  - metric: added_classes
-    query: |
-      MATCH (a:class)
-      WHERE a.name STARTS WITH 'after'
+        RETURN count(b) AS metric
+    - metric: added_classes
+      query: |
+        MATCH (a:class)
+        WHERE a.name STARTS WITH 'after'
         AND NOT EXISTS {
           MATCH (b:class)
           WHERE b.name = 'before' + substring(a.name, 5)
         }
-      RETURN count(a) AS added_classes_count
-  - metric: deleted_abstracts
-    query: |
-      MATCH (b:abstract)
-      WHERE b.name STARTS WITH 'before'
+        RETURN count(a) AS metric
+    - metric: deleted_abstracts
+      query: |
+        MATCH (b:abstract)
+        WHERE b.name STARTS WITH 'before'
         AND NOT EXISTS {
           MATCH (a:abstract)
           WHERE a.name = 'after' + substring(b.name, 6)
         }
-      RETURN count(b) AS deleted_abstracts_count
-  - metric: added_abstracts
-    query: |
-      MATCH (a:abstract)
-      WHERE a.name STARTS WITH 'after'
+        RETURN count(b) AS metric
+    - metric: added_abstracts
+      query: |
+        MATCH (a:abstract)
+        WHERE a.name STARTS WITH 'after'
         AND NOT EXISTS {
           MATCH (b:abstract)
           WHERE b.name = 'before' + substring(a.name, 5)
         }
-      RETURN count(a) AS added_abstracts_count
-  - metric: base_class_change
-    query: |
-      MATCH (a)-[r1]->(b)
-      WHERE a.name STARTS WITH 'after'
+        RETURN count(a) AS metric
+    - metric: base_class_change
+      query: |
+        MATCH (a)-[r1]->(b)
+        WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND EXISTS {
           MATCH (c), (d)
           WHERE c.name = 'before' + substring(a.name, 5)
-            AND d.name = 'before' + substring(b.name, 5)
-            AND NOT EXISTS {
-              MATCH (c)-[r2]->(d)
-            }
+          AND d.name = 'before' + substring(b.name, 5)
+          AND NOT EXISTS {
+            MATCH (c)-[r2]->(d)
+          }
         }
-      RETURN count(r1) AS metric
-  - metric: added_relationships
-    query: |
-      MATCH (a)-[r]->(b)
-      WHERE a.name STARTS WITH 'after'
+        RETURN count(r1) AS metric
+    - metric: added_relationships
+      query: |
+        MATCH (a)-[r]->(b)
+        WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND NOT EXISTS {
           MATCH (c)-[r1]->(d)
           WHERE c.name = 'before' + substring(a.name, 5)
             AND d.name = 'before' + substring(b.name, 5)
         }
-      RETURN count(r) AS metric
-  - metric: deleted_relationships
-    query: |
-      MATCH (c)-[r]->(d)
-      WHERE c.name STARTS WITH 'before'
+        RETURN count(r) AS metric
+    - metric: deleted_relationships
+      query: |
+        MATCH (c)-[r]->(d)
+        WHERE c.name STARTS WITH 'before'
         AND d.name STARTS WITH 'before'
         AND NOT EXISTS {
           MATCH (a)-[r1]->(b)
           WHERE a.name = 'after' + substring(c.name, 6)
             AND b.name = 'after' + substring(d.name, 6)
         }
-      RETURN count(r) AS metric
-  - metric: inheritance_to_composition
-    query: |
-      MATCH (a)-[r]->(b)
-      WHERE a.name STARTS WITH 'after'
+        RETURN count(r) AS metric
+    - metric: inheritance_to_composition
+      query: |
+        MATCH (a)-[r]->(b)
+        WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND r.name = 'composition'
-      AND EXISTS {
-        MATCH (c)-[r1]->(d)
-        WHERE c.name = 'before' + substring(a.name, 5)
-          AND d.name = 'before' + substring(b.name, 5)
-          AND r1.name = 'inheritance'
-      }
-      RETURN count(r) AS metric
-  - metric: composition_to_inheritance
-    query: |
-      MATCH (a)-[r]->(b)
-      WHERE a.name STARTS WITH 'after'
+        AND EXISTS {
+          MATCH (c)-[r1]->(d)
+          WHERE c.name = 'before' + substring(a.name, 5)
+            AND d.name = 'before' + substring(b.name, 5)
+            AND r1.name = 'inheritance'
+        }
+        RETURN count(r) AS metric
+    - metric: composition_to_inheritance
+      query: |
+        MATCH (a)-[r]->(b)
+        WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND r.name = 'inheritance'
-      AND EXISTS {
-        MATCH (c)-[r1]->(d)
-        WHERE c.name = 'before' + substring(a.name, 5)
-          AND d.name = 'before' + substring(b.name, 5)
-          AND r1.name = 'composition'
-      }
-      RETURN count(r) AS metric
-  - metric: class_to_abs
-    query: |
-      MATCH (a:abstract)
-      WHERE a.name STARTS WITH 'after'
-      AND EXISTS {
-        MATCH (b:class)
-        WHERE b.name = 'before' + substring(a.name, 5)
-      }
-      RETURN count(a) AS metric
-  - metric: abs_to_class
-    query: |
-      MATCH (a:class)
-      WHERE a.name STARTS WITH 'after'
-      AND EXISTS {
-        MATCH (b:abstract)
-        WHERE b.name = 'before' + substring(a.name, 5)
-      }
-      RETURN count(a) AS metric
-  - metric: number_of_classes_that_change_package
-    query: |
-      MATCH (a:class)
-      WHERE a.name STARTS WITH 'after'
-      AND EXISTS {
-        MATCH (b:class)
-        WHERE b.name = 'before' + substring(a.name, 5)
-          AND a.package <> b.package
-      }
-      RETURN count(a) AS metric
+        AND EXISTS {
+          MATCH (c)-[r1]->(d)
+          WHERE c.name = 'before' + substring(a.name, 5)
+            AND d.name = 'before' + substring(b.name, 5)
+            AND r1.name = 'composition'
+        }
+        RETURN count(r) AS metric
+    - metric: class_to_abs
+      query: |
+        MATCH (a:abstract)
+        WHERE a.name STARTS WITH 'after'
+        AND EXISTS {
+          MATCH (b:class)
+          WHERE b.name = 'before' + substring(a.name, 5)
+        }
+        RETURN count(a) AS metric
+    - metric: abs_to_class
+      query: |
+        MATCH (a:class)
+        WHERE a.name STARTS WITH 'after'
+        AND EXISTS {
+          MATCH (b:abstract)
+          WHERE b.name = 'before' + substring(a.name, 5)
+        }
+        RETURN count(a) AS metric
+    - metric: number_of_classes_that_change_package
+      query: |
+        MATCH (a:class)
+        WHERE a.name STARTS WITH 'after'
+        AND EXISTS {
+          MATCH (b:class)
+          WHERE b.name = 'before' + substring(a.name, 5)
+            AND a.package <> b.package
+        }
+        RETURN count(a) AS metric
+  per-class:
+    - metric: abstracts_deps_count
+      query: |
+        MATCH (c {name: $class_name})-[r]->(dependent:Abstract)
+        RETURN count(r) AS metric
+    - metric: concrete_deps_count
+      query: |
+        MATCH (c {name: $class_name})-[r]->(dependent:class)
+        RETURN count(r) AS metric
+    - metric: afferent_count
+      query: |
+        MATCH (external)-[r]->(c {name: $class_name})
+        RETURN count(r) AS metric
+    - metric: efferent_count
+      query: |
+        MATCH (c {name: $class_name})-[r]->(external)
+        RETURN count(r) AS metric
+    - metric: instability_class
+      query: |
+        MATCH (c {name: $class_name}) // Nodo actual
+        OPTIONAL MATCH (c)-[r]->(external) // Relación saliente
+        WITH c, count(r) AS salidas
+        OPTIONAL MATCH (external2)-[r2]->(c) // Relación entrante
+        WITH salidas, count(r2) AS entradas
+        RETURN
+          CASE 
+            WHEN (salidas + entradas) = 0 THEN 0
+            ELSE toFloat(salidas) / toFloat(salidas + entradas)
+          END AS metric
+  per-package:
+    - metric: nodes
+      query: |
+        MATCH (n)
+        WHERE n.package = $package_name
+        AND n.name STARTS WITH $time
+        RETURN {name: ()}
+    - metric: classes
+      query: |
+        MATCH (c:class)
+        WHERE c.package = $package_name
+        RETURN count(c) AS metric
+    - metric: abstracts
+      query: |
+        MATCH (a:abstract)
+        WHERE a.package = $package_name
+        RETURN count(a) AS metric
+    - metric: efferent
+      query: |
+        MATCH (c:class)
+        WHERE c.package = $package_name
+        MATCH (c)-[r]->(external:class)
+        WHERE external.package <> $package_name
+        RETURN count(r) AS metric
+    - metric: afferent
+      query: |
+        MATCH (c:class)
+        WHERE c.package = $package_name
+        MATCH (external:class)-[r]->(c)
+        WHERE external.package <> $package_name
+        RETURN count(r) AS metric
+    - metric: instability
+      query: |
+        MATCH (c:class)
+        WHERE c.package = $package_name
+        OPTIONAL MATCH (c)-[r]->(external)
+        WHERE external.package <> $package_name
+        WITH count(r) AS total_salidas
+        OPTIONAL MATCH (external2)-[r2]->(c)
+        WHERE external2.package <> $package_name
+        WITH total_salidas, count(r2) AS total_entradas
+        RETURN
+          CASE 
+            WHEN (total_salidas + total_entradas) = 0 THEN 0
+            ELSE toFloat(total_salidas) / toFloat(total_salidas + total_entradas)
+          END AS metric
+delta-metrics:
+  global:
+  per-class:
+  per-package:
+    metric: 

@@ -135,9 +135,3 @@ class Main:
 
         # Delete the temporary directories
         git_clone.delete_dir()
-
-
-# Execute the main logic
-if __name__ == "__main__":
-    main = Main()
-    main.runCddE("https://github.com/jfeliu007/goplantuml", 168)

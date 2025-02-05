@@ -3,17 +3,31 @@
         "['beforeAbstractInterface', 'beforeImplementsAbstractInterface', 'beforeAliasOfInt', 'beforeRenderingOptionSlice', 'beforeparserRenderingOption', 'beforeMyType', 'beforeBar', 'beforeFoo', 'beforeAlias', 'beforeAliasSlice', 'beforeClassDiagramOptions', 'beforeClassParser', 'beforeField', 'beforeFunction', 'beforeLineStringBuilder', 'beforeRenderingOptions', 'beforeStruct', 'beforeRenderingOption', 'beforeTest', 'beforeTestInterfaceAsField', 'beforetest2', 'beforeSubfolder2', 'beforeSubfolderInterface', 'beforetest', 'beforeTestComplicatedAlias', 'beforemyInt', 'beforefontcolorbluefuncfontstringsBuilderbool', 'beforeDuration', 'beforeBuilder', 'afterAbstractInterface', 'afterImplementsAbstractInterface', 'afterAliasOfInt', 'afterRenderingOptionSlice', 'afterparserRenderingOption', 'afterMyType', 'afterBar', 'afterFoo', 'afterAlias', 'afterAliasSlice', 'afterClassDiagramOptions', 'afterClassParser', 'afterField', 'afterFunction', 'afterLineStringBuilder', 'afterRenderingOptions', 'afterStruct', 'afterRenderingOption', 'afterTest', 'afterTestInterfaceAsField', 'aftertest2', 'afterSubfolder2', 'afterSubfolderInterface', 'aftertest', 'afterTestComplicatedAlias', 'aftermyInt', 'afterfontcolorbluefuncfontstringsBuilderbool', 'afterDuration', 'afterBuilder']": "Data",
         "total": 58
     },
-    "before-metrics": {
+    "composition": {
+        "beforeImplementsAbstractInterface --> beforeAliasOfInt": "Data",
+        "beforeMyType --> beforeDuration": "Data",
+        "beforeLineStringBuilder --> beforeBuilder": "Data",
+        "beforetest2 --> beforeTestInterfaceAsField": "Data",
+        "afterImplementsAbstractInterface --> afterAliasOfInt": "Data",
+        "afterMyType --> afterDuration": "Data",
+        "afterLineStringBuilder --> afterBuilder": "Data",
+        "aftertest2 --> afterTestInterfaceAsField": "Data"
+    },
+    "inheritance": {
+        "beforeImplementsAbstractInterface --> beforeAbstractInterface": "Data",
+        "beforeSubfolder2 --> beforeSubfolderInterface": "Data",
+        "beforetest --> beforetest2": "Data",
+        "afterImplementsAbstractInterface --> afterAbstractInterface": "Data",
+        "afterSubfolder2 --> afterSubfolderInterface": "Data",
+        "aftertest --> aftertest2": "Data"
+    },
+    "global": {
         "before_nodes": 29,
         "before_classes": 21,
-        "before_abstracts": 0
-    },
-    "after-metrics": {
+        "before_abstracts": 0,
         "after_nodes": 29,
         "after_classes": 21,
-        "after_abstracts": 0
-    },
-    "general-metrics": {
+        "after_abstracts": 0,
         "deleted_nodes": 0,
         "added_nodes": 0,
         "deleted_classes": 0,
@@ -27,9 +41,11 @@
         "composition_to_inheritance": 0,
         "class_to_abs": 0,
         "abs_to_class": 0,
-        "number_of_classes_that_change_package": 21
+        "number_of_classes_that_change_package": 21,
+        "all_abstractness_after": 0.0,
+        "abstractness_delta": 0.0
     },
-    "per-class-metrics": {
+    "per-class": {
         "beforeAbstractInterface_abstracts_deps_count": 0,
         "beforeAbstractInterface_concrete_deps_count": 0,
         "beforeAbstractInterface_afferent_count": 1,
@@ -321,25 +337,7 @@
         "afterBuilder_efferent_count": 0,
         "afterBuilder_instability_class": 0.0
     },
-    "composition": {
-        "beforeImplementsAbstractInterface --> beforeAliasOfInt": "Data",
-        "beforeMyType --> beforeDuration": "Data",
-        "beforeLineStringBuilder --> beforeBuilder": "Data",
-        "beforetest2 --> beforeTestInterfaceAsField": "Data",
-        "afterImplementsAbstractInterface --> afterAliasOfInt": "Data",
-        "afterMyType --> afterDuration": "Data",
-        "afterLineStringBuilder --> afterBuilder": "Data",
-        "aftertest2 --> afterTestInterfaceAsField": "Data"
-    },
-    "inheritance": {
-        "beforeImplementsAbstractInterface --> beforeAbstractInterface": "Data",
-        "beforeSubfolder2 --> beforeSubfolderInterface": "Data",
-        "beforetest --> beforetest2": "Data",
-        "afterImplementsAbstractInterface --> afterAbstractInterface": "Data",
-        "afterSubfolder2 --> afterSubfolderInterface": "Data",
-        "aftertest --> aftertest2": "Data"
-    },
-    "per-package-metrics": {
+    "per-package": {
         "before_connectionlabels_nodes": 3,
         "before_connectionlabels_classes": 2,
         "before_connectionlabels_abstracts": 0,
@@ -465,28 +463,18 @@
         "after_testingsupport_abstracts": 0,
         "after_testingsupport_efferent": 0,
         "after_testingsupport_afferent": 0,
-        "after_testingsupport_instability": 0.07142857142857142
-    },
-    "derivate_metrics": {
-        "delta_classes": 0,
-        "delta_relationships": 0,
-        "delta_nodes": 0,
-        "delta_abstracts": 0,
-        "all_abstractness_before": 0,
-        "all_abstractness_after": 0,
-        "abstractness_delta": 0
-    },
-    "per-package-derivate-metrics": {
-        "before_connectionlabels_package_abstractness_before": 0.0,
-        "before_main_package_abstractness_before": 0.0,
-        "before_namedimports_package_abstractness_before": 0.0,
-        "before_parenthesizedtypedeclarations_package_abstractness_before": 0.0,
-        "before_parser_package_abstractness_before": 0.0,
-        "before_renderingoptions_package_abstractness_before": 0.0,
-        "before_subfolder_package_abstractness_before": 0.0,
-        "before_subfolder2_package_abstractness_before": 0.0,
-        "before_subfolder3_package_abstractness_before": 0.0,
-        "before_testingsupport_package_abstractness_before": 0.0,
+        "after_testingsupport_instability": 0.07142857142857142,
+        "before_connectionlabels_package_abstractness_after": 0.0,
+        "before_main_package_abstractness_after": 0.0,
+        "before_namedimports_package_abstractness_after": 0.0,
+        "before_parenthesizedtypedeclarations_package_abstractness_after": 0.0,
+        "before_parser_package_abstractness_after": 0.0,
+        "before_renderingoptions_package_abstractness_after": 0.0,
+        "before_subfolder_package_abstractness_after": 0.0,
+        "before_subfolder2_package_abstractness_after": 0.0,
+        "before_subfolder3_package_abstractness_after": 0.0,
+        "before_testingsupport_package_abstractness_after": 0.0,
+        "library_package_abstractness_after": 0.0,
         "after_connectionlabels_package_abstractness_after": 0.0,
         "after_main_package_abstractness_after": 0.0,
         "after_namedimports_package_abstractness_after": 0.0,
@@ -496,48 +484,6 @@
         "after_subfolder_package_abstractness_after": 0.0,
         "after_subfolder2_package_abstractness_after": 0.0,
         "after_subfolder3_package_abstractness_after": 0.0,
-        "after_testingsupport_package_abstractness_after": 0.0,
-        "before_connectionlabels_package_abstractness_delta": 0.0,
-        "before_main_package_abstractness_delta": 0.0,
-        "before_namedimports_package_abstractness_delta": 0.0,
-        "before_parenthesizedtypedeclarations_package_abstractness_delta": 0.0,
-        "before_parser_package_abstractness_delta": 0.0,
-        "before_renderingoptions_package_abstractness_delta": 0.0,
-        "before_subfolder_package_abstractness_delta": 0.0,
-        "before_subfolder2_package_abstractness_delta": 0.0,
-        "before_subfolder3_package_abstractness_delta": 0.0,
-        "before_testingsupport_package_abstractness_delta": 0.0,
-        "library_package_abstractness_delta": 0,
-        "after_connectionlabels_package_abstractness_delta": 0.0,
-        "after_main_package_abstractness_delta": 0.0,
-        "after_namedimports_package_abstractness_delta": 0.0,
-        "after_parenthesizedtypedeclarations_package_abstractness_delta": 0.0,
-        "after_parser_package_abstractness_delta": 0.0,
-        "after_renderingoptions_package_abstractness_delta": 0.0,
-        "after_subfolder_package_abstractness_delta": 0.0,
-        "after_subfolder2_package_abstractness_delta": 0.0,
-        "after_subfolder3_package_abstractness_delta": 0.0,
-        "after_testingsupport_package_abstractness_delta": 0.0,
-        "before_connectionlabels_package_distance_from_main_sequence": 1.0,
-        "before_main_package_distance_from_main_sequence": 1.0,
-        "before_namedimports_package_distance_from_main_sequence": 0.9285714285714286,
-        "before_parenthesizedtypedeclarations_package_distance_from_main_sequence": 1.0,
-        "before_parser_package_distance_from_main_sequence": 0.9285714285714286,
-        "before_renderingoptions_package_distance_from_main_sequence": 1.0,
-        "before_subfolder_package_distance_from_main_sequence": 1.0,
-        "before_subfolder2_package_distance_from_main_sequence": 0.9285714285714286,
-        "before_subfolder3_package_distance_from_main_sequence": 1.0,
-        "before_testingsupport_package_distance_from_main_sequence": 0.9285714285714286,
-        "library_package_distance_from_main_sequence": 1.0,
-        "after_connectionlabels_package_distance_from_main_sequence": 1.0,
-        "after_main_package_distance_from_main_sequence": 1.0,
-        "after_namedimports_package_distance_from_main_sequence": 0.9285714285714286,
-        "after_parenthesizedtypedeclarations_package_distance_from_main_sequence": 1.0,
-        "after_parser_package_distance_from_main_sequence": 0.9285714285714286,
-        "after_renderingoptions_package_distance_from_main_sequence": 1.0,
-        "after_subfolder_package_distance_from_main_sequence": 1.0,
-        "after_subfolder2_package_distance_from_main_sequence": 0.9285714285714286,
-        "after_subfolder3_package_distance_from_main_sequence": 1.0,
-        "after_testingsupport_package_distance_from_main_sequence": 0.9285714285714286
+        "after_testingsupport_package_abstractness_after": 0.0
     }
 }

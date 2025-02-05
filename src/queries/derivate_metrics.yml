@@ -1,25 +1,33 @@
 # Derivate metrics are calculated based on the metrics that are already calculated.
-derivate_metrics:
-  - metric: delta_classes
-    query: abs(added_classes - deleted_classes)
-  - metric: delta_relationships
-    query: abs(added_relationships - deleted_relationships)
-  - metric: delta_nodes
-    query: abs(added_nodes - deleted_nodes)
-  - metric: delta_abstracts
-    query: abs(added_abstracts - deleted_abstracts)
-  - metric: all_abstractness_before
-    query: before_abstracts / before_nodes
-  - metric: all_abstractness_after
-    query: after_abstracts / after_nodes
-  - metric: abstractness_delta
-    query: abs((after_abstracts / after_nodes) - (before_abstracts / before_nodes))
-per-package-derivate-metrics:
-  - metric: package_abstractness_before
-    query: package.abstracts / package.nodes
-  - metric: package_abstractness_after
-    query: package.abstracts / package.nodes
-  - metric: package_abstractness_delta
-    query: abs( package.package_abstractness_after - package.package_abstractness_before)
-  - metric: package_distance_from_main_sequence
-    query: abs(package.package_abstractness_delta + package.instability - 1)
+snapshot-metrics:
+  global:
+    - metric: all_abstractness_before
+      query: before_abstracts / before_nodes
+    - metric: all_abstractness_after
+      query: after_abstracts / after_nodes
+  per-class:
+  per-package:
+    before:
+      - metric: package_abstractness_before
+        query: package._before_abstracts / package._before_nodes
+    after:
+      - metric: package_abstractness_after
+        query: package._after_abstracts / package._after_nodes
+delta-metrics:
+  global:
+    - metric: delta_classes
+      query: abs(added_classes - deleted_classes)
+    - metric: delta_relationships
+      query: abs(added_relationships - deleted_relationships)
+    - metric: delta_nodes
+      query: abs(added_nodes - deleted_nodes)
+    - metric: delta_abstracts
+      query: abs(added_abstracts - deleted_abstracts)
+    - metric: abstractness_delta
+      query: abs((after_abstracts / after_nodes) - (before_abstracts / before_nodes))
+  per-class:  
+  per-package:
+    - metric: package_abstractness_delta
+      query: abs( package._package_abstractness_after - package._package_abstractness_before)
+    - metric: package_distance_from_main_sequence
+      query: abs(package._package_abstractness_delta + package._instability - 1)
