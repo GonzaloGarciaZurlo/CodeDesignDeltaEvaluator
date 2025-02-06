@@ -156,14 +156,14 @@ class QueriesCypher(ResultQueries):
             result = safe_eval(formula, self.results)
             metric_name = query['metric']
 
-        if argument == "":
-            self.observer.on_result_metric_found(
-                result, kind_metrics, metric_name)
-            self.results[metric_name] = result
-        else:
-            self.observer.on_result_metric_found(
-                result, kind_metrics, argument + '_' + metric_name)
-            self.results[argument + '_' + metric_name] = result
+            if argument == "":
+                self.observer.on_result_metric_found(
+                    result, kind_metrics, metric_name)
+                self.results[metric_name] = result
+            else:
+                self.observer.on_result_metric_found(
+                    result, kind_metrics, argument + '_' + metric_name)
+                self.results[argument + '_' + metric_name] = result
 
     def get_all_classes(self) -> list:
         """

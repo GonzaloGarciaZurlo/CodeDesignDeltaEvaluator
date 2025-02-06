@@ -34,6 +34,7 @@ class Neo4j(Observer):
         """
         class1 = self.mode + class1
         class2 = self.mode + class2
+        mode = self.mode + '_'
         query = (
             f"MATCH (a), (b) "
             f"WHERE a.name = $class1 AND b.name = $class2 "
@@ -41,13 +42,13 @@ class Neo4j(Observer):
         )
         query_check_or_create_a = (
             "MERGE (a {name: $class1}) "
-            "ON CREATE SET a.package = 'library'"
+            f"ON CREATE SET a.package = ('{mode}' + 'library')"
             "RETURN a"
         )
 
         query_check_or_create_b = (
             "MERGE (b {name: $class2}) "
-            "ON CREATE SET b.package = 'library'"
+            f"ON CREATE SET b.package = ('{mode}' + 'library')"
             "RETURN b"
         )
         tx.run(query_check_or_create_a, class1=class1)

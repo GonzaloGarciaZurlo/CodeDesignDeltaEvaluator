@@ -208,8 +208,7 @@ snapshot-metrics:
       query: |
         MATCH (n)
         WHERE n.package = $package_name
-        AND n.name STARTS WITH $time
-        RETURN {name: ()}
+        RETURN count(n) AS metric
     - metric: classes
       query: |
         MATCH (c:class)
@@ -220,6 +219,11 @@ snapshot-metrics:
         MATCH (a:abstract)
         WHERE a.package = $package_name
         RETURN count(a) AS metric
+    - metric: interfaces
+      query: |
+        MATCH (i:interface)
+        WHERE i.package = $package_name
+        RETURN count(i) AS metric
     - metric: efferent
       query: |
         MATCH (c:class)
@@ -253,4 +257,3 @@ delta-metrics:
   global:
   per-class:
   per-package:
-    metric: 
