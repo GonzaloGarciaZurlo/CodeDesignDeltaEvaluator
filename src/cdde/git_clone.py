@@ -24,6 +24,7 @@ class GitClone:
         self.branch = branch
         self.work_dir = os.getcwd()
         self.repo_dir = os.path.join(self.work_dir, "repo-git")
+        self.repo = None
         self.before_dir = ""
         self.after_dir = ""
 

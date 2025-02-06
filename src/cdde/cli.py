@@ -2,10 +2,10 @@
 This module is the CLI of the tool.
 It uses the Typer library to create the CLI. 
 """
-import typer
 from typing import List
-from .main import Main
 from enum import StrEnum
+import typer
+from .main import Main
 
 
 app = typer.Typer(name="CddE")
@@ -19,32 +19,32 @@ class Leng(StrEnum):
     """
     StrEnum for the lenguage.
     """
-    py = ".py"
-    go = ".go"
-    cpp = ".cpp"
+    PY = ".py"
+    GO = ".go"
+    CPP = ".cpp"
 
 
 class Queryleng(StrEnum):
     """
     StrEnum for the query lenguage.
     """
-    cypher = "cypher"
+    CYPHER = "cypher"
 
 
 class Store(StrEnum):
     """
     StrEnum for the database.
     """
-    Neo4j = "Neo4j"
+    NEO4J = "Neo4j"
 
 
 class FormatResult(StrEnum):
     """
     StrEnum for the format of the result.
     """
-    json = "json"
-    csv = "csv"
-    console = "console"
+    JSON = "json"
+    CSV = "csv"
+    CONSOLE = "console"
 
 
 def set_lenguage(lenguage: Leng, main: Main) -> None:
@@ -94,7 +94,8 @@ def add_result_observer(result_observer: List[FormatResult], main: Main) -> None
 
 @app.command()
 def CddE(
-    repo_git: str = typer.Argument(..., help="Link to the repository to evaluate"),
+    repo_git: str = typer.Argument(...,
+                                   help="Link to the repository to evaluate"),
     pr_number: int = typer.Argument(..., help="Pull request number"),
     leng: Leng = typer.Option(
         ".py", help="Select lenguage of the repository"),
@@ -103,7 +104,8 @@ def CddE(
     store: List[Store] = typer.Option(
         ["Neo4j"], help="Select graph database"),
     visual: bool = typer.Option(
-        False, "--visual", "--v", help="Visualize the class and relations of the repository on the console"),
+        False, "--visual", "--v",
+        help="Visualize the class and relations of the repository on the console"),
     format_result: List[FormatResult] = typer.Option(
         ["json"], help="Select the format of the result")
 ):
@@ -117,11 +119,3 @@ def CddE(
     add_result_observer(format_result, main)
 
     main.runCddE(repo_git, pr_number)
-
-
-def main():
-    app()
-
-
-if __name__ == "__main__":
-    app()

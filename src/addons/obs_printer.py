@@ -3,8 +3,8 @@ This module contains the Printer class,
 which is an Observer that prints the information it receives.
 """
 from overrides import override
-from src.CddE.api import CddeAPI
-from src.CddE.puml_observer import Observer
+from src.cdde.api import CddeAPI
+from src.cdde.puml_observer import Observer
 
 
 class Printer(Observer):

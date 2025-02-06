@@ -4,11 +4,10 @@ This module contains functions for handling database queries.
 from neo4j import GraphDatabase, Transaction
 from overrides import override
 import yaml
-import json
-from src.CddE.result_queries import ResultQueries
-from src.CddE.api import CddeAPI
-from src.CddE.eval import safe_eval
-from src.CddE.result_observer import ResultObserver
+from src.cdde.result_queries import ResultQueries
+from src.cdde.api import CddeAPI
+from src.cdde.eval import safe_eval
+from src.cdde.result_observer import ResultObserver
 
 TIME_METRICS = ['snapshot-metrics', 'delta-metrics']
 KIND_METRICS = ['global', 'per-class', 'per-package']
@@ -96,8 +95,8 @@ class QueriesCypher(ResultQueries):
         Set the result in the results dictionary.
         Send the result to the observer.
         """
+        params = {}
         for query in list_of_queries:
-            params = {}
 
             if "$class_name" in query['query']:
                 params["class_name"] = argument

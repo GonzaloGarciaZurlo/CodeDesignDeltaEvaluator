@@ -6,9 +6,9 @@ Contains the grammar and the class that implements the parser.
 from typing import Any
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
-from src.CddE.api import CddeAPI
-from src.CddE.puml_observer import Observer
-import src.CddE.constants as constants
+from src.cdde.api import CddeAPI
+from src.cdde.puml_observer import Observer
+from src.cdde import constants
 
 
 grammar = Grammar(

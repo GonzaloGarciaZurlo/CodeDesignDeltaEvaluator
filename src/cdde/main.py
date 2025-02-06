@@ -1,7 +1,7 @@
 """
 This module handles the main execution flow of the application.
 """
-from enum import Enum, auto, StrEnum
+from enum import StrEnum
 from .api import load_addons
 from .git_clone import clone_repo
 from .puml_observer import Observer
@@ -56,7 +56,7 @@ class Main:
         """
         self.queryl = queryl
 
-    def _generate_UML(self, directory: str) -> str:
+    def _generate_uml(self, directory: str) -> str:
         """
         Generate the PlantUML file.
         """
@@ -103,7 +103,7 @@ class Main:
             lst.append(self.api.results_observers[result_observer]())
         return self.api.results_observers['composable'](lst)
 
-    def cleanDB(self) -> None:
+    def clean_db(self) -> None:
         """
         Clean the database.
         """
@@ -116,11 +116,11 @@ class Main:
         # Git examples
         before, after, git_clone = clone_repo(repo_git, pr_number)
         # Generate the plantuml file
-        archivo_plantuml_before = self._generate_UML(before)
-        archivo_plantuml_after = self._generate_UML(after)
+        archivo_plantuml_before = self._generate_uml(before)
+        archivo_plantuml_after = self._generate_uml(after)
 
         # Clean the database
-        self.cleanDB()
+        self.clean_db()
 
         # Parse the plantuml file
         self.parse(archivo_plantuml_before, Modes.Before.value)

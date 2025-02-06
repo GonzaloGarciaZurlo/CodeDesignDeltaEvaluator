@@ -4,8 +4,8 @@ Selected from 1 or more of the possible observers.
 """
 from typing import List
 from overrides import override
-from src.CddE.api import CddeAPI
-from src.CddE.puml_observer import Observer
+from src.cdde.api import CddeAPI
+from src.cdde.puml_observer import Observer
 
 
 class Composable(Observer):
