@@ -97,11 +97,7 @@ class QueriesCypher(ResultQueries):
         """
         params = {}
         for query in list_of_queries:
-
-            if "$class_name" in query['query']:
-                params["class_name"] = argument
-            if "$package_name" in query['query']:
-                params["package_name"] = argument
+            params = self.set_params(params, query, argument)
 
             with self.driver.session() as session:
                 result = session.execute_read(
@@ -116,6 +112,16 @@ class QueriesCypher(ResultQueries):
                 self.observer.on_result_metric_found(
                     result, kind_metrics, argument + '_' + metric_name)
                 self.results[argument + '_' + metric_name] = int(result)
+
+    def set_params(self, params: dict, query: dict, argument: str) -> dict:
+        """
+        Set the parameters of the query.
+        """
+        if "$class_name" in query['query']:
+            params["class_name"] = argument
+        if "$package_name" in query['query']:
+            params["package_name"] = argument
+        return params
 
     def execute_derivate_metrics(self) -> None:
         """
