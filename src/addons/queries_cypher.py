@@ -3,17 +3,13 @@ This module contains functions for handling database queries.
 """
 from neo4j import GraphDatabase, Transaction
 from overrides import override
-import yaml
-from src.cdde.result_queries import ResultQueries
-from src.cdde.api import CddeAPI
+from cdde.metric_generator import MetricGenerator
+from cdde.addons_api import CddeAPI
 from src.cdde.eval import safe_eval
-from src.cdde.result_observer import ResultObserver
-
-TIME_METRICS = ['snapshot-metrics', 'delta-metrics']
-KIND_METRICS = ['global', 'per-class', 'per-package']
+from cdde.metric_result_observer import ResultObserver
 
 
-class QueriesCypher(ResultQueries):
+class QueriesCypher(MetricGenerator):
     """
     This class is responsible for calculating the coupling of a class.
     """
@@ -23,153 +19,35 @@ class QueriesCypher(ResultQueries):
         self.uri = "bolt://localhost:7689"
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
-        self.classes: list = []
-        self.packages: list = []
-        self.queries: dict = {}
-        self.derivate_queries: dict = {}
-        self.results: dict = {}
 
     @override
-    def resolve_query(self) -> None:
+    def get_file_path(self) -> str:
         """
-        Resolves all queries.
+        Get the file path of the queries.
         """
-        self.queries = self._load_queries("src/queries/cypher.yml")
-        self.derivate_queries = self._load_queries(
-            "src/queries/derivate_metrics.yml")
+        return "../queries/cypher.yml"
 
-        self.observer.open_observer()
-
-        self.classes = self.get_all_classes()
-        self.get_all_relations()
-        self.get_all_packages()
-
-        self.execute_cypher_metrics()
-        self.execute_derivate_metrics()
-
-        self.observer.close_observer()
-
-    def _load_queries(self, file_path: str) -> dict:
-        """
-        Transforms a yaml file into a dictionary.
-        The dictionary contains all queries in the shape:
-        snaphot-metrics:
-            global:[...]
-            per-class:[...]
-            per-package:[...]
-        delta-metrics:
-            global:[...]
-            per-class:[...]
-            per-package:[...]
-        """
-        with open(file_path, 'r', encoding="utf-8") as file:
-            return yaml.load(file, Loader=yaml.SafeLoader)
-
-    def execute_cypher_metrics(self) -> None:
-        """
-        Executes all cypher queries.
-        """
-        for time_metrics in TIME_METRICS:
-            for kind_metrics in KIND_METRICS:
-                self.execute_queries(time_metrics, kind_metrics)
-
-    def execute_queries(self, time_metrics: str, kind_metrics: str) -> None:
-        """
-        Execute all queries for a specific time and kind of metrics.
-        """
-        list_of_queries = self.queries[time_metrics][kind_metrics]
-        if list_of_queries is None:
-            return None
-        if kind_metrics == 'global':
-            self.run_cypher(list_of_queries, kind_metrics)
-        if kind_metrics == 'per-class':
-            for class_name in self.classes:
-                self.run_cypher(list_of_queries, kind_metrics, class_name)
-        if kind_metrics == 'per-package':
-            for package_name in self.packages:
-                self.run_cypher(list_of_queries, kind_metrics, package_name)
-
-    def run_cypher(self, list_of_queries: list, kind_metrics: str, argument: str = "") -> None:
+    @override
+    def run_metrics(self, query: str, argument: dict = {}) -> float:
         """
         Run the list of queries.
         Set the result in the results dictionary.
         Send the result to the observer.
         """
-        params = {}
-        for query in list_of_queries:
-            params = self.set_params(params, query, argument)
+        with self.driver.session() as session:
+            result = session.execute_read(
+                lambda tx: tx.run(query, **argument).single()[0])
 
-            with self.driver.session() as session:
-                result = session.execute_read(
-                    lambda tx: tx.run(query['query'], **params).single()[0])
-            metric_name = query['metric']
+        return result
 
-            if argument == "":
-                self.observer.on_result_metric_found(
-                    result, kind_metrics, metric_name)
-                self.results[metric_name] = int(result)
-            else:
-                self.observer.on_result_metric_found(
-                    result, kind_metrics, argument + '_' + metric_name)
-                self.results[argument + '_' + metric_name] = int(result)
-
-    def set_params(self, params: dict, query: dict, argument: str) -> dict:
+    @override
+    def send_result(self, result: float, kind_metrics: str, metric_name: str) -> None:
         """
-        Set the parameters of the query.
+        Send the results to the observer.
         """
-        if "$class_name" in query['query']:
-            params["class_name"] = argument
-        if "$package_name" in query['query']:
-            params["package_name"] = argument
-        return params
+        self.observer.on_result_metric_found(result, kind_metrics, metric_name)
 
-    def execute_derivate_metrics(self) -> None:
-        """
-        Executes all derivate queries.
-        """
-        for time_metrics in TIME_METRICS:
-            for kind_metrics in KIND_METRICS:
-                self.execute_derivate_queries(time_metrics, kind_metrics)
-
-    def execute_derivate_queries(self, time_metrics: str, kind_metrics: str) -> None:
-        """
-        Execute all derivate queries for a specific time and kind of metrics.
-        """
-        list_of_queries = self.derivate_queries[time_metrics][kind_metrics]
-        if list_of_queries is None:
-            return None
-        if kind_metrics == 'global':
-            self.run_derivate(list_of_queries, kind_metrics)
-        if kind_metrics == 'per-class':
-            for class_name in self.classes:
-                self.run_derivate(list_of_queries, kind_metrics, class_name)
-        if kind_metrics == 'per-package':
-            for package_name in self.packages:
-                self.run_derivate(list_of_queries, kind_metrics, package_name)
-
-    def run_derivate(self, list_of_queries: list, kind_metrics: str, argument: str = "") -> None:
-        """
-        Run the list of derivate queries.
-        Set the result in the results dictionary.
-        Send the result to the observer.
-        """
-        for query in list_of_queries:
-
-            self.results['package'] = argument
-
-            formula = query['query']
-            result = safe_eval(formula, self.results)
-            metric_name = query['metric']
-
-            if argument == "":
-                self.observer.on_result_metric_found(
-                    result, kind_metrics, metric_name)
-                self.results[metric_name] = result
-            else:
-                self.observer.on_result_metric_found(
-                    result, kind_metrics, argument + '_' + metric_name)
-                self.results[argument + '_' + metric_name] = result
-
+    @override
     def get_all_classes(self) -> list:
         """
         Gets all classes in the database.
@@ -191,13 +69,13 @@ class QueriesCypher(ResultQueries):
         result = tx.run(query)
         return [record["name"] for record in result]
 
-    def get_all_relations(self) -> None:
+    @override
+    def get_all_relations(self, class_name: str) -> None:
         """
         Gets all relations of a class.
         """
-        for class_name in self.classes:
-            with self.driver.session() as session:
-                session.execute_read(self._get_all_relations, class_name)
+        with self.driver.session() as session:
+            session.execute_read(self._get_all_relations, class_name)
 
     def _get_all_relations(self, tx: Transaction, class_name: str) -> None:
         """
@@ -212,13 +90,13 @@ class QueriesCypher(ResultQueries):
             self.observer.on_result_data_found(
                 str(class_name)+' --> '+str(record['dependent']), str(record["relation"]))
 
-    def get_all_packages(self) -> None:
+    @override
+    def get_all_packages(self, class_name: str) -> None:
         """
         Sets all of the packages in the database.
         """
-        for class_name in self.classes:
-            with self.driver.session() as session:
-                session.execute_read(self._get_packages, class_name)
+        with self.driver.session() as session:
+            session.execute_read(self._get_packages, class_name)
 
     def _get_packages(self, tx: Transaction, class_name: str) -> None:
         """

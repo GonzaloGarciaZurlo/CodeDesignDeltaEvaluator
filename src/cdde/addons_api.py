@@ -17,8 +17,8 @@ from overrides import override
 from .puml_generator import PumlGenerator
 from .puml_parser import PumlParser
 from .puml_observer import Observer
-from .result_observer import ResultObserver
-from .result_queries import ResultQueries
+from .metric_result_observer import ResultObserver
+from .metric_generator import ResultQueries
 
 
 class CddeAPIAbstract(ABC):

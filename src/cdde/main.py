@@ -2,10 +2,10 @@
 This module handles the main execution flow of the application.
 """
 from enum import StrEnum
-from .api import load_addons
+from .addons_api import load_addons
 from .git_clone import clone_repo
 from .puml_observer import Observer
-from .result_observer import ResultObserver
+from .metric_result_observer import ResultObserver
 
 
 class Modes(StrEnum):

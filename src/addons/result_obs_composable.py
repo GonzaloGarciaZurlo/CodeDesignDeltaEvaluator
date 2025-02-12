@@ -4,8 +4,8 @@ Selected from 1 or more of the possible observers.
 """
 from typing import List
 from overrides import override
-from src.cdde.api import CddeAPI
-from src.cdde.result_observer import ResultObserver
+from cdde.addons_api import CddeAPI
+from cdde.metric_result_observer import ResultObserver
 
 
 class ResultComposable(ResultObserver):

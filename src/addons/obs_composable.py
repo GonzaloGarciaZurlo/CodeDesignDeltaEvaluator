@@ -4,7 +4,7 @@ Selected from 1 or more of the possible observers.
 """
 from typing import List
 from overrides import override
-from src.cdde.api import CddeAPI
+from cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer
 
 
