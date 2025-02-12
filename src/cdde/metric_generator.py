@@ -31,6 +31,11 @@ class MetricGenerator(ABC):
         Get the file path of the queries.
         """
 
+
+class AddonsMetricGenerator(MetricGenerator):
+    """
+    Abstract class that represents a AddonsMetricGenerator queries.
+    """
     @abstractmethod
     def get_all_classes(self) -> list:
         """

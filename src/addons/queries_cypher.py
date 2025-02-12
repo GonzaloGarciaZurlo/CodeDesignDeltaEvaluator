@@ -3,13 +3,13 @@ This module contains functions for handling database queries.
 """
 from neo4j import GraphDatabase, Transaction
 from overrides import override
-from cdde.metric_generator import MetricGenerator
+from cdde.metric_generator import AddonsMetricGenerator
 from cdde.addons_api import CddeAPI
 from src.cdde.eval import safe_eval
 from cdde.metric_result_observer import ResultObserver
 
 
-class QueriesCypher(MetricGenerator):
+class QueriesCypher(AddonsMetricGenerator):
     """
     This class is responsible for calculating the coupling of a class.
     """

@@ -126,34 +126,38 @@ class MetricsCalculator(MetricsAPI):
             for package_name in self.packages:
                 self._run(list_of_queries, metric_generator, package_name)
 
-    def _run(self, list_of_queries: list, metric_generator: MetricGenerator, argument: str = "") -> None:
+    def _run(self, list_of_queries: list, kind_metrics: KindMetrics,
+             metric_generator: MetricGenerator, argument: str = "") -> None:
         """
         Run the list of queries.
         Set the result in the results dictionary.
         Send the result to the observer.
         """
         for query in list_of_queries:
-            kind, params = self.set_params(query, argument)
+            params = self.set_params(query, argument, kind_metrics)
             result = metric_generator.run_metrics(query['query'], params)
-            metric_name = query['metric']
 
-            self.save_metric(metric_name, result, kind)
+            metric_name = self.set_metric_name(
+                query['metric'], kind_metrics, argument)
 
-    def set_params(self, query: dict, argument: str) -> tuple[KindMetrics, dict]:
+            self.save_metric(metric_name, result, kind_metrics)
+            self.metrics_generator.send_result(
+                result, kind_metrics.value, metric_name)
+
+    def set_params(self, query: dict, argument: str, kind_metrics: KindMetrics) -> dict:
         """
         Set the parameters of the query.
         """
         params = {}
-        kind = KindMetrics.GLOBAL
-        if "$class_name" in query['query']:
+        if kind_metrics == KindMetrics.PER_CLASS:
             params["class_name"] = argument
             kind = KindMetrics.PER_CLASS
-        if "$package_name" in query['query']:
+        if kind_metrics == KindMetrics.PER_PACKAGE:
             params["package_name"] = argument
             kind = KindMetrics.PER_PACKAGE
-        return (kind, params)
+        return params
 
-    def execute_derivate_queries(self, time_metrics: str, kind_metrics: str) -> None:
+    def execute_derivate_queries(self, time_metrics: TimeMetrics, kind_metrics: KindMetrics) -> None:
         """
         Execute all queries for a specific time and kind of metrics.
         """
@@ -161,25 +165,46 @@ class MetricsCalculator(MetricsAPI):
         if list_of_queries is None:
             return None
         if kind_metrics == KindMetrics.GLOBAL:
-            self._run_derivate(list_of_queries)
+            self._run_derivate(list_of_queries, kind_metrics)
         if kind_metrics == KindMetrics.PER_CLASS:
             for class_name in self.classes:
-                self._run_derivate(list_of_queries, class_name)
+                self._run_derivate(list_of_queries, kind_metrics, class_name)
         if kind_metrics == KindMetrics.PER_PACKAGE:
             for package_name in self.packages:
-                self._run_derivate(list_of_queries, package_name)
+                self._run_derivate(list_of_queries, kind_metrics, package_name)
 
-    def _run_derivate(self, list_of_queries: list, argument: str = "") -> None:
+    def _run_derivate(self, list_of_queries: list, kind_metrics: KindMetrics, argument: str = "") -> None:
         """
         Run the list of derivate queries.
         """
         for query in list_of_queries:
-            kind, params = self.set_params(query, argument)
+            self.set_resuts(kind_metrics, argument)
             result = self.derivate_metrics_generator.run_derivate(
-                query['query'], self.results, params)
-            metric_name = query['metric']
+                query['query'], self.results)
 
-            self.save_metric(metric_name, result, kind)
+            metric_name = self.set_metric_name(
+                query['metric'], kind_metrics, argument)
+            self.save_metric(metric_name, result, kind_metrics.value)
+
+            self.derivate_metrics_generator.send_result(
+                result, kind_metrics.value, metric_name)
+
+    def set_resuts(self, kind_metrics: KindMetrics, argument: str) -> None:
+        """
+        Set the results dictionary.
+        """
+        if kind_metrics == KindMetrics.PER_PACKAGE:
+            self.results['package'] = argument
+
+    def set_metric_name(self, metric_name: str, kind_metrics: KindMetrics, argument: str) -> str:
+        """
+        Set the metric name.
+        """
+        if kind_metrics == KindMetrics.PER_CLASS:
+            return argument + '_' + metric_name
+        if kind_metrics == KindMetrics.PER_PACKAGE:
+            return argument + '_' + metric_name
+        return metric_name
 
     def save_metric(self, metric_name: str, result: int, kind: KindMetrics) -> None:
         """
