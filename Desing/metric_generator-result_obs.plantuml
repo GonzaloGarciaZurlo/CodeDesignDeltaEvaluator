@@ -1,0 +1,50 @@
+@startuml resultQueries-resultObserver
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam backgroundColor #F9F9F9
+skinparam packageBackgroundColor #DDDDDD
+skinparam packageBorderColor #000000
+skinparam arrowColor #000000
+skinparam arrowThickness 2
+
+abstract class MetricGenerator {
+    send_result()
+    run_metrics()
+    get_file_path()
+}
+
+abstract class AddonsMetricGenerator{
+    get_all_classes()
+    get_all_relations()
+    get_all_packages()
+}
+abstract class ResultObserver {
+    open_observer()
+    close_observer()
+    on_result_found()
+    on_data_found()
+}
+
+class QueriesCypher
+class QueriesGremlin
+
+class DerivateMetrics
+
+class Printer
+class Composable
+class SVC
+
+
+MetricGenerator <|-- DerivateMetrics
+MetricGenerator <|-- AddonsMetricGenerator
+
+AddonsMetricGenerator <|-- QueriesCypher   
+AddonsMetricGenerator <|-- QueriesGremlin
+
+ResultObserver <|-- Printer
+ResultObserver <|-- Composable
+ResultObserver <|-- SVC
+
+MetricGenerator -> ResultObserver : (coupling)
+AddonsMetricGenerator -> ResultObserver : (coupling)
+@enduml
