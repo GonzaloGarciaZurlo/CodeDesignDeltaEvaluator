@@ -12,7 +12,6 @@ abstract class MetricGenerator {
     run_metrics()
     get_file_path()
 }
-
 abstract class AddonsMetricGenerator{
     get_all_classes()
     get_all_relations()
