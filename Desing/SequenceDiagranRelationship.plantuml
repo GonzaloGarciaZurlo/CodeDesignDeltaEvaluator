@@ -2,11 +2,13 @@
 participant main
 participant "API" as API
 participant "Puml Generator" as PumlGenerator
-participant "Parser" as Parser
+participant "Puml Parser" as PumlParser
 participant "Filter Parser" as FilterParser
-participant "Observer" as Observer
+participant "Puml Observer" as PumlObserver
 participant "RelationshipsDB" as relationshipsDB
-participant "Result Queries" as ResultQueries
+participant "Metric API" as MetricAPI
+participant "Metric Generator" as MetricGenerator
+participant "Derivate Metrics" as DerivateMetrics
 participant "Result Observer" as ResultObserver
 participant "MetricsDB" as metricsDB
 participant "Metrics Evaluator" as MetricsEvaluator
@@ -14,11 +16,11 @@ participant "Veredict" as Veredict
 
 API -> main: puml_generator
 
-API -> main: parser
+API -> main: puml_parser
 
-API -> main: FilterParser
+API -> main: filter_Parser
 
-API -> main: Observer
+API -> main: puml_observer
 
 API -> main: result_queries
 
@@ -28,32 +30,44 @@ main -> PumlGenerator: generate_puml()
 
 PumlGenerator -> main: file.puml
 
-main -> Observer: create_observer()
+main -> PumlObserver: create_observer()
 
-main -> Observer: set_mode(MODE)
+main -> PumlObserver: set_mode(MODE)
 
-main -> Parser: parse(file.puml, observer)
+main -> PumlParser: parse(file.puml, observer)
 
-activate Parser
+activate PumlParser
 
 loop
-    Parser -> FilterParser: relationship
-    FilterParser -> Observer: relationship
-    Observer -> relationshipsDB: store\nrelationship
+    PumlParser -> FilterParser: relationship
+    FilterParser -> PumlObserver: relationship
+    PumlObserver -> relationshipsDB: store\nrelationship
 end
-deactivate Parser
+deactivate PumlParser
 
-main -> ResultObserver: create_result_observer()
-main -> ResultQueries: resolve_query(result_observer)
+main -> MetricGenerator:(result_queries) 
+main -> MetricAPI: (MetricGenerator)
+MetricAPI -> MetricGenerator: run_metrics()
 
-activate ResultQueries
+activate MetricGenerator
 
 loop
-    ResultQueries -> relationshipsDB: queries
-    ResultQueries -> ResultObserver: result
+    MetricGenerator -> relationshipsDB: queries
+    MetricGenerator -> MetricAPI: result
+    MetricGenerator -> ResultObserver: on_result_found()
     ResultObserver -> metricsDB: store\nmetrics
 end
-deactivate ResultQueries
+deactivate MetricGenerator
+
+MetricAPI -> DerivateMetrics: run_metrics(results)
+activate DerivateMetrics
+loop
+    DerivateMetrics -> MetricAPI: result
+    DerivateMetrics -> ResultObserver: on_result_found()
+    ResultObserver -> metricsDB: store\nmetrics
+end
+deactivate DerivateMetrics
+
 
 MetricsEvaluator -> metricsDB: metrics
 MetricsEvaluator -> Veredict: veredict
