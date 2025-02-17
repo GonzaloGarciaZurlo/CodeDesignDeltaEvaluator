@@ -1,4 +1,4 @@
-@startuml resultQueries-resultObserver
+@startuml MetricGenerator-resultObserver
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam backgroundColor #F9F9F9

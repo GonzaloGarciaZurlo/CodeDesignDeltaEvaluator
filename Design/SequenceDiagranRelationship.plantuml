@@ -6,9 +6,8 @@ participant "Puml Parser" as PumlParser
 participant "Filter Parser" as FilterParser
 participant "Puml Observer" as PumlObserver
 participant "RelationshipsDB" as relationshipsDB
-participant "Metric API" as MetricAPI
 participant "Metric Generator" as MetricGenerator
-participant "Derivate Metrics" as DerivateMetrics
+participant "Metric API" as MetricAPI
 participant "Result Observer" as ResultObserver
 participant "MetricsDB" as metricsDB
 participant "Metrics Evaluator" as MetricsEvaluator
@@ -22,7 +21,7 @@ API -> main: filter_Parser
 
 API -> main: puml_observer
 
-API -> main: result_queries
+API -> main: metric_generator
 
 API -> main: result_observer
 
@@ -45,7 +44,7 @@ loop
 end
 deactivate PumlParser
 
-main -> MetricGenerator:(result_queries) 
+main -> MetricGenerator:(result_observer) 
 main -> MetricAPI: (MetricGenerator)
 MetricAPI -> MetricGenerator: run_metrics()
 
@@ -54,19 +53,11 @@ activate MetricGenerator
 loop
     MetricGenerator -> relationshipsDB: queries
     MetricGenerator -> MetricAPI: result
-    MetricGenerator -> ResultObserver: on_result_found()
+    MetricAPI -> ResultObserver: on_result_found()
     ResultObserver -> metricsDB: store\nmetrics
 end
 deactivate MetricGenerator
 
-MetricAPI -> DerivateMetrics: run_metrics(results)
-activate DerivateMetrics
-loop
-    DerivateMetrics -> MetricAPI: result
-    DerivateMetrics -> ResultObserver: on_result_found()
-    ResultObserver -> metricsDB: store\nmetrics
-end
-deactivate DerivateMetrics
 
 
 MetricsEvaluator -> metricsDB: metrics

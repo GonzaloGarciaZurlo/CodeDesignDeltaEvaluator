@@ -7,10 +7,9 @@ from enum import StrEnum
 import typer
 from .main import Main
 
-
 app = typer.Typer(name="CddE")
 
-# "https://github.com/jfeliu007/goplantuml", 168  # GO (none changes)
+# CddE https://github.com/jfeliu007/goplantuml 168 --leng .go # GO (none changes)
 
 # "https://github.com/jfeliu007/goplantuml", 145  # GO (many changes)
 
@@ -29,6 +28,7 @@ class Queryleng(StrEnum):
     StrEnum for the query lenguage.
     """
     CYPHER = "cypher"
+    DERIVATE = "derivate"
 
 
 class Store(StrEnum):
@@ -55,12 +55,13 @@ def set_lenguage(lenguage: Leng, main: Main) -> None:
         main.set_lenguage(lenguage.value)
 
 
-def set_querylenguage(querylenguage: Queryleng, main: Main) -> None:
+def set_querylenguage(querylenguage: list[Queryleng], main: Main) -> None:
     """
     Set the options of the tool.
     """
-    if querylenguage is not None:
-        main.set_queryl(querylenguage.value)
+    for ql in querylenguage:
+        if querylenguage is not None:
+            main.set_queryl(ql.value)
 
 
 def add_observer(observer: List[Store], main: Main) -> None:
@@ -80,7 +81,8 @@ def add_visual_mode(visual: bool, main: Main) -> None:
         main.set_observers('printer')
 
 
-def add_result_observer(result_observer: List[FormatResult], main: Main) -> None:
+def add_result_observer(result_observer: List[FormatResult],
+                        main: Main) -> None:
     """
     Set the options of the tool.
     """
@@ -94,21 +96,26 @@ def add_result_observer(result_observer: List[FormatResult], main: Main) -> None
 
 @app.command()
 def CddE(
-    repo_git: str = typer.Argument(...,
-                                   help="Link to the repository to evaluate"),
-    pr_number: int = typer.Argument(..., help="Pull request number"),
-    leng: Leng = typer.Option(
-        ".py", help="Select lenguage of the repository"),
-    queryl: Queryleng = typer.Option("cypher",
-                                     help="Select query lenguage"),
-    store: List[Store] = typer.Option(
-        ["Neo4j"], help="Select graph database"),
-    visual: bool = typer.Option(
-        False, "--visual", "--v",
-        help="Visualize the class and relations of the repository on the console"),
-    format_result: List[FormatResult] = typer.Option(
-        ["json"], help="Select the format of the result")
-):
+        repo_git: str = typer.Argument(
+            ..., help="Link to the repository to evaluate"),
+        pr_number: int = typer.Argument(..., help="Pull request number"),
+        leng: Leng = typer.Option(Leng.PY.value,
+                                  help="Select lenguage of the repository"),
+        queryl: List[Queryleng] = typer.Option(
+            [Queryleng.CYPHER.value, Queryleng.DERIVATE.value],
+            help="Select query lenguage"),
+        store: List[Store] = typer.Option([Store.NEO4J],
+                                          help="Select graph database"),
+        visual: bool = typer.
+    Option(
+        False,
+        "--visual",
+        "--v",
+        help=
+        "Visualize the class and relations of the repository on the console"),
+        format_result: List[FormatResult] = typer.Option(
+            [FormatResult.JSON.value],
+            help="Select the format of the result")):
     """Run the tool CddE"""
     main = Main()
     main.set_api()

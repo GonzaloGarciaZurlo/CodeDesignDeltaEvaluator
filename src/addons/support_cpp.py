@@ -4,7 +4,7 @@ Support for C++ files to generate PlantUML files.
 import subprocess
 import os
 from overrides import override
-from cdde.addons_api import CddeAPI
+from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_generator import PumlGenerator
 
 

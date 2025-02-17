@@ -9,16 +9,6 @@ class MetricGenerator(ABC):
     """
     Abstract class that represents a MetricGenerator queries.
     """
-
-    def __init__(self, observer: ResultObserver) -> None:
-        self.observer = observer
-
-    @abstractmethod
-    def send_result(self, result: float, kind_metrics: str, metric_name: str) -> None:
-        """
-        Send the results to the observer.
-        """
-
     @abstractmethod
     def run_metrics(self, query: str, argument: dict = {}) -> float:
         """
@@ -43,13 +33,19 @@ class AddonsMetricGenerator(MetricGenerator):
         """
 
     @abstractmethod
-    def get_all_relations(self) -> None:
+    def get_all_relations(self, class_name: str) -> list[tuple]:
         """
         Obtains all relations of a class.
         """
 
     @abstractmethod
-    def get_all_packages(self) -> None:
+    def get_all_packages(self) -> list:
         """
         Obtains all packages in the database.
+        """
+
+    @abstractmethod
+    def set_packages(self, class_name: str) -> None:
+        """
+        Set the packages of a class.
         """

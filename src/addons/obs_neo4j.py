@@ -3,7 +3,7 @@ This module handles the creation of a Neo4j database.
 """
 from overrides import override
 from neo4j import GraphDatabase, Transaction
-from cdde.addons_api import CddeAPI
+from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer
 
 

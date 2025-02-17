@@ -4,8 +4,8 @@ Selected from 1 or more of the possible observers.
 """
 from typing import List
 from overrides import override
-from cdde.addons_api import CddeAPI
-from cdde.metric_result_observer import ResultObserver
+from src.cdde.addons_api import CddeAPI
+from src.cdde.metric_result_observer import ResultObserver
 
 
 class ResultComposable(ResultObserver):
@@ -53,4 +53,4 @@ def init_module(api: CddeAPI) -> None:
     """
     Initializes the module on the API.
     """
-    api.register_result_observer('composable', ResultComposable)
+    api.register_result_observer('res_composable', ResultComposable)

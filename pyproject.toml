@@ -9,7 +9,7 @@ packages = [
     { include = "CddE"}
 ]
 readme = "README.md"
-requires-python = "3.12"
+requires-python = "3.12.3"
 dependencies = [
     "parsimonious (>=0.10.0,<0.11.0)",
     "gitpython (>=3.1.44,<4.0.0)",
@@ -23,6 +23,7 @@ dependencies = [
 
 [tool.poetry.scripts]
 CddE = "src.cdde.cli:app"
+goplantuml-install = "src.cdde.install_goplantuml:install_goplantuml"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

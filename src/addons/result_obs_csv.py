@@ -4,8 +4,8 @@ which is an Observer that saves the information it receives in a CSV file.
 """
 import subprocess
 from overrides import override
-from cdde.addons_api import CddeAPI
-from cdde.metric_result_observer import ResultObserver
+from src.cdde.addons_api import CddeAPI
+from src.cdde.metric_result_observer import ResultObserver
 
 
 class ResultCSV(ResultObserver):

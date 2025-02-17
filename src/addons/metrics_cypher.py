@@ -3,10 +3,8 @@ This module contains functions for handling database queries.
 """
 from neo4j import GraphDatabase, Transaction
 from overrides import override
-from cdde.metric_generator import AddonsMetricGenerator
-from cdde.addons_api import CddeAPI
-from src.cdde.eval import safe_eval
-from cdde.metric_result_observer import ResultObserver
+from src.cdde.metric_generator import AddonsMetricGenerator
+from src.cdde.addons_api import CddeAPI
 
 
 class QueriesCypher(AddonsMetricGenerator):
@@ -14,18 +12,17 @@ class QueriesCypher(AddonsMetricGenerator):
     This class is responsible for calculating the coupling of a class.
     """
 
-    def __init__(self, observer: ResultObserver) -> None:
-        super().__init__(observer)
+    def __init__(self) -> None:
         self.uri = "bolt://localhost:7689"
-        self.driver = GraphDatabase.driver(
-            self.uri, auth=None)
+        self.driver = GraphDatabase.driver(self.uri, auth=None)
+        self.packages = []
 
     @override
     def get_file_path(self) -> str:
         """
         Get the file path of the queries.
         """
-        return "../queries/cypher.yml"
+        return "src/queries/cypher.yml"
 
     @override
     def run_metrics(self, query: str, argument: dict = {}) -> float:
@@ -41,22 +38,12 @@ class QueriesCypher(AddonsMetricGenerator):
         return result
 
     @override
-    def send_result(self, result: float, kind_metrics: str, metric_name: str) -> None:
-        """
-        Send the results to the observer.
-        """
-        self.observer.on_result_metric_found(result, kind_metrics, metric_name)
-
-    @override
     def get_all_classes(self) -> list:
         """
         Gets all classes in the database.
         """
         with self.driver.session() as session:
             result = session.execute_read(self._get_all_classes)
-            self.observer.on_result_data_found(str(result), "classes")
-            self.observer.on_result_metric_found(
-                len(result), "classes", "total")
         return result
 
     def _get_all_classes(self, tx: Transaction) -> list:
@@ -70,14 +57,16 @@ class QueriesCypher(AddonsMetricGenerator):
         return [record["name"] for record in result]
 
     @override
-    def get_all_relations(self, class_name: str) -> None:
+    def get_all_relations(self, class_name: str) -> list[tuple]:
         """
         Gets all relations of a class.
         """
         with self.driver.session() as session:
-            session.execute_read(self._get_all_relations, class_name)
+            result = session.execute_read(self._get_all_relations, class_name)
+        return result
 
-    def _get_all_relations(self, tx: Transaction, class_name: str) -> None:
+    def _get_all_relations(self, tx: Transaction,
+                           class_name: str) -> list[tuple]:
         """
         Helper function to get all relations of a class.
         """
@@ -86,19 +75,20 @@ class QueriesCypher(AddonsMetricGenerator):
                 RETURN type(r) AS relation, dependent.name AS dependent
                 """
         result = tx.run(query, class_name=class_name)
+        r = []
         for record in result:
-            self.observer.on_result_data_found(
-                str(class_name)+' --> '+str(record['dependent']), str(record["relation"]))
+            r.append((record["relation"], record["dependent"]))
+        return r
 
     @override
-    def get_all_packages(self, class_name: str) -> None:
+    def set_packages(self, class_name: str) -> None:
         """
         Sets all of the packages in the database.
         """
         with self.driver.session() as session:
-            session.execute_read(self._get_packages, class_name)
+            session.execute_read(self._set_packages, class_name)
 
-    def _get_packages(self, tx: Transaction, class_name: str) -> None:
+    def _set_packages(self, tx: Transaction, class_name: str) -> None:
         """
         Helper function to get all of the packages in the database.
         """
@@ -112,9 +102,16 @@ class QueriesCypher(AddonsMetricGenerator):
         if self.packages == [None]:
             self.packages = []
 
+    @override
+    def get_all_packages(self) -> list:
+        """
+        Gets all packages in the database.
+        """
+        return self.packages
+
 
 def init_module(api: CddeAPI) -> None:
     """
     Initialize the module on the API.
     """
-    api.register_result_queries('cypher', QueriesCypher)
+    api.register_metric_generator('cypher', QueriesCypher)

@@ -4,6 +4,7 @@ This module contains functions for handling derivated metrics.
 from overrides import override
 from src.cdde.eval import safe_eval
 from src.cdde.metric_generator import MetricGenerator
+from src.cdde.addons_api import CddeAPI
 
 
 class DerivateMetrics(MetricGenerator):
@@ -16,19 +17,19 @@ class DerivateMetrics(MetricGenerator):
         """
         Get the file path of the queries.
         """
-        return "../queries/derivate.yml"
+        return "src/queries/derivate_metrics.yml"
 
     @override
-    def run_metrics(self, query: str, results: dict = {}) -> float:
+    def run_metrics(self, query: str, argument: dict = {}) -> float:
         """
         Run the list of derivate queries.
         """
-        result = safe_eval(query, results)
+        result = safe_eval(query, argument)
         return result
 
-    @override
-    def send_result(self, result: float, kind_metrics: str, metric_name: str) -> None:
-        """
-        Send the results to the observer.
-        """
-        self.observer.on_result_metric_found(result, kind_metrics, metric_name)
+
+def init_module(api: CddeAPI) -> None:
+    """
+    Initializes the module on the API.
+    """
+    api.register_metric_generator('derivate', DerivateMetrics)

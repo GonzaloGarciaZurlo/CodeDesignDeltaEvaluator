@@ -6,6 +6,7 @@ from .addons_api import load_addons
 from .git_clone import clone_repo
 from .puml_observer import Observer
 from .metric_result_observer import ResultObserver
+from .metrics_api import MetricsCalculator
 
 
 class Modes(StrEnum):
@@ -20,7 +21,7 @@ class Main:
 
     def __init__(self):
         self.lenguage = ""
-        self.queryl = ""
+        self.queryl = []
         self.observers = []
         self.results_observers = []
         self.api = None
@@ -54,13 +55,14 @@ class Main:
         """
         Set the language of the queries.
         """
-        self.queryl = queryl
+        self.queryl.append(queryl)
 
     def _generate_uml(self, directory: str) -> str:
         """
         Generate the PlantUML file.
         """
-        return self.api.generators[self.lenguage]().generate_plantuml(directory)
+        return self.api.generators[self.lenguage]().generate_plantuml(
+            directory)
 
     def parse(self, file: str, mode: str) -> None:
         """
@@ -83,7 +85,18 @@ class Main:
         Run the queries.
         """
         result_observer = self._set_result_obs(self.results_observers)
-        self.api.result_queries[self.queryl](result_observer).resolve_query()
+        metric_generators = self.set_metric_generators()
+        metrics_api = MetricsCalculator(metric_generators, result_observer)
+        metrics_api.execute_all_metrics()
+
+    def set_metric_generators(self) -> list:
+        """
+        Set the metric generators.
+        """
+        metric_generators = []
+        for queryl in self.queryl:
+            metric_generators.append(self.api.metric_generator[queryl]())
+        return metric_generators
 
     def _set_composable_obs(self, observers: list) -> Observer:
         """
@@ -101,7 +114,7 @@ class Main:
         lst = []
         for result_observer in res_obs:
             lst.append(self.api.results_observers[result_observer]())
-        return self.api.results_observers['composable'](lst)
+        return self.api.results_observers['res_composable'](lst)
 
     def clean_db(self) -> None:
         """
