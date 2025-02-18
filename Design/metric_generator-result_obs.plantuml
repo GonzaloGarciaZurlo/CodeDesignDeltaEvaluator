@@ -7,6 +7,10 @@ skinparam packageBorderColor #000000
 skinparam arrowColor #000000
 skinparam arrowThickness 2
 
+abstract class MetricsAPI {
+    execute_all_metrics()
+}
+
 abstract class MetricGenerator {
     send_result()
     run_metrics()
@@ -24,14 +28,13 @@ abstract class ResultObserver {
     on_data_found()
 }
 
+class DerivateMetrics
 class QueriesCypher
 class QueriesGremlin
 
-class DerivateMetrics
-
 class Printer
 class Composable
-class SVC
+class CSV
 
 
 MetricGenerator <|-- DerivateMetrics
@@ -42,8 +45,10 @@ AddonsMetricGenerator <|-- QueriesGremlin
 
 ResultObserver <|-- Printer
 ResultObserver <|-- Composable
-ResultObserver <|-- SVC
+ResultObserver <|-- CSV
 
-MetricGenerator -> ResultObserver : (coupling)
-AddonsMetricGenerator -> ResultObserver : (coupling)
+MetricGenerator -> MetricsAPI : (results)
+AddonsMetricGenerator -> MetricsAPI : (results)
+
+MetricsAPI -> ResultObserver : (on_result_found())
 @enduml
