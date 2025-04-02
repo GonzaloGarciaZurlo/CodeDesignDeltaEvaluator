@@ -17,7 +17,7 @@ class Composable(Observer):
         self.observers = observers
 
     @override
-    def set_mode(self, mode: str) -> None:
+    def set_mode(self, mode: Modes) -> None:
         """
         Sets the mode of the observer.
         """
@@ -41,7 +41,7 @@ class Composable(Observer):
             observer.close_observer()
 
     @override
-    def on_class_found(self, class_name: str, kind: str) -> None:
+    def on_class_found(self, class_name: str, kind: ClassKind) -> None:
         """
         Notifies the observers that a class was found.
         """
@@ -49,7 +49,7 @@ class Composable(Observer):
             observer.on_class_found(class_name, kind)
 
     @override
-    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
+    def on_relation_found(self, class1: str, class2: str, relation: Relationship) -> None:
         """
         Notifies the observers that a relation between two classes was found.
         """

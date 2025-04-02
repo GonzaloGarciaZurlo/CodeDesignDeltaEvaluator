@@ -29,7 +29,7 @@ class Filter(Observer):
         return value if value is not None else []
 
     @override
-    def set_mode(self, mode: str) -> None:
+    def set_mode(self, mode: Modes) -> None:
         """
         Set the mode of the observer.
         """
@@ -67,14 +67,14 @@ class Filter(Observer):
         self.observer_to_send.close_observer()
 
     @override
-    def on_class_found(self, class_name: str, kind) -> None:
+    def on_class_found(self, class_name: str, kind: ClassKind) -> None:
         """
         Create a list with the class found.
         """
         self.classes.append([class_name, kind])
 
     @override
-    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
+    def on_relation_found(self, class1: str, class2: str, relation: Relationship) -> None:
         """
         Create a list with the relationship found.
         """

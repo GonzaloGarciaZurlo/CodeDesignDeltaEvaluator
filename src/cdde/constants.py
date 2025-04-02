@@ -1,40 +1,37 @@
 """
 This file contains the constants used in the parser module.
 """
-
-# Relation type constants
-INHERITANCE = '--|>'
-INHERITANCE2 = '<|--'
-IMPLEMENTATION = '..|>'
-IMPLEMENTATION2 = '<|..'
-DEPENDENCY = '-->'
-DEPENDENCY2 = '<--'
-COMPOSITION = '--*'
-COMPOSITION2 = '*--'
-AGGREGATION = '--o'
-AGGREGATION2 = 'o--'
-ASSOCIATION = '--'
-
-# Mapping relation symbols to names
-RELATION_MAP = {
-    INHERITANCE: 'inheritance',
-    INHERITANCE2: 'inheritance2',
-    IMPLEMENTATION: 'implementation',
-    IMPLEMENTATION2: 'implementation2',
-    DEPENDENCY: 'dependency',
-    DEPENDENCY2: 'dependency2',
-    COMPOSITION: 'composition',
-    COMPOSITION2: 'composition2',
-    AGGREGATION: 'aggregation',
-    AGGREGATION2: 'aggregation2',
-    ASSOCIATION: 'association'
-}
-
-# Function to convert relation symbols to names
+from .puml_observer import Relationship, ClassKind
 
 
-def convert_relation(relation):
+def convert_relation(relation: str) -> tuple[Relationship, bool]:
     """
     function to convert relation symbols to names
     """
-    return RELATION_MAP.get(relation, relation)
+    relation_map = {
+        '--': (Relationship.association, False),
+        '--*': (Relationship.composition, False),
+        '*--': (Relationship.composition, True),
+        '--o': (Relationship.aggregation, False),
+        'o--': (Relationship.aggregation, True),
+        '-->': (Relationship.dependency, False),
+        '<--': (Relationship.dependency, True),
+        '..|>': (Relationship.implementation, False),
+        '<|..': (Relationship.implementation, True),
+        '--|>': (Relationship.inheritance, False),
+        '<|--': (Relationship.inheritance, True)
+    }
+    return relation_map[relation]
+
+
+def convert_class_kind(kind: str) -> ClassKind:
+    """
+    function to convert class kind symbols to names
+    """
+    kind_map = {
+        'class': (ClassKind.Class),
+        'interface': (ClassKind.Interface),
+        'abstract class': (ClassKind.Abstract),
+        'abstract': (ClassKind.Abstract)
+    }
+    return kind_map[kind]

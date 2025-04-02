@@ -4,7 +4,8 @@ This module handles the creation of a Neo4j database.
 from overrides import override
 from neo4j import GraphDatabase, Transaction
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer
+from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
+
 
 
 class Neo4j(Observer):
@@ -18,15 +19,15 @@ class Neo4j(Observer):
             self.uri, auth=None)
         self.mode = None
 
-    def _create_class(self, tx: Transaction, name: str, kind: str) -> None:
+    def _create_class(self, tx: Transaction, name: str, kind: ClassKind) -> None:
         """
         Query to create a node with the class name.
         """
         name = self.mode + name
-        tx.run(f"CREATE (p:{kind} {{name: $name}})", name=name)
+        tx.run(f"CREATE (p:{kind.value} {{name: $name}})", name=name)
 
     def _create_relation(self, tx: Transaction, class1: str, class2:
-                         str, relation: str) -> None:
+                         str, relation: Relationship) -> None:
         """
         Query to create a relationship between two nodes.
         If the nodes do not exist, they are created, 
@@ -38,7 +39,7 @@ class Neo4j(Observer):
         query = (
             f"MATCH (a), (b) "
             f"WHERE a.name = $class1 AND b.name = $class2 "
-            f"CREATE (a)-[r:{relation}] -> (b)"
+            f"CREATE (a)-[r:{relation.name}] -> (b)"
         )
         query_check_or_create_a = (
             "MERGE (a {name: $class1}) "
@@ -69,7 +70,7 @@ class Neo4j(Observer):
         self.driver.close()
 
     @override
-    def set_mode(self, mode: str) -> None:
+    def set_mode(self, mode: Modes) -> None:
         """
         Set the mode of the observer.
         """
@@ -89,7 +90,7 @@ class Neo4j(Observer):
         self.close()
 
     @override
-    def on_class_found(self, class_name: str, kind: str) -> None:
+    def on_class_found(self, class_name: str, kind: ClassKind) -> None:
         """
         Create a node with the class name.
         """
@@ -97,7 +98,7 @@ class Neo4j(Observer):
             session.execute_write(self._create_class, class_name, kind)
 
     @override
-    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
+    def on_relation_found(self, class1: str, class2: str, relation: Relationship) -> None:
         """
         Create a relationship between two nodes.
         """
@@ -110,7 +111,7 @@ class Neo4j(Observer):
         """
         Set the package name to the classes.
         """
-        package_name = self.mode + '_' + package_name
+        package_name = self.mode.value + '_' + package_name
         with self.driver.session() as session:
             for class_name in classes:
                 class_name = self.mode + class_name

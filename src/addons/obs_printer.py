@@ -4,8 +4,7 @@ which is an Observer that prints the information it receives.
 """
 from overrides import override
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer
-
+from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
 
 class Printer(Observer):
     """
@@ -16,11 +15,11 @@ class Printer(Observer):
         self.mode = None
 
     @override
-    def set_mode(self, mode: str) -> None:
+    def set_mode(self, mode: Modes) -> None:
         """
         Set the mode of the observer.
         """
-        print(f"Mode set to: {mode}")
+        print(f"Mode set to: {mode.value}")
         self.mode = mode
 
     @override
@@ -39,18 +38,18 @@ class Printer(Observer):
         print("--------------------------------")
 
     @override
-    def on_class_found(self, class_name: str, kind) -> None:
+    def on_class_found(self, class_name: str, kind: ClassKind) -> None:
         """
         Print the class found.
         """
-        print(f"{kind} found: {self.mode}_{class_name}")
+        print(f"{kind.value} found: {self.mode}_{class_name}")
 
     @override
-    def on_relation_found(self, class1: str, class2: str, relation: str) -> None:
+    def on_relation_found(self, class1: str, class2: str, relation: Relationship) -> None:
         """
         Print the relationship found.
         """
-        print(f"Relationship found: ({relation}) {
+        print(f"Relationship found: ({relation.name}) {
               self.mode}_{class1} --> {self.mode}_{class2}")
 
     @override
