@@ -15,17 +15,27 @@ class QueriesCypher(AddonsMetricGenerator):
     def __init__(self) -> None:
         self.uri = "bolt://localhost:7689"
         self.driver = GraphDatabase.driver(self.uri, auth=None)
+        self.path = "src/queries/cypher.yml"
         self.packages = []
 
     @override
-    def get_file_path(self) -> str:
+    def get_queries(self) -> str:
         """
-        Get the file path of the queries.
+        Get all queries of your file.
         """
-        return "src/queries/cypher.yml"
+        try:
+            queries = self._load_queries(self.path)
+            queries.pop('metrics-generator')
+            return queries
+        except FileNotFoundError as e:
+            print(f"Error: {e}")
+            return {}
 
     @override
-    def run_metrics(self, query: str, argument: dict = {}) -> float:
+    def run_metric(self,
+                   query: str,
+                   argument: dict = {},
+                   results: dict = {}) -> float:
         """
         Run the list of queries.
         Set the result in the results dictionary.

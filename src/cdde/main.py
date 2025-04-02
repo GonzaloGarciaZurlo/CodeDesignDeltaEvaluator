@@ -20,7 +20,7 @@ class Main:
     """
 
     def __init__(self):
-        self.lenguage = ""
+        self.language = ""
         self.queryl = []
         self.observers = []
         self.results_observers = []
@@ -45,11 +45,11 @@ class Main:
         """
         self.results_observers.append(result_observer)
 
-    def set_lenguage(self, lenguage: str) -> None:
+    def set_language(self, language: str) -> None:
         """
         Set the language of the PlantUML file.
         """
-        self.lenguage = lenguage
+        self.language = language
 
     def set_queryl(self, queryl: str) -> None:
         """
@@ -61,7 +61,7 @@ class Main:
         """
         Generate the PlantUML file.
         """
-        return self.api.generators[self.lenguage]().generate_plantuml(
+        return self.api.generators[self.language]().generate_plantuml(
             directory)
 
     def parse(self, file: str, mode: str) -> None:
@@ -78,7 +78,7 @@ class Main:
         """
         Delete the PlantUML file.
         """
-        self.api.generators[self.lenguage]().delete_plantuml(file)
+        self.api.generators[self.language]().delete_plantuml(file)
 
     def run_queries(self) -> None:
         """

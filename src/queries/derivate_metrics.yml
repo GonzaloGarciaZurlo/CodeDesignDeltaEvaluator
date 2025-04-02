@@ -1,3 +1,4 @@
+metrics-generator: derivate-metrics
 # Derivate metrics are calculated based on the metrics that are already calculated.
 snapshot-metrics:
   global:

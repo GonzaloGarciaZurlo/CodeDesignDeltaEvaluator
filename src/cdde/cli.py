@@ -16,16 +16,16 @@ app = typer.Typer(name="CddE")
 
 class Leng(StrEnum):
     """
-    StrEnum for the lenguage.
+    StrEnum for the language.
     """
     PY = ".py"
     GO = ".go"
     CPP = ".cpp"
 
 
-class Queryleng(StrEnum):
+class Querylang(StrEnum):
     """
-    StrEnum for the query lenguage.
+    StrEnum for the query language.
     """
     CYPHER = "cypher"
     DERIVATE = "derivate"
@@ -47,20 +47,20 @@ class FormatResult(StrEnum):
     CONSOLE = "console"
 
 
-def set_lenguage(lenguage: Leng, main: Main) -> None:
+def set_language(language: Leng, main: Main) -> None:
     """
     Set the options of the tool.
     """
-    if lenguage is not None:
-        main.set_lenguage(lenguage.value)
+    if language is not None:
+        main.set_language(language.value)
 
 
-def set_querylenguage(querylenguage: list[Queryleng], main: Main) -> None:
+def set_querylanguage(querylanguage: list[Querylang], main: Main) -> None:
     """
     Set the options of the tool.
     """
-    for ql in querylenguage:
-        if querylenguage is not None:
+    for ql in querylanguage:
+        if querylanguage is not None:
             main.set_queryl(ql.value)
 
 
@@ -100,10 +100,10 @@ def CddE(
             ..., help="Link to the repository to evaluate"),
         pr_number: int = typer.Argument(..., help="Pull request number"),
         leng: Leng = typer.Option(Leng.PY.value,
-                                  help="Select lenguage of the repository"),
-        queryl: List[Queryleng] = typer.Option(
-            [Queryleng.CYPHER.value, Queryleng.DERIVATE.value],
-            help="Select query lenguage"),
+                                  help="Select language of the repository"),
+        queryl: List[Querylang] = typer.Option(
+            [Querylang.CYPHER.value, Querylang.DERIVATE.value],
+            help="Select query language"),
         store: List[Store] = typer.Option([Store.NEO4J],
                                           help="Select graph database"),
         visual: bool = typer.
@@ -119,8 +119,8 @@ def CddE(
     """Run the tool CddE"""
     main = Main()
     main.set_api()
-    set_lenguage(leng, main)
-    set_querylenguage(queryl, main)
+    set_language(leng, main)
+    set_querylanguage(queryl, main)
     add_observer(store, main)
     add_visual_mode(visual, main)
     add_result_observer(format_result, main)

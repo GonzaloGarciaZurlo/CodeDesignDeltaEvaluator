@@ -2,23 +2,44 @@
 Module that contains the MetricGenerator abstract class
 """
 from abc import ABC, abstractmethod
-from .metric_result_observer import ResultObserver
+import yaml
 
 
 class MetricGenerator(ABC):
     """
     Abstract class that represents a MetricGenerator queries.
     """
+
+    def _load_queries(self, file_path: str) -> dict:
+        """
+        Transforms a yaml file into a dictionary.
+        The dictionary contains all queries in the shape:
+        metrics-generator: ...
+        snaphot-metrics:
+            global:[...]
+            per-class:[...]
+            per-package:[...]
+        delta-metrics:
+            global:[...]
+            per-class:[...]
+            per-package:[...]
+        """
+        with open(file_path, 'r', encoding="utf-8") as file:
+            return yaml.load(file, Loader=yaml.SafeLoader)
+
     @abstractmethod
-    def run_metrics(self, query: str, argument: dict = {}) -> float:
+    def run_metric(self,
+                   query: str,
+                   argument: dict = {},
+                   results: dict = {}) -> float:
         """
         Run the query in the language of the database.
         """
 
     @abstractmethod
-    def get_file_path(self) -> str:
+    def get_queries(self) -> str:
         """
-        Get the file path of the queries.
+        Get all queries of your file.
         """
 
 
@@ -26,6 +47,7 @@ class AddonsMetricGenerator(MetricGenerator):
     """
     Abstract class that represents a AddonsMetricGenerator queries.
     """
+
     @abstractmethod
     def get_all_classes(self) -> list:
         """

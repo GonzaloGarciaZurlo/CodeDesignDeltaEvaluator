@@ -12,19 +12,31 @@ class DerivateMetrics(MetricGenerator):
     This class is responsible for calculating the derivated metrics.
     """
 
-    @override
-    def get_file_path(self) -> str:
-        """
-        Get the file path of the queries.
-        """
-        return "src/queries/derivate_metrics.yml"
+    def __init__(self):
+        self.path = "src/queries/derivate_metrics.yml"
 
     @override
-    def run_metrics(self, query: str, argument: dict = {}) -> float:
+    def get_queries(self) -> str:
+        """
+        Get all queries of your file.
+        """
+        try:
+            queries = self._load_queries(self.path)
+            queries.pop('metrics-generator')
+            return queries
+        except FileNotFoundError as e:
+            print(f"Error: {e}")
+            return {}
+
+    @override
+    def run_metric(self,
+                   query: str,
+                   argument: dict = {},
+                   results: dict = {}) -> float:
         """
         Run the list of derivate queries.
         """
-        result = safe_eval(query, argument)
+        result = safe_eval(query, results)
         return result
 
 
