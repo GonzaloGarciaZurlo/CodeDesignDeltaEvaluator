@@ -5,8 +5,8 @@ this class is an intermediate Observer that filters the information it receives.
 import re
 from typing import Final
 from overrides import override
-from src.CddE.api import CddeAPI
-from src.CddE.puml_observer import Observer, Modes, ClassKind, Relationship
+from src.cdde.addons_api import CddeAPI
+from src.cdde.puml_observer import Observer
 
 
 class Filter(Observer):

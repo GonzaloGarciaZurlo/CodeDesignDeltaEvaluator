@@ -1,12 +1,12 @@
 """
 This module handles the main execution flow of the application.
 """
-from enum import Enum, auto, StrEnum
-from .api import load_addons
+from enum import StrEnum
+from .addons_api import load_addons
 from .git_clone import clone_repo
 from .puml_observer import Observer, Modes
-from .result_observer import ResultObserver
-
+from .metric_result_observer import ResultObserver
+from .metrics_api import MetricsCalculator
 
 
 class Main:
@@ -15,8 +15,8 @@ class Main:
     """
 
     def __init__(self):
-        self.lenguage = ""
-        self.queryl = ""
+        self.language = ""
+        self.queryl = []
         self.observers = []
         self.results_observers = []
         self.api = None
@@ -40,23 +40,24 @@ class Main:
         """
         self.results_observers.append(result_observer)
 
-    def set_lenguage(self, lenguage: str) -> None:
+    def set_language(self, language: str) -> None:
         """
         Set the language of the PlantUML file.
         """
-        self.lenguage = lenguage
+        self.language = language
 
     def set_queryl(self, queryl: str) -> None:
         """
         Set the language of the queries.
         """
-        self.queryl = queryl
+        self.queryl.append(queryl)
 
-    def _generate_UML(self, directory: str) -> str:
+    def _generate_uml(self, directory: str) -> str:
         """
         Generate the PlantUML file.
         """
-        return self.api.generators[self.lenguage]().generate_plantuml(directory)
+        return self.api.generators[self.language]().generate_plantuml(
+            directory)
 
     def parse(self, file: str, mode: Modes) -> None:
         """
@@ -72,14 +73,25 @@ class Main:
         """
         Delete the PlantUML file.
         """
-        self.api.generators[self.lenguage]().delete_plantuml(file)
+        self.api.generators[self.language]().delete_plantuml(file)
 
     def run_queries(self) -> None:
         """
         Run the queries.
         """
         result_observer = self._set_result_obs(self.results_observers)
-        self.api.result_queries[self.queryl](result_observer).resolve_query()
+        metric_generators = self.set_metric_generators()
+        metrics_api = MetricsCalculator(metric_generators, result_observer)
+        metrics_api.execute_all_metrics()
+
+    def set_metric_generators(self) -> list:
+        """
+        Set the metric generators.
+        """
+        metric_generators = []
+        for queryl in self.queryl:
+            metric_generators.append(self.api.metric_generator[queryl]())
+        return metric_generators
 
     def _set_composable_obs(self, observers: list) -> Observer:
         """
@@ -97,9 +109,9 @@ class Main:
         lst = []
         for result_observer in res_obs:
             lst.append(self.api.results_observers[result_observer]())
-        return self.api.results_observers['composable'](lst)
+        return self.api.results_observers['res_composable'](lst)
 
-    def cleanDB(self) -> None:
+    def clean_db(self) -> None:
         """
         Clean the database.
         """
@@ -112,11 +124,11 @@ class Main:
         # Git examples
         before, after, git_clone = clone_repo(repo_git, pr_number)
         # Generate the plantuml file
-        archivo_plantuml_before = self._generate_UML(before)
-        archivo_plantuml_after = self._generate_UML(after)
+        archivo_plantuml_before = self._generate_uml(before)
+        archivo_plantuml_after = self._generate_uml(after)
 
         # Clean the database
-        self.cleanDB()
+        self.clean_db()
 
         # Parse the plantuml file
         self.parse(archivo_plantuml_before, Modes.Before)
@@ -131,9 +143,3 @@ class Main:
 
         # Delete the temporary directories
         git_clone.delete_dir()
-
-
-# Execute the main logic
-if __name__ == "__main__":
-    main = Main()
-    main.runCddE("https://github.com/jfeliu007/goplantuml", 168)

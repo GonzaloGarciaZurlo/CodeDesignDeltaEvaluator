@@ -3,8 +3,8 @@ This module contains the ResultPrinter class,
 which is an Observer that prints the information it receives.
 """
 from overrides import override
-from src.CddE.api import CddeAPI
-from src.CddE.result_observer import ResultObserver
+from src.cdde.addons_api import CddeAPI
+from src.cdde.metric_result_observer import ResultObserver
 
 
 class ResultPrinter(ResultObserver):

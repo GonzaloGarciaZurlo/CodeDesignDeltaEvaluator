@@ -1,0 +1,67 @@
+@startuml
+participant main
+participant "API" as API
+participant "Puml Generator" as PumlGenerator
+participant "Puml Parser" as PumlParser
+participant "Filter Parser" as FilterParser
+participant "Puml Observer" as PumlObserver
+participant "RelationshipsDB" as relationshipsDB
+participant "Metric Generator" as MetricGenerator
+participant "Metric API" as MetricAPI
+participant "Result Observer" as ResultObserver
+participant "MetricsDB" as metricsDB
+participant "Metrics Evaluator" as MetricsEvaluator
+participant "Veredict" as Veredict
+
+API -> main: puml_generator
+
+API -> main: puml_parser
+
+API -> main: filter_Parser
+
+API -> main: puml_observer
+
+API -> main: metric_generator
+
+API -> main: result_observer
+
+main -> PumlGenerator: generate_puml()
+
+PumlGenerator -> main: file.puml
+
+main -> PumlObserver: create_observer()
+
+main -> PumlObserver: set_mode(MODE)
+
+main -> PumlParser: parse(file.puml, observer)
+
+activate PumlParser
+
+loop
+    PumlParser -> FilterParser: relationship
+    FilterParser -> PumlObserver: relationship
+    PumlObserver -> relationshipsDB: store\nrelationship
+end
+deactivate PumlParser
+
+main -> MetricGenerator:(result_observer) 
+main -> MetricAPI: (MetricGenerator)
+MetricAPI -> MetricGenerator: run_metrics()
+
+activate MetricGenerator
+
+loop
+    MetricGenerator -> relationshipsDB: queries
+    MetricGenerator -> MetricAPI: result
+    MetricAPI -> ResultObserver: on_result_found()
+    ResultObserver -> metricsDB: store\nmetrics
+end
+deactivate MetricGenerator
+
+
+
+MetricsEvaluator -> metricsDB: metrics
+MetricsEvaluator -> Veredict: veredict
+
+@enduml
+

@@ -17,8 +17,8 @@ from overrides import override
 from .puml_generator import PumlGenerator
 from .puml_parser import PumlParser
 from .puml_observer import Observer
-from .result_observer import ResultObserver
-from .result_queries import ResultQueries
+from .metric_result_observer import ResultObserver
+from .metric_generator import MetricGenerator
 
 
 class CddeAPIAbstract(ABC):
@@ -46,9 +46,9 @@ class CddeAPIAbstract(ABC):
         Register a result observer.
         """
     @abstractmethod
-    def register_result_queries(self, extension: str, queries: Type[ResultQueries]) -> None:
+    def register_metric_generator(self, extension: str, metric_generator: Type[MetricGenerator]) -> None:
         """
-        Register result queries.
+        Register metric generator.
         """
 
 
@@ -62,7 +62,7 @@ class CddeAPI(CddeAPIAbstract):
         self.parsers: dict[str, Type[PumlParser]] = {}
         self.observers: dict[str, Type[Observer]] = {}
         self.results_observers: dict[str, Type[ResultObserver]] = {}
-        self.result_queries: dict[str, Type[ResultQueries]] = {}
+        self.metric_generator: dict[str, Type[MetricGenerator]] = {}
 
     @override
     def register_puml_generator(self, extension: str, generator: Type[PumlGenerator]) -> None:
@@ -93,11 +93,11 @@ class CddeAPI(CddeAPIAbstract):
         self.results_observers[extension] = observer
 
     @override
-    def register_result_queries(self, extension: str, queries: Type[ResultQueries]) -> None:
+    def register_metric_generator(self, extension: str, metric_generator: Type[MetricGenerator]) -> None:
         """
-        Register result queries.
+        Register metric generator.
         """
-        self.result_queries[extension] = queries
+        self.metric_generator[extension] = metric_generator
 
     def _generate_module_name(self, module: str) -> str:
         """

@@ -19,8 +19,8 @@ package "MetricsDB" <<Database>> {
 [Parser] -> [Filter Parser] : 4
 [Filter Parser] -> [Observer] : 5
 [Observer] --> [RelationshipDB] : 6
-[Result Queries] --> [RelationshipDB] : queries 7
-[Result Queries] -> [Result Observer] : 8
+[Metric Generator] --> [RelationshipDB] : queries 7
+[Metric Generator] -> [Result Observer] : 8
 [Result Observer] -> [MetricsDB] : 9
 [MetricsDB] <-- [Metrics Evaluator] : 10
 [Metrics Evaluator] --> [Veredict] : 11

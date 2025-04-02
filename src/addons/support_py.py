@@ -4,8 +4,8 @@ Support for Python files to generate PlantUML files.
 import subprocess
 import os
 from overrides import override
-from src.CddE.api import CddeAPI
-from src.CddE.puml_generator import PumlGenerator
+from src.cdde.addons_api import CddeAPI
+from src.cdde.puml_generator import PumlGenerator
 
 
 class PyPumlGenerator(PumlGenerator):

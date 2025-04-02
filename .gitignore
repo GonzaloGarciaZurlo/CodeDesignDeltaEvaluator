@@ -12,3 +12,6 @@ parser_regex.py
 *.json
 
 .vscode/
+
+memgraph-platform/
+obs_memgraph.py

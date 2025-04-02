@@ -1,0 +1,54 @@
+@startuml MetricGenerator-resultObserver
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam backgroundColor #F9F9F9
+skinparam packageBackgroundColor #DDDDDD
+skinparam packageBorderColor #000000
+skinparam arrowColor #000000
+skinparam arrowThickness 2
+
+abstract class MetricsAPI {
+    execute_all_metrics()
+}
+
+abstract class MetricGenerator {
+    send_result()
+    run_metrics()
+    get_file_path()
+}
+abstract class AddonsMetricGenerator{
+    get_all_classes()
+    get_all_relations()
+    get_all_packages()
+}
+abstract class ResultObserver {
+    open_observer()
+    close_observer()
+    on_result_found()
+    on_data_found()
+}
+
+class DerivateMetrics
+class QueriesCypher
+class QueriesGremlin
+
+class Printer
+class Composable
+class CSV
+
+
+MetricGenerator <|-- DerivateMetrics
+MetricGenerator <|-- AddonsMetricGenerator
+
+AddonsMetricGenerator <|-- QueriesCypher   
+AddonsMetricGenerator <|-- QueriesGremlin
+
+ResultObserver <|-- Printer
+ResultObserver <|-- Composable
+ResultObserver <|-- CSV
+
+MetricGenerator -> MetricsAPI : (results)
+AddonsMetricGenerator -> MetricsAPI : (results)
+
+MetricsAPI -> ResultObserver : (on_result_found())
+@enduml
