@@ -6,7 +6,7 @@ import re
 from typing import Final
 from overrides import override
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer
+from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
 
 
 class Filter(Observer):

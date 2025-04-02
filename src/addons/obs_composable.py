@@ -5,7 +5,7 @@ Selected from 1 or more of the possible observers.
 from typing import List
 from overrides import override
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer
+from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
 
 
 class Composable(Observer):
