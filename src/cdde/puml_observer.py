@@ -6,21 +6,24 @@ from enum import StrEnum
 
 
 class Modes(StrEnum):
-    Before = 'before'
-    After = 'after'
+    """Enum for the modes of the observer."""
+    BEFORE = 'before'
+    AFTER = 'after'
 
 class Relationship(StrEnum):
-    inheritance = '--|>'
-    implementation = '..|>'
-    dependency = '-->'
-    composition = '--*'
-    aggregation = '--o'
-    association = '--'
+    """Enum for the relationships between classes."""
+    INHERITANCE = '--|>'
+    IMPLEMENTATION = '..|>'
+    DEPENDENCY = '-->'
+    COMPOSITION = '--*'
+    AGGREGATION = '--o'
+    ASSOCIATION = '--'
 
 class ClassKind(StrEnum):
-    Class = 'class'
-    Interface = 'interface'
-    Abstract = 'abstract'
+    """Enum for the kinds of classes."""
+    CLASS = 'class'
+    INTERFACE = 'interface'
+    ABSTRACT = 'abstract'
 
 
 class Observer(ABC):

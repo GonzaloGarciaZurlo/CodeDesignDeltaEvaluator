@@ -3,19 +3,24 @@ Module for the MetricsAPI class.
 In this module we define the API for the metrics used in CodeDesignDeltaEvaluator.
 """
 from abc import ABC, abstractmethod
-from overrides import overrides
-import yaml
 from enum import Enum
+from overrides import overrides
 from .metric_generator import AddonsMetricGenerator, MetricGenerator
 from .metric_result_observer import ResultObserver
 
 
 class TimeMetrics(Enum):
+    """
+    Time metrics for queries.
+    """
     SNAPSHOT_METRICS = 'snapshot-metrics'
     DELTA_METRICS = 'delta-metrics'
 
 
 class KindMetrics(Enum):
+    """
+    Kind of metrics for queries.
+    """
     GLOBAL = 'global'
     PER_CLASS = 'per-class'
     PER_PACKAGE = 'per-package'

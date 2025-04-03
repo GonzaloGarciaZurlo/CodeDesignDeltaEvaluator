@@ -9,6 +9,11 @@ class MetricGenerator(ABC):
     """
     Abstract class that represents a MetricGenerator queries.
     """
+    def __init__(self):
+        """
+        Initialize the MetricGenerator.
+        """
+        self.path = None
 
     def _load_queries(self, file_path: str) -> dict:
         """
@@ -36,11 +41,17 @@ class MetricGenerator(ABC):
         Run the query in the language of the database.
         """
 
-    @abstractmethod
-    def get_queries(self) -> str:
+    def get_queries(self) -> dict:
         """
         Get all queries of your file.
         """
+        try:
+            queries = self._load_queries(self.path)
+            queries.pop('metrics-generator')
+            return queries
+        except FileNotFoundError as e:
+            print(f"Error: {e}")
+            return {}
 
 
 class AddonsMetricGenerator(MetricGenerator):

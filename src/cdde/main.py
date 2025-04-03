@@ -1,7 +1,6 @@
 """
 This module handles the main execution flow of the application.
 """
-from enum import StrEnum
 from .addons_api import load_addons
 from .git_clone import clone_repo
 from .puml_observer import Observer, Modes
@@ -131,8 +130,8 @@ class Main:
         self.clean_db()
 
         # Parse the plantuml file
-        self.parse(archivo_plantuml_before, Modes.Before)
-        self.parse(archivo_plantuml_after, Modes.After)
+        self.parse(archivo_plantuml_before, Modes.BEFORE)
+        self.parse(archivo_plantuml_after, Modes.AFTER)
 
         # Run the queries
         self.run_queries()

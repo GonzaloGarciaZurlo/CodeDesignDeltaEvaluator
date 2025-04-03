@@ -1,8 +1,11 @@
+""" script to install goplantuml """
 import subprocess
-import sys
 
 
 def install_goplantuml():
+    """
+    Install goplantuml if not already installed.
+    """
     try:
         # Check if goplantuml is already installed
         subprocess.run(["goplantuml", "-h"],

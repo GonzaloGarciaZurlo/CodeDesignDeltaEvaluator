@@ -19,19 +19,6 @@ class QueriesCypher(AddonsMetricGenerator):
         self.packages = []
 
     @override
-    def get_queries(self) -> str:
-        """
-        Get all queries of your file.
-        """
-        try:
-            queries = self._load_queries(self.path)
-            queries.pop('metrics-generator')
-            return queries
-        except FileNotFoundError as e:
-            print(f"Error: {e}")
-            return {}
-
-    @override
     def run_metric(self,
                    query: str,
                    argument: dict = {},

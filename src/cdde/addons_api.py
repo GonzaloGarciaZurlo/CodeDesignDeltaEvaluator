@@ -46,7 +46,8 @@ class CddeAPIAbstract(ABC):
         Register a result observer.
         """
     @abstractmethod
-    def register_metric_generator(self, extension: str, metric_generator: Type[MetricGenerator]) -> None:
+    def register_metric_generator(self, extension: str, 
+                                metric_generator: Type[MetricGenerator]) -> None:
         """
         Register metric generator.
         """
@@ -93,7 +94,8 @@ class CddeAPI(CddeAPIAbstract):
         self.results_observers[extension] = observer
 
     @override
-    def register_metric_generator(self, extension: str, metric_generator: Type[MetricGenerator]) -> None:
+    def register_metric_generator(self, extension: str, 
+                                metric_generator: Type[MetricGenerator]) -> None:
         """
         Register metric generator.
         """

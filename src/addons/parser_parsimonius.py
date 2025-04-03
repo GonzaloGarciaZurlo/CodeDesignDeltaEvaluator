@@ -7,7 +7,7 @@ from typing import Any
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
+from src.cdde.puml_observer import Observer
 from src.cdde import constants
 
 
