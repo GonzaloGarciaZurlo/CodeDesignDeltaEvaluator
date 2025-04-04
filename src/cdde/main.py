@@ -1,11 +1,13 @@
 """
 This module handles the main execution flow of the application.
 """
+import yaml
 from .addons_api import load_addons
 from .git_clone import clone_repo
 from .puml_observer import Observer, Modes
 from .metric_result_observer import ResultObserver
-from .metrics_api import MetricsCalculator
+from .metrics_api import MetricsCalculator, MetricsAPI
+from .factory_expr_evaluator import FactoryExprEvaluator
 
 
 class Main:
@@ -15,7 +17,7 @@ class Main:
 
     def __init__(self):
         self.language = ""
-        self.queryl = []
+        self.expr_evaluators: list[tuple[str, dict]] = []
         self.observers = []
         self.results_observers = []
         self.api = None
@@ -45,11 +47,13 @@ class Main:
         """
         self.language = language
 
-    def set_queryl(self, queryl: str) -> None:
+    def set_expr_evaluator(self, yaml_filepath: str) -> None:
         """
         Set the language of the queries.
         """
-        self.queryl.append(queryl)
+        yaml = self._get_yaml_as_dict(yaml_filepath)
+        expr_evaluator_name = yaml.pop("metrics-generator")
+        self.expr_evaluators.append((expr_evaluator_name, yaml))
 
     def _generate_uml(self, directory: str) -> str:
         """
@@ -68,6 +72,15 @@ class Main:
         parser = self.api.parsers['parsimonious'](filter)
         parser.parse_uml(file)
 
+    def _set_composable_obs(self, observers: list) -> Observer:
+        """
+        Set the composable observers.
+        """
+        lst = []
+        for observer in observers:
+            lst.append(self.api.observers[observer]())
+        return self.api.observers['composable'](lst)
+
     def delete_plantuml(self, file: str) -> None:
         """
         Delete the PlantUML file.
@@ -79,27 +92,16 @@ class Main:
         Run the queries.
         """
         result_observer = self._set_result_obs(self.results_observers)
-        metric_generators = self.set_metric_generators()
-        metrics_api = MetricsCalculator(metric_generators, result_observer)
-        metrics_api.execute_all_metrics()
-
-    def set_metric_generators(self) -> list:
-        """
-        Set the metric generators.
-        """
-        metric_generators = []
-        for queryl in self.queryl:
-            metric_generators.append(self.api.metric_generator[queryl]())
-        return metric_generators
-
-    def _set_composable_obs(self, observers: list) -> Observer:
-        """
-        Set the composable observers.
-        """
-        lst = []
-        for observer in observers:
-            lst.append(self.api.observers[observer]())
-        return self.api.observers['composable'](lst)
+        factory_expr_evaluator = FactoryExprEvaluator()
+        metrics_api = MetricsAPI()
+        design_db = self.api.design_db['Neo4j']()
+        for expr_eval_name, queries in self.expr_evaluators:
+            expr_evaluator = factory_expr_evaluator.create_evaluator(
+                expr_eval_name, self.api)
+            metrics_calulator = MetricsCalculator(expr_evaluator, design_db,
+                                                  result_observer, queries,
+                                                  metrics_api)
+            metrics_calulator.calc_all_expr()
 
     def _set_result_obs(self, res_obs: list) -> ResultObserver:
         """
@@ -115,6 +117,13 @@ class Main:
         Clean the database.
         """
         self.api.observers['Neo4j']().delete_all()
+
+    def _get_yaml_as_dict(self, filepath: str) -> dict[str, str]:
+        """
+        Get the expression evaluator name from the file path.
+        """
+        with open(filepath, 'r', encoding="utf-8") as file:
+            return yaml.load(file, Loader=yaml.SafeLoader)
 
     def runCddE(self, repo_git: str, pr_number: int) -> None:
         """

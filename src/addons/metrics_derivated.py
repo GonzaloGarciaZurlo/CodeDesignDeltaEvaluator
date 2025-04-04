@@ -3,32 +3,28 @@ This module contains functions for handling derivated metrics.
 """
 from overrides import override
 from src.cdde.eval import safe_eval
-from src.cdde.metric_generator import MetricGenerator
+from src.cdde.expr_evaluator import ExprEvaluator, MetricType
 from src.cdde.addons_api import CddeAPI
 
 
-class DerivateMetrics(MetricGenerator):
+class DerivateMetrics(ExprEvaluator):
     """
     This class is responsible for calculating the derivated metrics.
     """
 
-    def __init__(self):
-        self.path = "src/queries/derivate_metrics.yml"
-
     @override
-    def run_metric(self,
-                   query: str,
-                   argument: dict = {},
-                   results: dict = {}) -> float:
+    def eval(self,
+             expr: str,
+             arguments: dict[str, str] = {},
+             results: dict[str, str | float] = {}) -> MetricType:
         """
-        Run the list of derivate queries.
+        Evaluate an expression.
         """
-        result = safe_eval(query, results)
-        return result
+        return safe_eval(expr, results)
 
 
 def init_module(api: CddeAPI) -> None:
     """
     Initializes the module on the API.
     """
-    api.register_metric_generator('derivate', DerivateMetrics)
+    api.register_expr_evaluator('derivate-metrics', DerivateMetrics)

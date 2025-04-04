@@ -32,15 +32,6 @@ class MetricGenerator(ABC):
         with open(file_path, 'r', encoding="utf-8") as file:
             return yaml.load(file, Loader=yaml.SafeLoader)
 
-    @abstractmethod
-    def run_metric(self,
-                   query: str,
-                   argument: dict = {},
-                   results: dict = {}) -> float:
-        """
-        Run the query in the language of the database.
-        """
-
     def get_queries(self) -> dict:
         """
         Get all queries of your file.
@@ -53,32 +44,3 @@ class MetricGenerator(ABC):
             print(f"Error: {e}")
             return {}
 
-
-class AddonsMetricGenerator(MetricGenerator):
-    """
-    Abstract class that represents a AddonsMetricGenerator queries.
-    """
-
-    @abstractmethod
-    def get_all_classes(self) -> list:
-        """
-        Obtains all classes in the database.
-        """
-
-    @abstractmethod
-    def get_all_relations(self, class_name: str) -> list[tuple]:
-        """
-        Obtains all relations of a class.
-        """
-
-    @abstractmethod
-    def get_all_packages(self) -> list:
-        """
-        Obtains all packages in the database.
-        """
-
-    @abstractmethod
-    def set_packages(self, class_name: str) -> None:
-        """
-        Set the packages of a class.
-        """

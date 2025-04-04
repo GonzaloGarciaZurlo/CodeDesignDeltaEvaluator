@@ -20,7 +20,7 @@ class Printer(Observer):
         Set the mode of the observer.
         """
         print(f"Mode set to: {mode.value}")
-        self.mode = mode
+        self.mode = mode.value
 
     @override
     def open_observer(self) -> None:

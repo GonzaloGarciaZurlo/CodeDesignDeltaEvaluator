@@ -4,8 +4,8 @@ In this module we define the parser with parsimonius to parse the plantuml file.
 Contains the grammar and the class that implements the parser.
 """
 from typing import Any
-from parsimonious.grammar import Grammar
-from parsimonious.nodes import NodeVisitor, Node
+from parsimonious.grammar import Grammar    # pylint: disable=import-error
+from parsimonious.nodes import NodeVisitor, Node    # pylint: disable=import-error
 from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer
 from src.cdde import constants

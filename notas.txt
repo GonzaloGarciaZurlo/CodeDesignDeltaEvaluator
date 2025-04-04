@@ -1,0 +1,4 @@
+acualizar puml
+cambiar nombre run -> 
+
+named tuple clase a clase y relacion(enum)

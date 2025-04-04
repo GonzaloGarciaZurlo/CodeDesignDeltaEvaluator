@@ -18,8 +18,8 @@ from .puml_generator import PumlGenerator
 from .puml_parser import PumlParser
 from .puml_observer import Observer
 from .metric_result_observer import ResultObserver
-from .metric_generator import MetricGenerator
-
+from .expr_evaluator import ExprEvaluator
+from .design_db import DesignDB
 
 class CddeAPIAbstract(ABC):
     """
@@ -46,12 +46,16 @@ class CddeAPIAbstract(ABC):
         Register a result observer.
         """
     @abstractmethod
-    def register_metric_generator(self, extension: str, 
-                                metric_generator: Type[MetricGenerator]) -> None:
+    def register_expr_evaluator(self, extension: str, 
+                                expr_evaluator: Type[ExprEvaluator]) -> None:
         """
-        Register metric generator.
+        Register expression evaluator.
         """
-
+    @abstractmethod
+    def  register_design_db(self, extension: str, db: Type[DesignDB]) -> None:
+        """
+        Register a design database.
+        """
 
 class CddeAPI(CddeAPIAbstract):
     """
@@ -63,7 +67,8 @@ class CddeAPI(CddeAPIAbstract):
         self.parsers: dict[str, Type[PumlParser]] = {}
         self.observers: dict[str, Type[Observer]] = {}
         self.results_observers: dict[str, Type[ResultObserver]] = {}
-        self.metric_generator: dict[str, Type[MetricGenerator]] = {}
+        self.expr_evaluator: dict[str, Type[ExprEvaluator]] = {}
+        self.design_db: dict[str, Type[DesignDB]] = {}
 
     @override
     def register_puml_generator(self, extension: str, generator: Type[PumlGenerator]) -> None:
@@ -94,12 +99,19 @@ class CddeAPI(CddeAPIAbstract):
         self.results_observers[extension] = observer
 
     @override
-    def register_metric_generator(self, extension: str, 
-                                metric_generator: Type[MetricGenerator]) -> None:
+    def register_expr_evaluator(self, extension: str, 
+                                expr_evaluator: Type[ExprEvaluator]) -> None:
         """
-        Register metric generator.
+        Register expression evaluator.
         """
-        self.metric_generator[extension] = metric_generator
+        self.expr_evaluator[extension] = expr_evaluator
+
+    @override
+    def register_design_db(self, extension: str, db: Type[DesignDB]) -> None:
+        """
+        Register a design database.
+        """
+        self.design_db[extension] = db
 
     def _generate_module_name(self, module: str) -> str:
         """
