@@ -17,13 +17,13 @@ class Neo4j(Observer):
         self.uri = "bolt://localhost:7689"
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
-        self.mode = None
+        self.mode: Modes
 
     def _create_class(self, tx: Transaction, name: str, kind: ClassKind) -> None:
         """
         Query to create a node with the class name.
         """
-        name = self.mode + name
+        name = self.mode.value + name
         tx.run(f"CREATE (p:{kind.value} {{name: $name}})", name=name)
 
     def _create_relation(self, tx: Transaction, class1: str, class2:
@@ -33,9 +33,9 @@ class Neo4j(Observer):
         If the nodes do not exist, they are created, 
         with the package attribute set to 'library'.
         """
-        class1 = self.mode + class1
-        class2 = self.mode + class2
-        mode = self.mode + '_'
+        class1 = self.mode.value + class1
+        class2 = self.mode.value + class2
+        mode = self.mode.value + '_'
         query = (
             f"MATCH (a), (b) "
             f"WHERE a.name = $class1 AND b.name = $class2 "
@@ -48,7 +48,7 @@ class Neo4j(Observer):
         )
 
         query_check_or_create_b = (
-            "MERGE (b {name: $class2}) "
+            "MERGE (b {name: $class2})"
             f"ON CREATE SET b.package = ('{mode}' + 'library')"
             "RETURN b"
         )
@@ -95,7 +95,7 @@ class Neo4j(Observer):
         Create a node with the class name.
         """
         with self.driver.session() as session:
-            session.execute_write(self._create_class, class_name, kind)
+            session.execute_write(self._create_class, class_name, kind) # type: ignore
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: Relationship) -> None:
@@ -103,7 +103,7 @@ class Neo4j(Observer):
         Create a relationship between two nodes.
         """
         with self.driver.session() as session:
-            session.execute_write(self._create_relation,
+            session.execute_write(self._create_relation,    # type: ignore
                                   class1, class2, relation)
 
     @override
@@ -114,7 +114,7 @@ class Neo4j(Observer):
         package_name = self.mode.value + '_' + package_name
         with self.driver.session() as session:
             for class_name in classes:
-                class_name = self.mode + class_name
+                class_name = self.mode.value + class_name
                 query = (
                     "MATCH (a) "
                     "WHERE a.name = $class_name "

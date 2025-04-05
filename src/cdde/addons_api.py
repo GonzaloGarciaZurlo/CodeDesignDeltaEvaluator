@@ -46,7 +46,7 @@ class CddeAPIAbstract(ABC):
         Register a result observer.
         """
     @abstractmethod
-    def register_expr_evaluator(self, extension: str, 
+    def register_expr_evaluator(self, extension: str,
                                 expr_evaluator: Type[ExprEvaluator]) -> None:
         """
         Register expression evaluator.
@@ -99,7 +99,7 @@ class CddeAPI(CddeAPIAbstract):
         self.results_observers[extension] = observer
 
     @override
-    def register_expr_evaluator(self, extension: str, 
+    def register_expr_evaluator(self, extension: str,
                                 expr_evaluator: Type[ExprEvaluator]) -> None:
         """
         Register expression evaluator.

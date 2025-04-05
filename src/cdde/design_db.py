@@ -1,3 +1,4 @@
+""" Abstract class that represents a design database. """
 from abc import ABC, abstractmethod
 from typing import NamedTuple
 from src.cdde.puml_observer import Relationship
@@ -13,7 +14,9 @@ class RelationshipType(NamedTuple):
 
 
 class DesignDB(ABC):
-
+    """
+    Abstract class that represents a design database.
+    """
     @abstractmethod
     def get_all_classes(self) -> list[str]:
         """
@@ -44,3 +47,8 @@ class DesignDB(ABC):
         Obtains all packages in the database.
         """
 
+    @abstractmethod
+    def _set_packages(self, class_name: str) -> None:
+        """
+        Sets the packages of a class.
+        """

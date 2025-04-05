@@ -3,10 +3,10 @@ Module for the MetricsAPI class.
 In this module we define the API for the metrics used in CodeDesignDeltaEvaluator.
 """
 from enum import Enum
+from typing import Final
 from .expr_evaluator import ExprEvaluator, MetricType
 from .metric_result_observer import ResultObserver
 from .design_db import DesignDB
-from typing import Final
 
 
 class TimeMetrics(Enum):
@@ -55,6 +55,8 @@ class MetricsAPI:
 
 class MetricsCalculator:
     """
+    This class is responsible for calculating the metrics.
+    This is the main class of the program.
     """
 
     def __init__(self, exp_evaluator: ExprEvaluator, design_db: DesignDB,
@@ -76,7 +78,7 @@ class MetricsCalculator:
         self.set_metrics(self.exp_eval)
 
     def _get_base_metrics(self, design_db: DesignDB) -> None:
-        """ Use this method to get the base metrics of a AddonsMetricGenerator."""
+        """ Use this method to get the base queries of DesignDB."""
         # set classes
         self.__set_classes(design_db)
         # set relationships
@@ -102,7 +104,7 @@ class MetricsCalculator:
     def __set_packages(self, design_db: DesignDB) -> None:
         """ Set the packages of the design_db."""
         for class_name in self.classes:
-            design_db.set_packages(class_name)
+            design_db._set_packages(class_name)
 
         self.packages = design_db.get_all_packages()
         self.result_observer.on_result_data_found(str(self.packages),

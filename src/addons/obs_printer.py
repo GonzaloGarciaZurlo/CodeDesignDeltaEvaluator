@@ -12,7 +12,7 @@ class Printer(Observer):
     """
 
     def __init__(self) -> None:
-        self.mode = None
+        self.mode: Modes
 
     @override
     def set_mode(self, mode: Modes) -> None:
@@ -20,7 +20,7 @@ class Printer(Observer):
         Set the mode of the observer.
         """
         print(f"Mode set to: {mode.value}")
-        self.mode = mode.value
+        self.mode = mode
 
     @override
     def open_observer(self) -> None:
@@ -42,7 +42,7 @@ class Printer(Observer):
         """
         Print the class found.
         """
-        print(f"{kind.value} found: {self.mode}_{class_name}")
+        print(f"{kind.value} found: {self.mode.value}_{class_name}")
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: Relationship) -> None:
@@ -50,14 +50,14 @@ class Printer(Observer):
         Print the relationship found.
         """
         print(f"Relationship found: ({relation.name}) {
-              self.mode}_{class1} --> {self.mode}_{class2}")
+              self.mode.value}_{class1} --> {self.mode.value}_{class2}")
 
     @override
     def on_package_found(self, package_name: str, classes: list) -> None:
         """
         Print the package found.
         """
-        print(f"Package found: {self.mode}_{
+        print(f"Package found: {self.mode.value}_{
               package_name} with classes: {classes}")
 
 

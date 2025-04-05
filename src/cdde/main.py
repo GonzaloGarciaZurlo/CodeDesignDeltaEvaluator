@@ -51,9 +51,9 @@ class Main:
         """
         Set the language of the queries.
         """
-        yaml = self._get_yaml_as_dict(yaml_filepath)
-        expr_evaluator_name = yaml.pop("metrics-generator")
-        self.expr_evaluators.append((expr_evaluator_name, yaml))
+        yaml_file = self._get_yaml_as_dict(yaml_filepath)
+        expr_evaluator_name = yaml_file.pop("metrics-generator")
+        self.expr_evaluators.append((expr_evaluator_name, yaml_file))
 
     def _generate_uml(self, directory: str) -> str:
         """

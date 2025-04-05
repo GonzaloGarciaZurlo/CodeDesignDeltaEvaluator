@@ -9,12 +9,11 @@ using the variables and functions provided.
 This module belongs to Aleksi Torhamo 
 (https://stackoverflow.com/users/680727/aleksi-torhamo),
 Obtained from the following stackoverflow discussion 
-(https://stackoverflow.com/questions/26505420/evaluate-math-equations-from-unsafe-user-input-in-python)
+(https://stackoverflow.com/questions/26505420/evaluate-math-equations-from-unsafe-user-input-in-python) # pylint: disable=line-too-long
 """
 import ast
 import operator
 from typing import Any, Callable, Dict, Union
-
 
 # Dictionary of safe operations
 _operations = {
@@ -30,7 +29,7 @@ _operations = {
 EvalResult = Union[int, float, Any]
 
 
-def safe_eval(expr: Any, variables: dict = {}, functions: dict = {}) -> EvalResult:
+def safe_eval(expr: Any, variables: dict, functions: dict) -> EvalResult:
     """
     Evaluate a mathematical expression safely.
     """

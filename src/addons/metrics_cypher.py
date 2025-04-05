@@ -16,23 +16,20 @@ class QueriesCypher(ExprEvaluator):
         self.uri = "bolt://localhost:7689"
         self.driver = GraphDatabase.driver(self.uri, auth=None)
         self.path = "src/queries/cypher.yml"
-        self.packages = []
 
     @override
     def eval(self,
              expr: str,
-             arguments: dict = {},
-             results: dict = {}) -> MetricType:
+             arguments: dict,  # type: ignore
+             results: dict) -> MetricType: # type: ignore
         """
         Run the list of queries.
         Set the result in the results dictionary.
         Send the result to the observer.
         """
         with self.driver.session() as session:
-            result = session.execute_read(
-                lambda tx: tx.run(expr, **arguments).single()[0])
-
-        return result
+            return session.execute_read(
+                lambda tx: tx.run(expr, **arguments).single()[0])   # type: ignore
 
 
 def init_module(api: CddeAPI) -> None:

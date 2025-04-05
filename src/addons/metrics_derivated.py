@@ -15,8 +15,8 @@ class DerivateMetrics(ExprEvaluator):
     @override
     def eval(self,
              expr: str,
-             arguments: dict[str, str] = {},
-             results: dict[str, str | float] = {}) -> MetricType:
+             arguments: dict[str, str],    # type: ignore
+             results: dict[str, str | float]) -> MetricType:   # type: ignore
         """
         Evaluate an expression.
         """
