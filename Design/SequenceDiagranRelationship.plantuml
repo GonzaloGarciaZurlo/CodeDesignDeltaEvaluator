@@ -1,4 +1,5 @@
 @startuml
+participant CLI
 participant main
 participant "API" as API
 participant "Puml Generator" as PumlGenerator
@@ -6,12 +7,16 @@ participant "Puml Parser" as PumlParser
 participant "Filter Parser" as FilterParser
 participant "Puml Observer" as PumlObserver
 participant "RelationshipsDB" as relationshipsDB
-participant "Metric Generator" as MetricGenerator
+participant "Expression Evaluator" as ExpressionEvaluator
+participant "DesignDB" as designDB
+participant "Metric Calulator" as MetricCalculator
 participant "Metric API" as MetricAPI
 participant "Result Observer" as ResultObserver
 participant "MetricsDB" as metricsDB
 participant "Metrics Evaluator" as MetricsEvaluator
 participant "Veredict" as Veredict
+
+CLI -> main: config
 
 API -> main: puml_generator
 
@@ -21,7 +26,7 @@ API -> main: filter_Parser
 
 API -> main: puml_observer
 
-API -> main: metric_generator
+API -> main: metric_calculator
 
 API -> main: result_observer
 
@@ -44,19 +49,22 @@ loop
 end
 deactivate PumlParser
 
-main -> MetricGenerator:(result_observer) 
-main -> MetricAPI: (MetricGenerator)
-MetricAPI -> MetricGenerator: run_metrics()
+main -> MetricCalculator:(result_observer)
+main -> MetricCalculator:(expression_evaluator)
+main -> MetricCalculator:(designDB)
+main -> MetricCalculator:(metricsAPI) 
 
-activate MetricGenerator
+activate MetricCalculator
 
 loop
-    MetricGenerator -> relationshipsDB: queries
-    MetricGenerator -> MetricAPI: result
-    MetricAPI -> ResultObserver: on_result_found()
+    ExpressionEvaluator -> relationshipsDB: queries
+    ExpressionEvaluator -> MetricCalculator: result
+    designDB -> MetricCalculator: design_graph
+    MetricCalculator -> MetricAPI: save_metrics()
+    MetricCalculator -> ResultObserver: on_result_found()
     ResultObserver -> metricsDB: store\nmetrics
 end
-deactivate MetricGenerator
+deactivate MetricCalculator
 
 
 

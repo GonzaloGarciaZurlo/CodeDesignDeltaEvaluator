@@ -1,4 +1,4 @@
-@startuml MetricGenerator-resultObserver
+@startuml MetricCalculator-resultObserver
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam backgroundColor #F9F9F9
@@ -7,16 +7,18 @@ skinparam packageBorderColor #000000
 skinparam arrowColor #000000
 skinparam arrowThickness 2
 
-abstract class MetricsAPI {
+abstract class MetricCalculator {
     execute_all_metrics()
 }
-
-abstract class MetricGenerator {
-    send_result()
-    run_metrics()
-    get_file_path()
+abstract class ExpressionEvaluator {
+    eval()
 }
-abstract class AddonsMetricGenerator{
+abstract class MetricAPI {
+    save_metric()
+    get_metric()
+    get_all_metrics()
+}
+abstract class DesignDB{
     get_all_classes()
     get_all_relations()
     get_all_packages()
@@ -37,18 +39,17 @@ class Composable
 class CSV
 
 
-MetricGenerator <|-- DerivateMetrics
-MetricGenerator <|-- AddonsMetricGenerator
-
-AddonsMetricGenerator <|-- QueriesCypher   
-AddonsMetricGenerator <|-- QueriesGremlin
+ExpressionEvaluator <|-- QueriesCypher   
+ExpressionEvaluator <|-- QueriesGremlin
+ExpressionEvaluator <|-- DerivateMetrics
 
 ResultObserver <|-- Printer
 ResultObserver <|-- Composable
 ResultObserver <|-- CSV
 
-MetricGenerator -> MetricsAPI : (results)
-AddonsMetricGenerator -> MetricsAPI : (results)
+ExpressionEvaluator -> MetricCalculator : (results)
+MetricCalculator -> ResultObserver : (on_result_found())
+DesignDB -> MetricCalculator : (design)
+MetricCalculator  -> MetricAPI : (save_metric)
 
-MetricsAPI -> ResultObserver : (on_result_found())
 @enduml

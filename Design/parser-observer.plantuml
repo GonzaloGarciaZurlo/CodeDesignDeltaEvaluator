@@ -24,6 +24,7 @@ class pyparsing
 class neo4j
 class printer
 class composable
+class filter
 
 PUML_Parser <|-- parsimonius
 PUML_Parser <|-- regex
@@ -33,6 +34,7 @@ PUML_Parser <|-- pyparsing
 PUML_Obs <|-- neo4j
 PUML_Obs <|-- printer
 PUML_Obs <|-- composable
+PUML_Obs <|-- filter
 
 PUML_Parser -> PUML_Obs : (coupling)
 @enduml
