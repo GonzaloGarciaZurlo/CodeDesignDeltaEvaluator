@@ -29,7 +29,9 @@ _operations = {
 EvalResult = Union[int, float, Any]
 
 
-def safe_eval(expr: Any, variables: dict, functions: dict) -> EvalResult:
+def safe_eval(expr: Any,
+              variables: dict = {},
+              functions: dict = {}) -> EvalResult:
     """
     Evaluate a mathematical expression safely.
     """

@@ -24,7 +24,8 @@
     },
     "packages": {
         "['before_parser', 'before_renderingoptions', 'before_subfolder', 'before_subfolder2', 'before_subfolder3', 'before_testingsupport', 'before_library', 'after_connectionlabels', 'after_main', 'after_namedimports', 'after_parenthesizedtypedeclarations', 'after_parser', 'after_renderingoptions', 'after_subfolder', 'after_subfolder2', 'after_subfolder3', 'after_testingsupport', 'after_library', 'before_connectionlabels', 'before_main', 'before_namedimports', 'before_parenthesizedtypedeclarations']": "Data",
-        "['before_connectionlabels', 'before_main', 'before_namedimports', 'before_parenthesizedtypedeclarations', 'before_parser', 'before_renderingoptions', 'before_subfolder', 'before_subfolder2', 'before_subfolder3', 'before_testingsupport', 'before_library', 'after_connectionlabels', 'after_main', 'after_namedimports', 'after_parenthesizedtypedeclarations', 'after_parser', 'after_renderingoptions', 'after_subfolder', 'after_subfolder2', 'after_subfolder3', 'after_testingsupport', 'after_library']": "Data"
+        "['before_connectionlabels', 'before_main', 'before_namedimports', 'before_parenthesizedtypedeclarations', 'before_parser', 'before_renderingoptions', 'before_subfolder', 'before_subfolder2', 'before_subfolder3', 'before_testingsupport', 'before_library', 'after_connectionlabels', 'after_main', 'after_namedimports', 'after_parenthesizedtypedeclarations', 'after_parser', 'after_renderingoptions', 'after_subfolder', 'after_subfolder2', 'after_subfolder3', 'after_testingsupport', 'after_library']": "Data",
+        "[]": "Data"
     },
     "global": {
         "before_nodes": 29,

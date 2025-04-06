@@ -48,7 +48,7 @@ class DesignDB(ABC):
         """
 
     @abstractmethod
-    def _set_packages(self, class_name: str) -> None:
+    def set_packages(self, class_name: str) -> None:
         """
         Sets the packages of a class.
         """

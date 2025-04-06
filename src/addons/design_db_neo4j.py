@@ -96,6 +96,19 @@ class DesignDBNeo4j(DesignDB):
         return r
 
     @override
+    def set_packages(self, class_name: str) -> None:
+        """
+        Sets all of the packages in the database.
+        """
+        with self.driver.session() as session:
+            session.execute_write(
+                self._set_packages,  # type: ignore
+                class_name)
+        if not self.packages:
+            self.packages = [None]
+        if None in self.packages:
+            self.packages.remove(None)
+
     def _set_packages(self, tx: Transaction, class_name: str) -> None:
         """
         Helper function to get all of the packages in the database.
@@ -104,12 +117,7 @@ class DesignDBNeo4j(DesignDB):
                 MATCH (c {name: $class_name})
                 RETURN c.package AS package
                 """
-        result = tx.run(query,
-                        class_name=class_name).single()[0]  # type: ignore
-        if result not in self.packages:
-            self.packages.append(result)
-        if self.packages == [None]:
-            self.packages = []
+        return tx.run(query, class_name=class_name).single()[0]  # type: ignore
 
     @override
     def get_all_packages(self) -> list[str]:

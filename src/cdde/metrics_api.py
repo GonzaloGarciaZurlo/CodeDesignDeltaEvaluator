@@ -104,7 +104,7 @@ class MetricsCalculator:
     def __set_packages(self, design_db: DesignDB) -> None:
         """ Set the packages of the design_db."""
         for class_name in self.classes:
-            design_db._set_packages(class_name)
+            design_db.set_packages(class_name)
 
         self.packages = design_db.get_all_packages()
         self.result_observer.on_result_data_found(str(self.packages),
