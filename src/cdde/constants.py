@@ -1,25 +1,34 @@
 """
 This file contains the constants used in the parser module.
 """
+from enum import Enum, auto
 from .puml_observer import Relationship, ClassKind
 
 
-def convert_relation(relation: str) -> tuple[Relationship, bool]:
+class Direction(Enum):
+    """
+    Enum class to represent the direction of a relationship.
+    """
+    RIGHT = auto()
+    BACKWARD = auto()
+
+
+def convert_relation(relation: str) -> tuple[Relationship, Direction]:
     """
     function to convert relation symbols to names
     """
     relation_map = {
-        '--': (Relationship.ASSOCIATION, False),
-        '--*': (Relationship.COMPOSITION, False),
-        '*--': (Relationship.COMPOSITION, True),
-        '--o': (Relationship.AGGREGATION, False),
-        'o--': (Relationship.AGGREGATION, True),
-        '-->': (Relationship.DEPENDENCY, False),
-        '<--': (Relationship.DEPENDENCY, True),
-        '..|>': (Relationship.IMPLEMENTATION, False),
-        '<|..': (Relationship.IMPLEMENTATION, True),
-        '--|>': (Relationship.INHERITANCE, False),
-        '<|--': (Relationship.INHERITANCE, True)
+        '--': (Relationship.ASSOCIATION, Direction.RIGHT),
+        '--*': (Relationship.COMPOSITION, Direction.BACKWARD),
+        '*--': (Relationship.COMPOSITION, Direction.RIGHT),
+        '--o': (Relationship.AGGREGATION, Direction.BACKWARD),
+        'o--': (Relationship.AGGREGATION, Direction.RIGHT),
+        '-->': (Relationship.DEPENDENCY, Direction.BACKWARD),
+        '<--': (Relationship.DEPENDENCY, Direction.RIGHT),
+        '..|>': (Relationship.IMPLEMENTATION, Direction.BACKWARD),
+        '<|..': (Relationship.IMPLEMENTATION, Direction.RIGHT),
+        '--|>': (Relationship.INHERITANCE, Direction.BACKWARD),
+        '<|--': (Relationship.INHERITANCE, Direction.RIGHT)
     }
     return relation_map[relation]
 

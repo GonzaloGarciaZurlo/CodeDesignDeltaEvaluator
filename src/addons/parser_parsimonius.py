@@ -4,11 +4,13 @@ In this module we define the parser with parsimonius to parse the plantuml file.
 Contains the grammar and the class that implements the parser.
 """
 from typing import Any
-from parsimonious.grammar import Grammar  # type: ignore[import-untyped]  # pylint: disable=import-error
-from parsimonious.nodes import NodeVisitor, Node # type: ignore[import-untyped]   # pylint: disable=import-error
+# type: ignore[import-untyped]  # pylint: disable=import-error
+from parsimonious.grammar import Grammar
+# type: ignore[import-untyped]   # pylint: disable=import-error
+from parsimonious.nodes import NodeVisitor, Node
 from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer
-from src.cdde import constants
+from src.cdde.constants import convert_relation, convert_class_kind, Direction
 
 
 grammar = Grammar(
@@ -99,7 +101,7 @@ class Parsimonius(NodeVisitor):
         after that, notify the observer about the class found.
         """
         class_type = visited_children[1][0]
-        class_type = constants.convert_class_kind(class_type)
+        class_type = convert_class_kind(class_type)
 
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
@@ -144,8 +146,8 @@ class Parsimonius(NodeVisitor):
         class_b = str(visited_children[4])
 
         # Convert relationship type to standard names
-        rel_type, reverse = constants.convert_relation(rel_type)
-        if reverse:
+        rel_type, reverse = convert_relation(rel_type)
+        if reverse == Direction.BACKWARD:
             self.observer.on_relation_found(
                 class_b, class_a, rel_type)
         else:
