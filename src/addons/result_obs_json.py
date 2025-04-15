@@ -20,6 +20,7 @@ class ResultJson(ResultObserver):
         Event triggered when the observer is opened,
         creating the Json file.
         """
+        self._delete_json()
         self._create_json()
 
     @override
@@ -28,7 +29,6 @@ class ResultJson(ResultObserver):
         Event triggered when the observer is closed,
         deleting the Json file.
         """
-        # self._delete_json()
 
     @override
     def on_result_metric_found(self, result: int, kind: str, class_name) -> None:
@@ -82,7 +82,7 @@ class ResultJson(ResultObserver):
         """
         Delete the json file.
         """
-        subprocess.run("rm results.json", shell=True, check=True)
+        subprocess.run("rm -rf results.json", shell=True, check=True)
 
 
 def init_module(api: CddeAPI) -> None:

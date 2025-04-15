@@ -50,15 +50,6 @@ class DesignDBNeo4j(DesignDB):
     def get_methods_per_class(self, class_name: str) -> list[str]:
         return []
 
-    def set_packages(self, class_name: str) -> None:
-        """
-        Sets all of the packages in the database.
-        """
-        with self.driver.session() as session:
-            session.execute_read(
-                self._set_packages,  # type: ignore
-                class_name)
-
     def _get_class_per_package(self, tx: Transaction,
                                package_name: str) -> list:
         """
@@ -101,13 +92,11 @@ class DesignDBNeo4j(DesignDB):
         Sets all of the packages in the database.
         """
         with self.driver.session() as session:
-            session.execute_write(
+            result = session.execute_write(
                 self._set_packages,  # type: ignore
                 class_name)
-        if not self.packages:
-            self.packages = [None]
-        if None in self.packages:
-            self.packages.remove(None)
+        if result not in self.packages:
+            self.packages.append(result)
 
     def _set_packages(self, tx: Transaction, class_name: str) -> None:
         """
