@@ -65,3 +65,9 @@ class Observer(ABC):
         """
         Event triggered when a package is found.
         """
+
+    @abstractmethod
+    def on_method_found(self, class_name: str, method_name: str) -> None:
+        """
+        Event triggered when a method is found.
+        """

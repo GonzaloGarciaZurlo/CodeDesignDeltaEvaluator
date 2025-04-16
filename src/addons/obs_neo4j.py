@@ -7,7 +7,6 @@ from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
 
 
-
 class Neo4j(Observer):
     """
     Class responsible for creating and initializing a Neo4j database.
@@ -95,7 +94,8 @@ class Neo4j(Observer):
         Create a node with the class name.
         """
         with self.driver.session() as session:
-            session.execute_write(self._create_class, class_name, kind) # type: ignore
+            session.execute_write(self._create_class,
+                                  class_name, kind)  # type: ignore
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: Relationship) -> None:
@@ -122,6 +122,10 @@ class Neo4j(Observer):
                 )
                 session.run(query, class_name=class_name,
                             package_name=package_name)
+
+    @override
+    def on_method_found(self, class_name: str, method_name: str) -> None:
+        pass
 
 
 def init_module(api: CddeAPI) -> None:

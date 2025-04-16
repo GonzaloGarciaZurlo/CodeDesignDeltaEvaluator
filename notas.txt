@@ -2,3 +2,10 @@ acualizar puml
 cambiar nombre run -> 
 
 named tuple clase a clase y relacion(enum)
+
+
+--------------------------------------------------------
+- diferencia entre metodos privados, publicos y Protegidos?
+- 1 gramatica por leng
+- relaciono con cada clase o cuento el global (cant de metodos)
+- 

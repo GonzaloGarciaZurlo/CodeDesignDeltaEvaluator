@@ -3,10 +3,8 @@ Module parser with parsimonius implementation.
 In this module we define the parser with parsimonius to parse the plantuml file.
 Contains the grammar and the class that implements the parser.
 """
-from typing import Any
-# type: ignore[import-untyped]  # pylint: disable=import-error
-from parsimonious.grammar import Grammar
-# type: ignore[import-untyped]   # pylint: disable=import-error
+from typing import Any  # type: ignore[import-untyped]  # pylint: disable=import-error
+from parsimonious.grammar import Grammar    # type: ignore[import-untyped]   # pylint: disable=import-error
 from parsimonious.nodes import NodeVisitor, Node
 from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer
@@ -31,13 +29,25 @@ grammar = Grammar(
 
     name                = ~r'"?[A-Za-z_#[][A-Za-z0-9_.#\[\]]*"?'
 
-    method_name         = ws? ~r'"?[A-Za-z_#[(][A-Za-z0-9_.#\[\]()]*"?' ws?
+    alias               = "as" ws name
 
-    alias               = "as" ws name       
+    body                =  method / attribute / comment  
 
-    body                =  method / comment / method_name 
+    method              = visibility ws? method_name "(" arguments? ")" ws return_type? ws?
 
-    method              = visibility ws? ~"[^\n]+" ws?
+    method_name         = ~r"[A-Za-z_<>\[\]\*\./={}][A-Za-z0-9_<>\[\]\*\./={}]*"
+
+    arguments           = argument ("," ws? ws? argument)* ws?
+
+    argument            = ws? method_name ws? type_expr* ws?
+
+    type_expr           = method_name ws? method_name?
+
+    return_type         = ~r"[A-Za-z_*][A-Za-z0-9_*]*"
+
+    attribute           = visibility ws? attribute_name ws?
+
+    attribute_name      = ~"[^\n]+"
 
     visibility          = ("+" / "-" / "#")        
 
@@ -153,6 +163,12 @@ class Parsimonius(NodeVisitor):
         else:
             self.observer.on_relation_found(
                 class_a, class_b, rel_type)
+            
+    def visit_method(self, node: Node, visited_children: list) -> str:
+        """
+        Extract method name.
+        """
+        return print(str(node.text))
 
     def generic_visit(self, node: Node, visited_children: list) -> list[Any] | Any:
         """

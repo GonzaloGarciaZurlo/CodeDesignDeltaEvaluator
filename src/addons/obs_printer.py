@@ -60,6 +60,12 @@ class Printer(Observer):
         print(f"Package found: {self.mode.value}_{
               package_name} with classes: {classes}")
 
+    @override
+    def on_method_found(self, class_name: str, method_name: str) -> None:
+        """
+        Print the method found.
+        """
+        print(f"Method found: {self.mode.value}_{class_name}::{method_name}")
 
 def init_module(api: CddeAPI) -> None:
     """

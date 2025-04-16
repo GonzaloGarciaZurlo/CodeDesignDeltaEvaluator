@@ -64,6 +64,13 @@ class Composable(Observer):
         for observer in self.observers:
             observer.on_package_found(package_name, classes)
 
+    @override
+    def on_method_found(self, class_name: str, method_name: str) -> None:
+        """
+        Notifies the observers that a method was found.
+        """
+        for observer in self.observers:
+            observer.on_method_found(class_name, method_name)
 
 def init_module(api: CddeAPI) -> None:
     """

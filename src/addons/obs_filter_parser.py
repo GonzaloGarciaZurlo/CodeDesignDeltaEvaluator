@@ -87,6 +87,9 @@ class Filter(Observer):
         """
         self.packages.append([package_name, classes])
 
+    @override
+    def on_method_found(self, class_name: str, method_name: str) -> None:
+        pass
 
 class ClassFilter(Filter):
     """
