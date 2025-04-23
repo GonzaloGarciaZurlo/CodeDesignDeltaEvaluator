@@ -30,7 +30,7 @@ abstract class ResultObserver {
     on_data_found()
 }
 
-class DerivateMetrics
+class DerivedMetrics
 class QueriesCypher
 class QueriesGremlin
 
@@ -41,7 +41,7 @@ class CSV
 
 ExpressionEvaluator <|-- QueriesCypher   
 ExpressionEvaluator <|-- QueriesGremlin
-ExpressionEvaluator <|-- DerivateMetrics
+ExpressionEvaluator <|-- DerivedMetrics
 
 ResultObserver <|-- Printer
 ResultObserver <|-- Composable

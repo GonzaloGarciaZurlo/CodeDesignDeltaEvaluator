@@ -7,20 +7,19 @@ from enum import StrEnum
 import typer
 from .main import Main
 
-app = typer.Typer(name="CddE")
+app = typer.Typer(name="cdde")
 
-# CddE https://github.com/jfeliu007/goplantuml 168 --leng .go # GO (none changes)
+# cdde https://github.com/jfeliu007/goplantuml 168 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
+# cdde https://github.com/jfeliu007/goplantuml 145 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 
-# "https://github.com/jfeliu007/goplantuml", 145  # GO (many changes)
 
-
-class Leng(StrEnum):
+class Lang(StrEnum):
     """
     StrEnum for the language.
     """
-    PY = ".py"
-    GO = ".go"
-    CPP = ".cpp"
+    PY = "py"
+    GO = "go"
+    CPP = "cpp"
 
 
 class Store(StrEnum):
@@ -39,12 +38,12 @@ class FormatResult(StrEnum):
     CONSOLE = "console"
 
 
-def set_language(language: Leng, main: Main) -> None:
+def set_language(language: Lang, main: Main) -> None:
     """
     Set the options of the tool.
     """
     if language is not None:
-        main.set_language(language.value)
+        main.set_language("." + language.value)
 
 
 def add_yamls(yamls: list[str], main: Main) -> None:
@@ -92,7 +91,7 @@ def CddE(
         pr_number: int = typer.Argument(..., help="Pull request number"),
         yamls: List[str] = typer.Argument(
             ..., help="Select the file with the queries"),
-        leng: Leng = typer.Option(Leng.PY.value,
+        lang: Lang = typer.Option(Lang.PY.value,
                                   help="Select language of the repository"),
         store: List[Store] = typer.Option([Store.NEO4J],
                                           help="Select graph database"),
@@ -101,15 +100,14 @@ def CddE(
         False,
         "--visual",
         "--v",
-        help=
-        "Visualize the class and relations of the repository on the console"),
+        help="Visualize the class and relations of the repository on the console"),
         format_result: List[FormatResult] = typer.Option(
             [FormatResult.JSON.value],
             help="Select the format of the result")):
     """Run the tool CddE"""
     main = Main()
     main.set_api()
-    set_language(leng, main)
+    set_language(lang, main)
     add_yamls(yamls, main)
     add_observer(store, main)
     add_visual_mode(visual, main)
