@@ -47,9 +47,9 @@ ResultObserver <|-- Printer
 ResultObserver <|-- Composable
 ResultObserver <|-- CSV
 
-ExpressionEvaluator -> MetricCalculator : (results)
+ExpressionEvaluator <- MetricCalculator : (run())
 MetricCalculator -> ResultObserver : (on_result_found())
-DesignDB -> MetricCalculator : (design)
+DesignDB <- MetricCalculator : (get_base_metrics())
 MetricCalculator  -> MetricAPI : (save_metric)
 
 @enduml
