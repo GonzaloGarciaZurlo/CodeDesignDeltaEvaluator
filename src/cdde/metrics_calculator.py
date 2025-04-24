@@ -27,7 +27,9 @@ class TypeMetrics(StrEnum):
     PER_CLASS = 'per-class'
     PER_PACKAGE = 'per-package'
 
+
 MetricsRepo = dict[str, MetricType]
+
 
 class MetricsRepository:
     """
@@ -71,6 +73,8 @@ class MetricsCalculator:
         self.result_observer: Final = result_observer
         self.queries: Final = yaml
         self.results: MetricsRepository = results
+        self.classes = []
+        self.packages = []
 
     def calc_all_expr(self) -> None:
         """
@@ -78,7 +82,6 @@ class MetricsCalculator:
         """
 
         self._get_base_metrics(self.design_db)
-
         self._set_metrics(self.exp_eval)
 
     def _get_base_metrics(self, design_db: DesignDB) -> None:
@@ -123,8 +126,8 @@ class MetricsCalculator:
                 self._calc_metrics(time_metrics, type_metrics, evaluator)
 
     def _calc_metrics(self, time_metrics: TimeMetrics,
-                        type_metrics: TypeMetrics,
-                        evaluator: ExprEvaluator) -> None:
+                      type_metrics: TypeMetrics,
+                      evaluator: ExprEvaluator) -> None:
         """
         Calculate the metric, depending on the time and type of metric.
         """
@@ -157,7 +160,7 @@ class MetricsCalculator:
             result = evaluator.eval(query['query'], params, results_api)
 
             metric_name = self.__set_metric_name(query['metric'], type_metrics,
-                                               argument)
+                                                 argument)
             self.results.add_metric(metric_name, result)
 
             # Send the result to the observer
@@ -178,7 +181,7 @@ class MetricsCalculator:
         return params
 
     def __set_metric_name(self, metric_name: str, type_metrics: TypeMetrics,
-                        argument: str) -> str:
+                          argument: str) -> str:
         """
         Set the metric name.
         """

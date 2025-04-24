@@ -4,7 +4,8 @@ In this module we define the parser with parsimonius to parse the plantuml file.
 Contains the grammar and the class that implements the parser.
 """
 from typing import Any  # type: ignore[import-untyped]  # pylint: disable=import-error
-from parsimonious.grammar import Grammar    # type: ignore[import-untyped]   # pylint: disable=import-error
+# type: ignore[import-untyped]   # pylint: disable=import-error
+from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
 from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer
@@ -115,10 +116,16 @@ class Parsimonius(NodeVisitor):
 
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
-            alias = visited_children[5][0]
-            self.observer.on_class_found(alias, class_type)
-            return alias
-        self.observer.on_class_found(class_name, class_type)
+            class_name = visited_children[5][0]  # alias
+            self.observer.on_class_found(class_name, class_type)
+        else:
+            self.observer.on_class_found(class_name, class_type)
+
+        # Send methods to observer
+        for method_name in visited_children[11]:
+            if method_name:
+                self.observer.on_method_found(class_name, method_name)
+
         return class_name
 
     def visit_name(self, node: Node, _visited_children: list) -> str:
@@ -163,12 +170,30 @@ class Parsimonius(NodeVisitor):
         else:
             self.observer.on_relation_found(
                 class_a, class_b, rel_type)
-            
-    def visit_method(self, node: Node, visited_children: list) -> str:
+
+    def visit_body(self, _node: Node, visited_children: list) -> str:
         """
         Extract method name.
         """
-        return print(str(node.text))
+        return visited_children[0]
+
+    def visit_method(self, _node: Node, visited_children: list) -> str:
+        """
+        retrurn method name, without arguments and return type.
+        """
+        return visited_children[2]
+
+    def visit_attribute(self, _node: Node, _visited_children: list) -> str:
+        """
+        Ignore attributes.
+        """
+        return ""
+
+    def visit_comment(self, _node: Node, _visited_children: list) -> str:
+        """
+        Ignore comments.
+        """
+        return ""
 
     def generic_visit(self, node: Node, visited_children: list) -> list[Any] | Any:
         """

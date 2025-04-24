@@ -95,7 +95,7 @@ class DesignDBNeo4j(DesignDB):
             result = session.execute_write(
                 self._set_packages,  # type: ignore
                 class_name)
-        if result not in self.packages:
+        if result and result not in self.packages:
             self.packages.append(result)
 
     def _set_packages(self, tx: Transaction, class_name: str) -> None:

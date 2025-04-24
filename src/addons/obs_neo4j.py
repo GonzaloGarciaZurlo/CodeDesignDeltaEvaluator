@@ -55,6 +55,17 @@ class Neo4j(Observer):
         tx.run(query_check_or_create_b, class2=class2)
         tx.run(query, class1=class1, class2=class2)
 
+    def _create_method(self, tx: Transaction, class_name: str,
+                       method_name: str) -> None:
+        """
+        Query to create a node with the method name.
+        """
+        class_name = self.mode.value + class_name
+        method_name = self.mode.value + method_name
+        tx.run(
+            f"CREATE (p:Method {{name: $method_name}})"
+            f"SET p.class_name = $class_name ", method_name=method_name, class_name=class_name)
+
     def delete_all(self) -> None:
         """
         Delete all nodes and relationships in the database.
@@ -94,8 +105,8 @@ class Neo4j(Observer):
         Create a node with the class name.
         """
         with self.driver.session() as session:
-            session.execute_write(self._create_class,
-                                  class_name, kind)  # type: ignore
+            session.execute_write(self._create_class,  # type: ignore
+                                  class_name, kind)
 
     @override
     def on_relation_found(self, class1: str, class2: str, relation: Relationship) -> None:
@@ -125,7 +136,12 @@ class Neo4j(Observer):
 
     @override
     def on_method_found(self, class_name: str, method_name: str) -> None:
-        pass
+        """
+        Create a node with the method name.
+        """
+        with self.driver.session() as session:
+            session.execute_write(self._create_method,  # type: ignore
+                                  class_name, method_name)
 
 
 def init_module(api: CddeAPI) -> None:

@@ -18,11 +18,12 @@ class Filter(Observer):
     """
 
     def __init__(self, observer_to_send: Observer,
-                 classes=None, relationships=None, packages=None) -> None:
+                 classes=None, relationships=None, packages=None, methods=None) -> None:
         self.observer_to_send: Final = observer_to_send
         self.classes: list = self._default_list(classes)
         self.relationships: list = self._default_list(relationships)
         self.packages: list = self._default_list(packages)
+        self.methods: list = self._default_list(methods)
 
     @staticmethod
     def _default_list(value):
@@ -54,16 +55,21 @@ class Filter(Observer):
             self.relationships, self.observer_to_send)
         package_filter = PackageFilter(
             self.packages, self.observer_to_send)
+        method_filter = MethodsFilter(self.methods, self.observer_to_send)
 
         # Filter the information
         class_filter.filter()
         relationship_filter.filter()
         package_filter.filter()
+        method_filter.filter()
+
         # Send the filtered information
         class_filter.send()
         relationship_filter.send()
         package_filter.send()
+        method_filter.send()
 
+        # Close the observer
         self.observer_to_send.close_observer()
 
     @override
@@ -89,7 +95,11 @@ class Filter(Observer):
 
     @override
     def on_method_found(self, class_name: str, method_name: str) -> None:
-        pass
+        """
+        Create a list with the method found.
+        """
+        self.methods.append([class_name, method_name])
+
 
 class ClassFilter(Filter):
     """
@@ -278,6 +288,37 @@ class PackageFilter(Filter):
             package_name, classes = package
             self.observer_to_send.on_package_found(
                 package_name, classes)
+
+
+class MethodsFilter(Filter):
+    """
+    Filter the Methods.
+    """
+
+    def __init__(self, methods: list, observer_to_send: Observer) -> None:
+        super().__init__(observer_to_send, methods=methods)
+
+    def filter(self) -> None:
+        """
+        Filter the methods:
+        - Removing special characters of the methods names.
+        """
+        self._remove_special_characters()
+
+    def _remove_special_characters(self) -> None:
+        """
+        Remove special characters from the methods name.
+        """
+        for i, method in enumerate(self.methods):
+            self.methods[i][1]= re.sub(r'[^A-Za-z0-9\s]', '', method[1])
+
+    def send(self) -> None:
+        """
+        Send the filtered methods to the next observer.
+        """
+        for method in self.methods:
+            class_name, method_name = method
+            self.observer_to_send.on_method_found(class_name, method_name)
 
 
 def init_module(api: CddeAPI) -> None:

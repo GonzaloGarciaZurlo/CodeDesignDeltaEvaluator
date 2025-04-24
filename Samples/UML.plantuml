@@ -193,7 +193,7 @@ namespace subfolder {
 namespace subfolder2 {
     class Subfolder2 << (S,Aquamarine) >> {
         + SubfolderFunction(b bool, i int) bool
-        + SubfolderFunctionWithReturnListParametrized() ([]byte, []byte, []byte, error)
+        + SubfolderFunctionWithReturnListParametrized() ([]byte, []byte, []byte, error) ->>>>>>>>>>>>>>verrrrr--------------------------
 
     }
 }
