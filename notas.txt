@@ -6,3 +6,4 @@
 - Estadistico:
 ver que PRs elegir (con muchos cambios o tambien con pocos)
 solo tomo PRs abiertas?
+sirven todas las metricas? o las filtro para resultados finales e intermedos?
