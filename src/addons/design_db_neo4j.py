@@ -56,7 +56,7 @@ class DesignDBNeo4j(DesignDB):
         Helper function to get all classes in a package.
         """
         query = """
-                MATCH (c {package: $package_name}) RETURN c.name AS name
+                MATCH (c:class {package: $package_name}) RETURN c.name AS name
                 """
         result = tx.run(query, package_name=package_name)
         return [record["name"] for record in result]
@@ -66,7 +66,7 @@ class DesignDBNeo4j(DesignDB):
         Helper function to get all classes in the database.
         """
         query = """
-                MATCH (c) RETURN c.name AS name
+                MATCH (c:class) RETURN c.name AS name
                 """
         result = tx.run(query)
         return [record["name"] for record in result]
@@ -77,7 +77,7 @@ class DesignDBNeo4j(DesignDB):
         Helper function to get all relations of a class.
         """
         query = """
-                MATCH (c {name: $class_name})-[r]->(dependent)
+                MATCH (c:class {name: $class_name})-[r]->(dependent)
                 RETURN type(r) AS relation, dependent.name AS dependent
                 """
         result = tx.run(query, class_name=class_name)
@@ -103,7 +103,7 @@ class DesignDBNeo4j(DesignDB):
         Helper function to get all of the packages in the database.
         """
         query = """
-                MATCH (c {name: $class_name})
+                MATCH (c:class {name: $class_name})
                 RETURN c.package AS package
                 """
         return tx.run(query, class_name=class_name).single()[0]  # type: ignore

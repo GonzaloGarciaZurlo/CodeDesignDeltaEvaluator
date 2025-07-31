@@ -13,15 +13,15 @@ class GitClone:
     Class that creates the before and after directories of a PR.
     """
 
-    def __init__(self, repo_url: str, pr_number: int, branch: str = "master") -> None:
+    def __init__(self, repo_url: str, main_branch: str, pr_number: int) -> None:
         """
         repo_url: The URL of the repository.
         pr_number: The number of the PR.
-        branch: the branch you want to merge into. Default is master.
+        main_branch: the branch you want to merge into. Default is master.
         """
         self.repo_url = repo_url
         self.pr_number = pr_number
-        self.branch = branch
+        self.branch = main_branch
         self.work_dir = os.getcwd()
         self.repo_dir = os.path.join(self.work_dir, "repo-git")
         self.repo = None
@@ -96,11 +96,11 @@ class GitClone:
         shutil.rmtree(self.repo_dir)
 
 
-def clone_repo(repo_url: str, pr_number: int):
+def clone_repo(repo_url: str, main_branch: str, pr_number: int):
     """
     Clone the repository and generate the plantuml files.
     """
-    git_clone = GitClone(repo_url, pr_number)
+    git_clone = GitClone(repo_url, main_branch, pr_number)
     git_clone.run()
     before = git_clone.before_dir
     after = git_clone.after_dir

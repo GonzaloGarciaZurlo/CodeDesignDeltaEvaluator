@@ -45,4 +45,4 @@ def init_module(api: CddeAPI) -> None:
     """
     Initialize the module of the API.
     """
-    api.register_puml_generator('.go', GoPumlGenerator)
+    api.register_puml_generator('go', GoPumlGenerator)

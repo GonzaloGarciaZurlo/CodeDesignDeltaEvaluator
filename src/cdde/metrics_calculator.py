@@ -89,16 +89,16 @@ class MetricsCalculator:
         # set classes
         self.__get_classes(design_db)
         # set relationships
-        self.__get_relationships(design_db)
+        #self.__get_relationships(design_db)
         # set packages
         self.__get_packages(design_db)
 
     def __get_classes(self, design_db: DesignDB) -> None:
         """ Set the classes of the design_db."""
         self.classes = design_db.get_all_classes()
-        self.result_observer.on_result_data_found(str(self.classes), "classes")
-        self.result_observer.on_result_metric_found(len(self.classes),
-                                                    "classes", "total")
+        #self.result_observer.on_result_data_found(str(self.classes), "classes")
+        #self.result_observer.on_result_metric_found(len(self.classes),
+        #                                            "classes", "total")
 
     def __get_relationships(self, design_db: DesignDB) -> None:
         """ Set the relationships of the design_db."""
@@ -114,8 +114,8 @@ class MetricsCalculator:
             design_db.set_packages(class_name)
 
         self.packages = design_db.get_all_packages()
-        self.result_observer.on_result_data_found(str(self.packages),
-                                                  "packages")
+        #self.result_observer.on_result_data_found(str(self.packages),
+        #                                          "packages")
 
     def _set_metrics(self, evaluator: ExprEvaluator) -> None:
         """

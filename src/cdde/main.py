@@ -10,6 +10,8 @@ from .metric_result_observer import ResultObserver
 from .metrics_calculator import MetricsCalculator, MetricsRepository
 from .factory_expr_evaluator import FactoryExprEvaluator
 
+FILE_GRAMMAR = "src/addons/grammars/parsimonious_"
+
 
 class Main:
     """
@@ -59,7 +61,7 @@ class Main:
         except:
             print("Error: The yaml file is not valid.")
             sys.exit(1)
-    
+
     def _generate_uml(self, directory: str) -> str:
         """
         Generate the PlantUML file.
@@ -74,7 +76,8 @@ class Main:
         observer = self._set_composable_obs(self.observers)
         filter = self.api.observers['filter'](observer)
         filter.set_mode(mode)
-        parser = self.api.parsers['parsimonious'](filter)
+        parser = self.api.parsers['parsimonious'](
+            filter, FILE_GRAMMAR + self.language + ".txt")
         parser.parse_uml(file)
 
     def _set_composable_obs(self, observers: list) -> Observer:
@@ -130,12 +133,12 @@ class Main:
         with open(filepath, 'r', encoding="utf-8") as file:
             return yaml.load(file, Loader=yaml.SafeLoader)
 
-    def runCddE(self, repo_git: str, pr_number: int) -> None:
+    def runCddE(self, repo_git: str, main_branch: str, pr_number: int) -> None:
         """
         Run the main logic of the program.
         """
         # Git examples
-        before, after, git_clone = clone_repo(repo_git, pr_number)
+        before, after, git_clone = clone_repo(repo_git, main_branch, pr_number)
         # Generate the plantuml file
         archivo_plantuml_before = self._generate_uml(before)
         archivo_plantuml_after = self._generate_uml(after)

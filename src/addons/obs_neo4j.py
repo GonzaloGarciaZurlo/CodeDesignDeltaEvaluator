@@ -4,7 +4,7 @@ This module handles the creation of a Neo4j database.
 from overrides import override
 from neo4j import GraphDatabase, Transaction
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
+from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship, MethodKind
 
 
 class Neo4j(Observer):
@@ -23,7 +23,7 @@ class Neo4j(Observer):
         Query to create a node with the class name.
         """
         name = self.mode.value + name
-        tx.run(f"CREATE (p:{kind.value} {{name: $name}})", name=name)
+        tx.run(f"CREATE (p:class {{name: $name, type: $type}})", name=name, type=kind.value)
 
     def _create_relation(self, tx: Transaction, class1: str, class2:
                          str, relation: Relationship) -> None:
@@ -36,7 +36,7 @@ class Neo4j(Observer):
         class2 = self.mode.value + class2
         mode = self.mode.value + '_'
         query = (
-            f"MATCH (a), (b) "
+            f"MATCH (a:class), (b:class) "
             f"WHERE a.name = $class1 AND b.name = $class2 "
             f"CREATE (a)-[r:{relation.name}] -> (b)"
         )
@@ -56,15 +56,21 @@ class Neo4j(Observer):
         tx.run(query, class1=class1, class2=class2)
 
     def _create_method(self, tx: Transaction, class_name: str,
-                       method_name: str) -> None:
+                       method_name: str, kind: MethodKind) -> None:
         """
         Query to create a node with the method name.
         """
         class_name = self.mode.value + class_name
         method_name = self.mode.value + method_name
         tx.run(
-            f"CREATE (p:Method {{name: $method_name}})"
-            f"SET p.class_name = $class_name ", method_name=method_name, class_name=class_name)
+            f"CREATE (p:method {{name: $method_name, visibility: $kind}})", method_name=method_name, kind=kind.value)
+        tx.run(#---> ver que pasa si hay 2 metodos con el mismo nombre y distinta clase
+            f"""
+            MATCH (a:class), (p:method)
+            WHERE p.name = $method_name
+            AND a.name = $class_name
+            CREATE (a)-[:HAS_METHOD]->(p)
+            """, class_name=class_name, method_name=method_name)
 
     def delete_all(self) -> None:
         """
@@ -122,7 +128,7 @@ class Neo4j(Observer):
         """
         Set the package name to the classes.
         """
-        package_name = self.mode.value + '_' + package_name
+        package_name = package_name
         with self.driver.session() as session:
             for class_name in classes:
                 class_name = self.mode.value + class_name
@@ -135,13 +141,13 @@ class Neo4j(Observer):
                             package_name=package_name)
 
     @override
-    def on_method_found(self, class_name: str, method_name: str) -> None:
+    def on_method_found(self, class_name: str, method_name: str, kind: MethodKind) -> None:
         """
         Create a node with the method name.
         """
         with self.driver.session() as session:
             session.execute_write(self._create_method,  # type: ignore
-                                  class_name, method_name)
+                                  class_name, method_name, kind)
 
 
 def init_module(api: CddeAPI) -> None:

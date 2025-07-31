@@ -6,7 +6,7 @@ import re
 from typing import Final
 from overrides import override
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
+from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship, MethodKind
 
 
 class Filter(Observer):
@@ -94,11 +94,11 @@ class Filter(Observer):
         self.packages.append([package_name, classes])
 
     @override
-    def on_method_found(self, class_name: str, method_name: str) -> None:
+    def on_method_found(self, class_name: str, method_name: str, kind: MethodKind) -> None:
         """
         Create a list with the method found.
         """
-        self.methods.append([class_name, method_name])
+        self.methods.append([class_name, method_name, kind])
 
 
 class ClassFilter(Filter):
@@ -317,8 +317,8 @@ class MethodsFilter(Filter):
         Send the filtered methods to the next observer.
         """
         for method in self.methods:
-            class_name, method_name = method
-            self.observer_to_send.on_method_found(class_name, method_name)
+            class_name, method_name, kind = method
+            self.observer_to_send.on_method_found(class_name, method_name, kind)
 
 
 def init_module(api: CddeAPI) -> None:

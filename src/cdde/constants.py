@@ -2,7 +2,7 @@
 This file contains the constants used in the parser module.
 """
 from enum import Enum, auto
-from .puml_observer import Relationship, ClassKind
+from .puml_observer import Relationship, ClassKind, MethodKind
 
 
 class Direction(Enum):
@@ -44,3 +44,16 @@ def convert_class_kind(kind: str) -> ClassKind:
         'abstract': (ClassKind.ABSTRACT)
     }
     return kind_map[kind]
+
+
+def convert_visibility(vis: str) -> MethodKind:
+    """
+    Convert visibility symbols to names.
+    """
+    vis_map = {
+        '+': MethodKind.PUBLIC,
+        '-': MethodKind.PRIVATE,
+        '#': MethodKind.PROTECTED
+    }
+    # Default to public if not found
+    return vis_map.get(vis, MethodKind.PUBLIC)

@@ -1,61 +1,43 @@
 metrics-generator: cypher-metrics
 snapshot-metrics:
   global:
-    - metric: before_nodes
-      query: |
-        MATCH (b)
-        WHERE b.name STARTS WITH 'before'
-        RETURN count(b) AS metric
     - metric: before_classes
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'before'
         RETURN count(b) AS metric
-    - metric: before_abstracts
+    - metric: before_concrete_classes
       query: |
-        MATCH (b:abstract)
-        WHERE b.name STARTS WITH 'before'
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'before' AND b.type = 'class'
         RETURN count(b) AS metric
-    - metric: after_nodes
+    - metric: before_abstracts_classes
       query: |
-        MATCH (b)
-        WHERE b.name STARTS WITH 'after'
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'before' AND (b.type = 'abstract' OR b.type = 'interface')
         RETURN count(b) AS metric
     - metric: after_classes
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'after'
         RETURN count(b) AS metric
-    - metric: after_abstracts
+    - metric: after_abstracts_classes
       query: |
-        MATCH (b:abstract)
-        WHERE b.name STARTS WITH 'after'
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'after' AND (b.type = 'abstract' OR b.type = 'interface')
         RETURN count(b) AS metric
-    - metric: deleted_nodes
+    - metric: after_concrete_abstracts
       query: |
-        MATCH (b)
-        WHERE b.name STARTS WITH 'before'
-        AND NOT EXISTS {
-            MATCH (a)
-            WHERE a.name = 'after' + substring(b.name, 6)
-        }
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'after' AND b.type = 'class'
         RETURN count(b) AS metric
-    - metric: added_nodes
-      query: |
-        MATCH (a)
-        WHERE a.name STARTS WITH 'after'
-        AND NOT EXISTS {
-          MATCH (b)
-          WHERE b.name = 'before' + substring(a.name, 5)
-        }
-        RETURN count(a) AS metric
     - metric: deleted_classes
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'before'
         AND NOT EXISTS {
-          MATCH (a:class)
-          WHERE a.name = 'after' + substring(b.name, 6)
+            MATCH (a:class)
+            WHERE a.name = 'after' + substring(b.name, 6)
         }
         RETURN count(b) AS metric
     - metric: added_classes
@@ -67,31 +49,51 @@ snapshot-metrics:
           WHERE b.name = 'before' + substring(a.name, 5)
         }
         RETURN count(a) AS metric
-    - metric: deleted_abstracts
+    - metric: deleted_concrete_classes
       query: |
-        MATCH (b:abstract)
-        WHERE b.name STARTS WITH 'before'
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'before' AND b.type = 'class'
         AND NOT EXISTS {
-          MATCH (a:abstract)
-          WHERE a.name = 'after' + substring(b.name, 6)
+          MATCH (a:class)
+          WHERE a.name = 'after' + substring(b.name, 6) 
+            AND a.type = 'class'
         }
         RETURN count(b) AS metric
-    - metric: added_abstracts
+    - metric: added_concrete_classes
       query: |
-        MATCH (a:abstract)
-        WHERE a.name STARTS WITH 'after'
+        MATCH (a:class)
+        WHERE a.name STARTS WITH 'after' AND a.type = 'class'
         AND NOT EXISTS {
-          MATCH (b:abstract)
+          MATCH (b:class)
           WHERE b.name = 'before' + substring(a.name, 5)
+            AND b.type = 'class'
+        }
+        RETURN count(a) AS metric
+    - metric: deleted_abstracts_classes
+      query: |
+        MATCH (b:class)
+        WHERE b.name STARTS WITH 'before' AND (b.type = 'abstract' OR b.type = 'interface')
+        AND NOT EXISTS {
+          MATCH (a:class)
+          WHERE a.name = 'after' + substring(b.name, 6) AND (a.type = 'abstract' OR a.type = 'interface')
+        }
+        RETURN count(b) AS metric
+    - metric: added_abstracts_classes
+      query: |
+        MATCH (a:class)
+        WHERE a.name STARTS WITH 'after' AND (a.type = 'abstract' OR a.type = 'interface')
+        AND NOT EXISTS {
+          MATCH (b:class)
+          WHERE b.name = 'before' + substring(a.name, 5) AND (b.type = 'abstract' OR b.type = 'interface')
         }
         RETURN count(a) AS metric
     - metric: base_class_change
       query: |
-        MATCH (a)-[r1]->(b)
+        MATCH (a:class)-[r1]->(b:class)
         WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND EXISTS {
-          MATCH (c), (d)
+          MATCH (c:class), (d:class)
           WHERE c.name = 'before' + substring(a.name, 5)
           AND d.name = 'before' + substring(b.name, 5)
           AND NOT EXISTS {
@@ -101,34 +103,34 @@ snapshot-metrics:
         RETURN count(r1) AS metric
     - metric: added_relationships
       query: |
-        MATCH (a)-[r]->(b)
+        MATCH (a:class)-[r]->(b:class)
         WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND NOT EXISTS {
-          MATCH (c)-[r1]->(d)
+          MATCH (c:class)-[r1]->(d:class)
           WHERE c.name = 'before' + substring(a.name, 5)
             AND d.name = 'before' + substring(b.name, 5)
         }
         RETURN count(r) AS metric
     - metric: deleted_relationships
       query: |
-        MATCH (c)-[r]->(d)
+        MATCH (c:class)-[r]->(d:class)
         WHERE c.name STARTS WITH 'before'
         AND d.name STARTS WITH 'before'
         AND NOT EXISTS {
-          MATCH (a)-[r1]->(b)
+          MATCH (a:class)-[r1]->(b:class)
           WHERE a.name = 'after' + substring(c.name, 6)
             AND b.name = 'after' + substring(d.name, 6)
         }
         RETURN count(r) AS metric
     - metric: inheritance_to_composition
       query: |
-        MATCH (a)-[r]->(b)
+        MATCH (a:class)-[r]->(b:class)
         WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND r.name = 'composition'
         AND EXISTS {
-          MATCH (c)-[r1]->(d)
+          MATCH (c:class)-[r1]->(d:class)
           WHERE c.name = 'before' + substring(a.name, 5)
             AND d.name = 'before' + substring(b.name, 5)
             AND r1.name = 'inheritance'
@@ -136,68 +138,119 @@ snapshot-metrics:
         RETURN count(r) AS metric
     - metric: composition_to_inheritance
       query: |
-        MATCH (a)-[r]->(b)
+        MATCH (a:class)-[r]->(b:class)
         WHERE a.name STARTS WITH 'after'
         AND b.name STARTS WITH 'after'
         AND r.name = 'inheritance'
         AND EXISTS {
-          MATCH (c)-[r1]->(d)
+          MATCH (c:class)-[r1]->(d:class)
           WHERE c.name = 'before' + substring(a.name, 5)
             AND d.name = 'before' + substring(b.name, 5)
             AND r1.name = 'composition'
         }
         RETURN count(r) AS metric
-    - metric: class_to_abs
-      query: |
-        MATCH (a:abstract)
-        WHERE a.name STARTS WITH 'after'
-        AND EXISTS {
-          MATCH (b:class)
-          WHERE b.name = 'before' + substring(a.name, 5)
-        }
-        RETURN count(a) AS metric
-    - metric: abs_to_class
+    - metric: concrete_to_abstract
       query: |
         MATCH (a:class)
-        WHERE a.name STARTS WITH 'after'
+        WHERE a.name STARTS WITH 'after' AND (a.type = 'abstract' OR a.type = 'interface')
         AND EXISTS {
-          MATCH (b:abstract)
-          WHERE b.name = 'before' + substring(a.name, 5)
+          MATCH (b:class)
+          WHERE b.name = 'before' + substring(a.name, 5) AND b.type = 'class'
+        }
+        RETURN count(a) AS metric
+    - metric: abstract_to_concrete
+      query: |
+        MATCH (a:class)
+        WHERE a.name STARTS WITH 'after' AND a.type = 'class'
+        AND EXISTS {
+          MATCH (b:class)
+          WHERE b.name = 'before' + substring(a.name, 5) AND (b.type = 'abstract' OR b.type = 'interface')
         }
         RETURN count(a) AS metric
     - metric: number_of_classes_that_change_package
       query: |
         MATCH (a:class)
         WHERE a.name STARTS WITH 'after'
-        AND EXISTS {
-          MATCH (b:class)
-          WHERE b.name = 'before' + substring(a.name, 5)
-            AND a.package <> b.package
-        }
+        WITH a, substring(a.name, 5) AS base_name
+        MATCH (b:class {name: 'before' + base_name})
+        WHERE a.package <> b.package
         RETURN count(a) AS metric
+    - metric: before_methods
+      query: |
+        MATCH (b:class)-[:HAS_METHOD]->(m:method)
+        WHERE b.name STARTS WITH 'before'
+        RETURN count(m) AS metric
+    - metric: after_methods
+      query: |
+        MATCH (b:class)-[:HAS_METHOD]->(m:method)
+        WHERE b.name STARTS WITH 'after'
+        RETURN count(m) AS metric
+    - metric: added_methods
+      query: |
+        MATCH (a:class)-[:HAS_METHOD]->(m:method)
+        WHERE a.name STARTS WITH 'after'
+        AND NOT EXISTS {
+          MATCH (b:class)-[:HAS_METHOD]->(m1:method)
+          WHERE b.name = 'before' + substring(a.name, 5)
+            AND substring(m1.name, 6) = substring(m.name, 5)
+        }
+        RETURN count(m) AS metric
+    - metric: deleted_methods
+      query: |
+        MATCH (b:class)-[:HAS_METHOD]->(m:method)
+        WHERE b.name STARTS WITH 'before'
+        AND NOT EXISTS {
+          MATCH (a:class)-[:HAS_METHOD]->(m1:method)
+          WHERE a.name = 'after' + substring(b.name, 6)
+            AND substring(m1.name, 5) = substring(m.name, 6)
+        }
+        RETURN count(m) AS metric
+    - metric: added_public_methods
+      query: |
+        MATCH (a:class)-[:HAS_METHOD]->(m:method)
+        WHERE a.name STARTS WITH 'after' AND m.visibility = 'public'
+        AND NOT EXISTS {
+          MATCH (b:class)-[:HAS_METHOD]->(m1:method)
+          WHERE b.name = 'before' + substring(a.name, 5)
+            AND substring(m1.name, 6) = substring(m.name, 5)
+        }
+        RETURN count(m) AS metric
+    - metric: private_to_public_methods
+      query: |
+        MATCH (a:class)-[:HAS_METHOD]->(m:method)
+        WHERE a.name STARTS WITH 'after' AND m.visibility = 'public'
+        AND EXISTS {
+          MATCH (b:class)-[:HAS_METHOD]->(m1:method)
+          WHERE b.name = 'before' + substring(a.name, 5)
+            AND substring(m1.name, 6) = substring(m.name, 5)
+            AND (m1.visibility = 'private' OR m1.visibility = 'protected')
+        }
+        RETURN count(m) AS metric
   per-class:
     - metric: abstracts_deps_count
       query: |
-        MATCH (c {name: $class_name})-[r]->(dependent:abstract)
+        MATCH (c:class {name: $class_name})-[r]->(dependent:class)
+        WHERE dependent.type = 'abstract' OR dependent.type = 'interface'
         RETURN count(r) AS metric
     - metric: concrete_deps_count
       query: |
-        MATCH (c {name: $class_name})-[r]->(dependent:class)
+        MATCH (c:class {name: $class_name})-[r]->(dependent:class)
+        WHERE dependent.type = 'class'
         RETURN count(r) AS metric
     - metric: afferent_count
       query: |
-        MATCH (external)-[r]->(c {name: $class_name})
+        MATCH (external:class)-[r]->(c:class {name: $class_name})
         RETURN count(r) AS metric
     - metric: efferent_count
       query: |
-        MATCH (c {name: $class_name})-[r]->(external)
+        MATCH (c:class {name: $class_name})-[r]->(external:class)
         RETURN count(r) AS metric
     - metric: instability_class
       query: |
-        MATCH (c {name: $class_name}) // Nodo actual
-        OPTIONAL MATCH (c)-[r]->(external) // Relación saliente
+        MATCH (c:class {name: $class_name}) // Nodo actual
+        OPTIONAL MATCH (c)-[r]->(external:class) // Relación saliente
         WITH c, count(r) AS salidas
-        OPTIONAL MATCH (external2)-[r2]->(c) // Relación entrante
+        OPTIONAL MATCH (external2:class)-[r2]->(c) // Relación entrante
         WITH salidas, count(r2) AS entradas
         RETURN
           CASE 
@@ -207,23 +260,23 @@ snapshot-metrics:
   per-package:
     - metric: nodes
       query: |
-        MATCH (n)
+        MATCH (n:class)
         WHERE n.package = $package_name
         RETURN count(n) AS metric
     - metric: classes
       query: |
         MATCH (c:class)
-        WHERE c.package = $package_name
+        WHERE c.package = $package_name AND c.type = 'class'
         RETURN count(c) AS metric
     - metric: abstracts
       query: |
-        MATCH (a:abstract)
-        WHERE a.package = $package_name
+        MATCH (a:class)
+        WHERE a.package = $package_name AND a.type = 'abstract' 
         RETURN count(a) AS metric
     - metric: interfaces
       query: |
-        MATCH (i:interface)
-        WHERE i.package = $package_name
+        MATCH (i:class)
+        WHERE i.package = $package_name AND i.type = 'interface'
         RETURN count(i) AS metric
     - metric: efferent
       query: |

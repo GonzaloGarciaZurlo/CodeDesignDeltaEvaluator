@@ -10,6 +10,7 @@ class Modes(StrEnum):
     BEFORE = 'before'
     AFTER = 'after'
 
+
 class Relationship(StrEnum):
     """Enum for the relationships between classes."""
     INHERITANCE = '--|>'
@@ -19,11 +20,19 @@ class Relationship(StrEnum):
     AGGREGATION = '--o'
     ASSOCIATION = '--'
 
+
 class ClassKind(StrEnum):
     """Enum for the kinds of classes."""
     CLASS = 'class'
     INTERFACE = 'interface'
     ABSTRACT = 'abstract'
+
+
+class MethodKind(StrEnum):
+    """Enum for the kinds of methods."""
+    PUBLIC = 'public'
+    PRIVATE = 'private'
+    PROTECTED = 'protected'
 
 
 class Observer(ABC):
@@ -67,7 +76,7 @@ class Observer(ABC):
         """
 
     @abstractmethod
-    def on_method_found(self, class_name: str, method_name: str) -> None:
+    def on_method_found(self, class_name: str, method_name: str, kind: MethodKind) -> None:
         """
         Event triggered when a method is found.
         """

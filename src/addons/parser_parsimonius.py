@@ -8,63 +8,8 @@ from typing import Any  # type: ignore[import-untyped]  # pylint: disable=import
 from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer
-from src.cdde.constants import convert_relation, convert_class_kind, Direction
-
-
-grammar = Grammar(
-    r"""
-    start               = ( package_namespace / class_definition / relationship / other)*
-
-    package_namespace   = package / namespace
-
-    package             = ws? "package" ws? name ws? "{" ws? class_definition+ ws? "}"
-
-    namespace           = ws? "namespace" ws? name ws? "{" ws? class_definition+ ws? "}"
-
-    class_type          = "class" / "interface" / "struct" / "abstract class" / "abstract" 
-
-    class_name          = ~r'"[^"]*"|\'[^\']*\'|[^\s]+'
-
-    class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"     # pylint: disable=line-too-long
-
-    name                = ~r'"?[A-Za-z_#[][A-Za-z0-9_.#\[\]]*"?'
-
-    alias               = "as" ws name
-
-    body                =  method / attribute / comment  
-
-    method              = visibility ws? method_name "(" arguments? ")" ws return_type? ws?
-
-    method_name         = ~r"[A-Za-z_<>\[\]\*\./={}][A-Za-z0-9_<>\[\]\*\./={}]*"
-
-    arguments           = argument ("," ws? ws? argument)* ws?
-
-    argument            = ws? method_name ws? type_expr* ws?
-
-    type_expr           = method_name ws? method_name?
-
-    return_type         = ~r"[A-Za-z_*][A-Za-z0-9_*]*"
-
-    attribute           = visibility ws? attribute_name ws?
-
-    attribute_name      = ~"[^\n]+"
-
-    visibility          = ("+" / "-" / "#")        
-
-    stereotype          = "<<" ws? "(" ws? name ws? "," ws? name ws? ")" ws? ">>"
-
-    relationship_type   = '--|>' / '<|--' / '..|>' / '<|..' / '-->' / '<--' / '*--' / '--*' / 'o--' / '--o' / '--'      # pylint: disable=line-too-long
-    
-    relationship        = name ws* relationship_type ws* name ws?
-
-    comment             = ws? "'" ~"[^\n]*"
-    
-    other               = ~r".*\n?"  
-
-    ws                  = ~r"\s+"                                 
-    """
-)
+from src.cdde.puml_observer import Observer, MethodKind
+from src.cdde.constants import convert_relation, convert_class_kind, Direction, convert_visibility
 
 
 class Parsimonius(NodeVisitor):
@@ -72,8 +17,18 @@ class Parsimonius(NodeVisitor):
     Class that implements parser with parsimonius to parse the plantuml file.
     """
 
-    def __init__(self, observer: Observer) -> None:
+    def __init__(self, observer: Observer, file_grammar: str) -> None:
         self.observer = observer
+        self.file_grammar = file_grammar
+        self.grammar = self._init_grammar()
+
+    def _init_grammar(self) -> Grammar:
+        """
+        Initialize the grammar.
+        """
+        with open(self.file_grammar, 'r', encoding='utf-8') as grammar_file:
+            grammar_text = grammar_file.read()
+        return Grammar(grammar_text)
 
     def parse_uml(self, file: str) -> None:
         """ 
@@ -82,7 +37,7 @@ class Parsimonius(NodeVisitor):
         with open(file, 'r', encoding='utf-8') as filename:
             self.observer.open_observer()
             content = filename.read()
-            tree = grammar.parse(content)
+            tree = self.grammar.parse(content)
             self.visit(tree)
             self.observer.close_observer()
 
@@ -122,9 +77,12 @@ class Parsimonius(NodeVisitor):
             self.observer.on_class_found(class_name, class_type)
 
         # Send methods to observer
-        for method_name in visited_children[11]:
-            if method_name:
-                self.observer.on_method_found(class_name, method_name)
+        for method in visited_children[11]:
+            if method != "":
+                kind = method[0]
+                method_name = method[1:]
+                self.observer.on_method_found(
+                    class_name, method_name, convert_visibility(kind))
 
         return class_name
 
@@ -175,15 +133,21 @@ class Parsimonius(NodeVisitor):
         """
         Extract method name.
         """
-        return visited_children[0]
+        return str(visited_children[0])
 
     def visit_method(self, _node: Node, visited_children: list) -> str:
         """
-        retrurn method name, without arguments and return type.
+        return method name, without arguments and return type.
         """
-        return visited_children[2]
+        return str(visited_children[0]) + str(visited_children[2])
 
-    def visit_attribute(self, _node: Node, _visited_children: list) -> str:
+    def visit_visibility(self, node: Node, _visited_children: list) -> MethodKind:
+        """
+        Convert visibility symbols to names.
+        """
+        return node.text.strip()
+
+    def visit_attribute(self, _node: Node, visited_children: list) -> str:
         """
         Ignore attributes.
         """

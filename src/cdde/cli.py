@@ -9,6 +9,10 @@ from .main import Main
 
 app = typer.Typer(name="cdde")
 
+"GO REPOSITORIES"
+# cdde https://github.com/stretchr/testify/pulls 1775 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
+# cdde https://github.com/sirupsen/logrus 1449 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
+# cdde https://github.com/spf13/cobra --main-branch main 2294 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 168 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 145 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 
@@ -43,7 +47,7 @@ def set_language(language: Lang, main: Main) -> None:
     Set the options of the tool.
     """
     if language is not None:
-        main.set_language("." + language.value)
+        main.set_language(language.value)
 
 
 def add_yamls(yamls: list[str], main: Main) -> None:
@@ -88,6 +92,8 @@ def add_result_observer(result_observer: List[FormatResult],
 def CddE(
         repo_git: str = typer.Argument(
             ..., help="Link to the repository to evaluate"),
+        main_branch: str = typer.Option(
+            "master", help="Main branch of the repository"),
         pr_number: int = typer.Argument(..., help="Pull request number"),
         yamls: List[str] = typer.Argument(
             ..., help="Select the file with the queries"),
@@ -113,4 +119,4 @@ def CddE(
     add_visual_mode(visual, main)
     add_result_observer(format_result, main)
 
-    main.runCddE(repo_git, pr_number)
+    main.runCddE(repo_git, main_branch, pr_number)
