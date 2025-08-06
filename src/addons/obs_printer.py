@@ -4,7 +4,7 @@ which is an Observer that prints the information it receives.
 """
 from overrides import override
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
+from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship, MethodKind
 
 class Printer(Observer):
     """
@@ -60,6 +60,12 @@ class Printer(Observer):
         print(f"Package found: {self.mode.value}_{
               package_name} with classes: {classes}")
 
+    @override
+    def on_method_found(self, class_name: str, method_name: str, kind: MethodKind) -> None:
+        """
+        Print the method found.
+        """
+        print(f"Method found: {self.mode.value}_{class_name}::{method_name} ({kind.value})")
 
 def init_module(api: CddeAPI) -> None:
     """

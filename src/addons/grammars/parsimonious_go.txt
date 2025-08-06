@@ -1,0 +1,49 @@
+start               = ( package_namespace / class_definition / relationship / other)*
+
+package_namespace   = package / namespace
+
+package             = ws? "package" ws? name ws? "{" ws? class_definition+ ws? "}"
+
+namespace           = ws? "namespace" ws? name ws? "{" ws? class_definition+ ws? "}"
+
+class_type          = "class" / "interface" / "struct" / "abstract class" / "abstract" 
+
+class_name          = ~r'"[^"]*"|\'[^\']*\'|[^\s]+'
+
+class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"     # pylint: disable=line-too-long
+
+name                = ~r'"?[A-Za-z_#[][A-Za-z0-9_.#\[\]]*"?'
+
+alias               = "as" ws name
+
+body                =  method / attribute / comment  
+
+method              = visibility ws? method_name "(" arguments? ")" ws return_type? ws?
+
+method_name         = ~r"[A-Za-z_<>\[\]\*\./={}][A-Za-z0-9_<>\[\]\*\./={}]*"
+
+arguments           = argument ("," ws? ws? argument)* ws?
+
+argument            = ws? method_name ws? type_expr* ws?
+
+type_expr           = method_name ws? method_name?
+
+return_type         = ~r"\(?[\[\]A-Za-z0-9_,\s\*\.]*\)?"
+
+attribute           = visibility ws? attribute_name ws?
+
+attribute_name      = ~"[^\n]+"
+
+visibility          = ("+" / "-" / "#")        
+
+stereotype          = "<<" ws? "(" ws? name ws? "," ws? name ws? ")" ws? ">>"
+
+relationship_type   = '--|>' / '<|--' / '..|>' / '<|..' / '-->' / '<--' / '*--' / '--*' / 'o--' / '--o' / '--'      # pylint: disable=line-too-long
+
+relationship        = name ws* relationship_type ws* name ws?
+
+comment             = ws? "'" ~"[^\n]*"
+
+other               = ~r".*\n?"  
+
+ws                  = ~r"\s+"                                 

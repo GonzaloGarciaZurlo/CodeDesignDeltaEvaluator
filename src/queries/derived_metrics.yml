@@ -1,11 +1,13 @@
-metrics-generator: derivate-metrics
-# Derivate metrics are calculated based on the metrics that are already calculated.
+metrics-generator: derived-metrics
+# Derived metrics are calculated based on the metrics that are already calculated.
 snapshot-metrics:
   global:
     - metric: all_abstractness_before
-      query: before_abstracts / before_nodes
+      query: before_abstracts_classes / before_classes
     - metric: all_abstractness_after
-      query: after_abstracts / after_nodes
+      query: after_abstracts_classes / after_classes
+    - metric: delta_methods
+      query: after_methods - before_methods
   per-class:
   per-package:
       - metric: package_abstractness
@@ -15,15 +17,15 @@ snapshot-metrics:
 delta-metrics:
   global:
     - metric: delta_classes
-      query: abs(added_classes - deleted_classes)
+      query: abs(added_concrete_classes - deleted_concrete_classes)
     - metric: delta_relationships
       query: abs(added_relationships - deleted_relationships)
     - metric: delta_nodes
-      query: abs(added_nodes - deleted_nodes)
+      query: abs(added_classes - deleted_classes)
     - metric: delta_abstracts
-      query: abs(added_abstracts - deleted_abstracts)
+      query: abs(added_abstracts_classes - deleted_abstracts_classes)
     - metric: abstractness_delta
-      query: abs((after_abstracts / after_nodes) - (before_abstracts / before_nodes))
-  per-class:  
+      query: abs((after_abstracts_classes / after_classes) - (before_abstracts_classes / before_classes))
+  per-class:
   per-package:
 

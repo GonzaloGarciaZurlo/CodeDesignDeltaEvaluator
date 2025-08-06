@@ -32,34 +32,32 @@ API -> main: result_observer
 
 main -> PumlGenerator: generate_puml()
 
-PumlGenerator -> main: file.puml
+PumlGenerator --> main: file.puml
 
 main -> PumlObserver: create_observer()
-
-main -> PumlObserver: set_mode(MODE)
-
-main -> PumlParser: parse(file.puml, observer)
 
 activate PumlParser
 
 loop
+    main -> PumlObserver: set_mode(MODE)
+    main -> PumlParser: parse(file.puml, observer)
     PumlParser -> FilterParser: relationship
     FilterParser -> PumlObserver: relationship
     PumlObserver -> relationshipsDB: store\nrelationship
 end
 deactivate PumlParser
 
-main -> MetricCalculator:(result_observer)
-main -> MetricCalculator:(expression_evaluator)
-main -> MetricCalculator:(designDB)
-main -> MetricCalculator:(metricsAPI) 
+main -> MetricCalculator: create( result_observer, expression_evaluator, designDB, metricsAPI ) 
 
 activate MetricCalculator
 
 loop
+    MetricCalculator -> designDB: get_base_metrics()
+    designDB --> MetricCalculator: design_graph
+    MetricCalculator -> ResultObserver: on_result_found()
+    MetricCalculator -> ExpressionEvaluator: run()
     ExpressionEvaluator -> relationshipsDB: queries
-    ExpressionEvaluator -> MetricCalculator: result
-    designDB -> MetricCalculator: design_graph
+    ExpressionEvaluator --> MetricCalculator: result
     MetricCalculator -> MetricAPI: save_metrics()
     MetricCalculator -> ResultObserver: on_result_found()
     ResultObserver -> metricsDB: store\nmetrics

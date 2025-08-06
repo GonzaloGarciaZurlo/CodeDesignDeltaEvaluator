@@ -1,4 +1,9 @@
-acualizar puml
-cambiar nombre run -> 
+- 1 gramatica por leng
+- Borrar bien el resutls.json
 
-named tuple clase a clase y relacion(enum)
+- implementar memgraph
+
+- Estadistico:
+ver que PRs elegir (con muchos cambios o tambien con pocos)
+solo tomo PRs abiertas?
+sirven todas las metricas? o las filtro para resultados finales e intermedos?

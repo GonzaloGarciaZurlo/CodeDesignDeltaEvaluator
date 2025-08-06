@@ -10,6 +10,7 @@ class Modes(StrEnum):
     BEFORE = 'before'
     AFTER = 'after'
 
+
 class Relationship(StrEnum):
     """Enum for the relationships between classes."""
     INHERITANCE = '--|>'
@@ -19,11 +20,19 @@ class Relationship(StrEnum):
     AGGREGATION = '--o'
     ASSOCIATION = '--'
 
+
 class ClassKind(StrEnum):
     """Enum for the kinds of classes."""
     CLASS = 'class'
     INTERFACE = 'interface'
     ABSTRACT = 'abstract'
+
+
+class MethodKind(StrEnum):
+    """Enum for the kinds of methods."""
+    PUBLIC = 'public'
+    PRIVATE = 'private'
+    PROTECTED = 'protected'
 
 
 class Observer(ABC):
@@ -64,4 +73,10 @@ class Observer(ABC):
     def on_package_found(self, package_name: str, classes: list) -> None:
         """
         Event triggered when a package is found.
+        """
+
+    @abstractmethod
+    def on_method_found(self, class_name: str, method_name: str, kind: MethodKind) -> None:
+        """
+        Event triggered when a method is found.
         """

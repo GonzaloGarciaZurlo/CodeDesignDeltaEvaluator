@@ -3,57 +3,13 @@ Module parser with parsimonius implementation.
 In this module we define the parser with parsimonius to parse the plantuml file.
 Contains the grammar and the class that implements the parser.
 """
-from typing import Any
-# type: ignore[import-untyped]  # pylint: disable=import-error
-from parsimonious.grammar import Grammar
+from typing import Any  # type: ignore[import-untyped]  # pylint: disable=import-error
 # type: ignore[import-untyped]   # pylint: disable=import-error
+from parsimonious.grammar import Grammar
 from parsimonious.nodes import NodeVisitor, Node
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer
-from src.cdde.constants import convert_relation, convert_class_kind, Direction
-
-
-grammar = Grammar(
-    r"""
-    start               = ( package_namespace / class_definition / relationship / other)*
-
-    package_namespace   = package / namespace
-
-    package             = ws? "package" ws? name ws? "{" ws? class_definition+ ws? "}"
-
-    namespace           = ws? "namespace" ws? name ws? "{" ws? class_definition+ ws? "}"
-
-    class_type          = "class" / "interface" / "struct" / "abstract class" / "abstract" 
-
-    class_name          = ~r'"[^"]*"|\'[^\']*\'|[^\s]+'
-
-    class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"     # pylint: disable=line-too-long
-
-    name                = ~r'"?[A-Za-z_#[][A-Za-z0-9_.#\[\]]*"?'
-
-    method_name         = ws? ~r'"?[A-Za-z_#[(][A-Za-z0-9_.#\[\]()]*"?' ws?
-
-    alias               = "as" ws name       
-
-    body                =  method / comment / method_name 
-
-    method              = visibility ws? ~"[^\n]+" ws?
-
-    visibility          = ("+" / "-" / "#")        
-
-    stereotype          = "<<" ws? "(" ws? name ws? "," ws? name ws? ")" ws? ">>"
-
-    relationship_type   = '--|>' / '<|--' / '..|>' / '<|..' / '-->' / '<--' / '*--' / '--*' / 'o--' / '--o' / '--'      # pylint: disable=line-too-long
-    
-    relationship        = name ws* relationship_type ws* name ws?
-
-    comment             = ws? "'" ~"[^\n]*"
-    
-    other               = ~r".*\n?"  
-
-    ws                  = ~r"\s+"                                 
-    """
-)
+from src.cdde.puml_observer import Observer, MethodKind
+from src.cdde.constants import convert_relation, convert_class_kind, Direction, convert_visibility
 
 
 class Parsimonius(NodeVisitor):
@@ -61,8 +17,18 @@ class Parsimonius(NodeVisitor):
     Class that implements parser with parsimonius to parse the plantuml file.
     """
 
-    def __init__(self, observer: Observer) -> None:
+    def __init__(self, observer: Observer, file_grammar: str) -> None:
         self.observer = observer
+        self.file_grammar = file_grammar
+        self.grammar = self._init_grammar()
+
+    def _init_grammar(self) -> Grammar:
+        """
+        Initialize the grammar.
+        """
+        with open(self.file_grammar, 'r', encoding='utf-8') as grammar_file:
+            grammar_text = grammar_file.read()
+        return Grammar(grammar_text)
 
     def parse_uml(self, file: str) -> None:
         """ 
@@ -71,7 +37,7 @@ class Parsimonius(NodeVisitor):
         with open(file, 'r', encoding='utf-8') as filename:
             self.observer.open_observer()
             content = filename.read()
-            tree = grammar.parse(content)
+            tree = self.grammar.parse(content)
             self.visit(tree)
             self.observer.close_observer()
 
@@ -105,10 +71,19 @@ class Parsimonius(NodeVisitor):
 
         class_name = visited_children[3]
         if len(visited_children[5]) > 0:
-            alias = visited_children[5][0]
-            self.observer.on_class_found(alias, class_type)
-            return alias
-        self.observer.on_class_found(class_name, class_type)
+            class_name = visited_children[5][0]  # alias
+            self.observer.on_class_found(class_name, class_type)
+        else:
+            self.observer.on_class_found(class_name, class_type)
+
+        # Send methods to observer
+        for method in visited_children[11]:
+            if method != "":
+                kind = method[0]
+                method_name = method[1:]
+                self.observer.on_method_found(
+                    class_name, method_name, convert_visibility(kind))
+
         return class_name
 
     def visit_name(self, node: Node, _visited_children: list) -> str:
@@ -153,6 +128,36 @@ class Parsimonius(NodeVisitor):
         else:
             self.observer.on_relation_found(
                 class_a, class_b, rel_type)
+
+    def visit_body(self, _node: Node, visited_children: list) -> str:
+        """
+        Extract method name.
+        """
+        return str(visited_children[0])
+
+    def visit_method(self, _node: Node, visited_children: list) -> str:
+        """
+        return method name, without arguments and return type.
+        """
+        return str(visited_children[0]) + str(visited_children[2])
+
+    def visit_visibility(self, node: Node, _visited_children: list) -> MethodKind:
+        """
+        Convert visibility symbols to names.
+        """
+        return node.text.strip()
+
+    def visit_attribute(self, _node: Node, visited_children: list) -> str:
+        """
+        Ignore attributes.
+        """
+        return ""
+
+    def visit_comment(self, _node: Node, _visited_children: list) -> str:
+        """
+        Ignore comments.
+        """
+        return ""
 
     def generic_visit(self, node: Node, visited_children: list) -> list[Any] | Any:
         """

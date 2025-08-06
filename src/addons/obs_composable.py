@@ -5,7 +5,7 @@ Selected from 1 or more of the possible observers.
 from typing import List
 from overrides import override
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship
+from src.cdde.puml_observer import Observer, Modes, ClassKind, Relationship, MethodKind
 
 
 class Composable(Observer):
@@ -64,6 +64,13 @@ class Composable(Observer):
         for observer in self.observers:
             observer.on_package_found(package_name, classes)
 
+    @override
+    def on_method_found(self, class_name: str, method_name: str, kind: MethodKind) -> None:
+        """
+        Notifies the observers that a method was found.
+        """
+        for observer in self.observers:
+            observer.on_method_found(class_name, method_name, kind)
 
 def init_module(api: CddeAPI) -> None:
     """

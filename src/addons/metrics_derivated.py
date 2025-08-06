@@ -1,5 +1,5 @@
 """
-This module contains functions for handling derivated metrics.
+This module contains functions for handling derived metrics.
 """
 from overrides import override
 from src.cdde.eval import safe_eval
@@ -7,9 +7,9 @@ from src.cdde.expr_evaluator import ExprEvaluator, MetricType
 from src.cdde.addons_api import CddeAPI
 
 
-class DerivateMetrics(ExprEvaluator):
+class DerivedMetrics(ExprEvaluator):
     """
-    This class is responsible for calculating the derivated metrics.
+    This class is responsible for calculating the derived metrics.
     """
 
     @override
@@ -27,4 +27,4 @@ def init_module(api: CddeAPI) -> None:
     """
     Initializes the module on the API.
     """
-    api.register_expr_evaluator('derivate-metrics', DerivateMetrics)
+    api.register_expr_evaluator('derived-metrics', DerivedMetrics)

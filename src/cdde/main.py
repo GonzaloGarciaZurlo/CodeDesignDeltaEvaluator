@@ -2,12 +2,15 @@
 This module handles the main execution flow of the application.
 """
 import yaml
+import sys
 from .addons_api import load_addons
 from .git_clone import clone_repo
 from .puml_observer import Observer, Modes
 from .metric_result_observer import ResultObserver
-from .metrics_api import MetricsCalculator, MetricsAPI
+from .metrics_calculator import MetricsCalculator, MetricsRepository
 from .factory_expr_evaluator import FactoryExprEvaluator
+
+FILE_GRAMMAR = "src/addons/grammars/parsimonious_"
 
 
 class Main:
@@ -51,9 +54,13 @@ class Main:
         """
         Set the language of the queries.
         """
-        yaml_file = self._get_yaml_as_dict(yaml_filepath)
-        expr_evaluator_name = yaml_file.pop("metrics-generator")
-        self.expr_evaluators.append((expr_evaluator_name, yaml_file))
+        try:
+            yaml_file = self._get_yaml_as_dict(yaml_filepath)
+            expr_evaluator_name = yaml_file.pop("metrics-generator")
+            self.expr_evaluators.append((expr_evaluator_name, yaml_file))
+        except:
+            print("Error: The yaml file is not valid.")
+            sys.exit(1)
 
     def _generate_uml(self, directory: str) -> str:
         """
@@ -69,7 +76,8 @@ class Main:
         observer = self._set_composable_obs(self.observers)
         filter = self.api.observers['filter'](observer)
         filter.set_mode(mode)
-        parser = self.api.parsers['parsimonious'](filter)
+        parser = self.api.parsers['parsimonious'](
+            filter, FILE_GRAMMAR + self.language + ".txt")
         parser.parse_uml(file)
 
     def _set_composable_obs(self, observers: list) -> Observer:
@@ -93,7 +101,7 @@ class Main:
         """
         result_observer = self._set_result_obs(self.results_observers)
         factory_expr_evaluator = FactoryExprEvaluator()
-        metrics_api = MetricsAPI()
+        metrics_api = MetricsRepository()
         design_db = self.api.design_db['Neo4j']()
         for expr_eval_name, queries in self.expr_evaluators:
             expr_evaluator = factory_expr_evaluator.create_evaluator(
@@ -125,12 +133,12 @@ class Main:
         with open(filepath, 'r', encoding="utf-8") as file:
             return yaml.load(file, Loader=yaml.SafeLoader)
 
-    def runCddE(self, repo_git: str, pr_number: int) -> None:
+    def runCddE(self, repo_git: str, main_branch: str, pr_number: int) -> None:
         """
         Run the main logic of the program.
         """
         # Git examples
-        before, after, git_clone = clone_repo(repo_git, pr_number)
+        before, after, git_clone = clone_repo(repo_git, main_branch, pr_number)
         # Generate the plantuml file
         archivo_plantuml_before = self._generate_uml(before)
         archivo_plantuml_after = self._generate_uml(after)
