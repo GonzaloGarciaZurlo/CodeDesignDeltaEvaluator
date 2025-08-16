@@ -14,14 +14,16 @@ class ResultJson(ResultObserver):
     """
     Observer that saves the information it receives in a Json file.
     """
+    def __init__(self) -> None:
+        self._delete_json()
+        self._create_json()
+
     @override
     def open_observer(self) -> None:
         """
         Event triggered when the observer is opened,
         creating the Json file.
         """
-        self._delete_json()
-        self._create_json()
 
     @override
     def close_observer(self) -> None:

@@ -80,7 +80,7 @@ class MetricsCalculator:
         """
         Executes all metrics.
         """
-
+        self.result_observer.open_observer()
         self._get_base_metrics(self.design_db)
         self._set_metrics(self.exp_eval)
 
@@ -154,6 +154,7 @@ class MetricsCalculator:
         Set the result in the results dictionary.
         Send the result to the observer.
         """
+
         for query in list_of_queries:
             params = self.__set_params(argument, type_metrics)
             results_api = self.results.get_metrics_dict()
@@ -186,7 +187,7 @@ class MetricsCalculator:
         Set the metric name.
         """
         if type_metrics == TypeMetrics.PER_CLASS:
-            return argument + '_' + metric_name
+            return argument + '___SEP___' + metric_name
         if type_metrics == TypeMetrics.PER_PACKAGE:
-            return argument + '_' + metric_name
+            return argument + '___SEP___' + metric_name
         return metric_name
