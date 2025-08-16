@@ -11,9 +11,9 @@ snapshot-metrics:
   per-class:
   per-package:
       - metric: package_abstractness
-        query: (package._abstracts + package._interfaces) / package._nodes
+        query: (package.___SEP___abstracts + package.___SEP___interfaces) / package.___SEP___nodes
       - metric: package_distance_from_main_sequence
-        query: abs((package._package_abstractness + package._instability) - 1)
+        query: abs((package.___SEP___package_abstractness + package.___SEP___instability) - 1)
 delta-metrics:
   global:
     - metric: delta_classes
