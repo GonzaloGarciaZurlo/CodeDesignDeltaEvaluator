@@ -10,11 +10,11 @@ from .main import Main
 app = typer.Typer(name="cdde")
 
 "GO REPOSITORIES"
-# cdde https://github.com/stretchr/testify/pulls 1775 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
-# cdde https://github.com/sirupsen/logrus 1449 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
-# cdde https://github.com/spf13/cobra --main-branch main 2294 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
-# cdde https://github.com/jfeliu007/goplantuml 168 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
-# cdde https://github.com/jfeliu007/goplantuml 145 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
+# cdde https://github.com/stretchr/testify/pulls 1775 src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --lang go --v
+# cdde https://github.com/sirupsen/logrus 1449 src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --lang go --v
+# cdde https://github.com/spf13/cobra --main-branch main 2294 src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --lang go --v
+# cdde https://github.com/jfeliu007/goplantuml 168 src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --lang go --v
+# cdde https://github.com/jfeliu007/goplantuml 145 src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --lang go --v
 
 
 class Lang(StrEnum):

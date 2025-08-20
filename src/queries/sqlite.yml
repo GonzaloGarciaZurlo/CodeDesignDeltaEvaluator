@@ -1,0 +1,13 @@
+metrics-generator: aggregated-metrics
+# Aggregated metrics are calculated based on the metrics that are already calculated.
+snapshot-metrics:
+  global:
+    - metric: all_abstractness_before
+      query: before_abstracts_classes / before_classes
+  per-class:
+  per-package:
+delta-metrics:
+  global:
+  per-class:
+  per-package:
+
