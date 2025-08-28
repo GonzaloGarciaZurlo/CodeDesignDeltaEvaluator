@@ -7,7 +7,7 @@ snapshot-metrics:
     - metric: all_abstractness_after
       query: after_abstracts_classes / after_classes
     - metric: delta_methods
-      query: after_methods - before_methods
+      query: abs(after_methods - before_methods)
   per-class:
   per-package:
       - metric: package_abstractness

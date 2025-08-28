@@ -8,13 +8,13 @@ import typer
 from .main import Main
 
 app = typer.Typer(name="cdde")
-
 "GO REPOSITORIES"
 # cdde https://github.com/stretchr/testify/pulls 1775 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/sirupsen/logrus 1449 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/spf13/cobra --main-branch main 2294 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 168 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 145 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
+# cdde https://github.com/AdkOP07/filesql 1 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --set-thresholds --main-branch main
 
 
 class Lang(StrEnum):
@@ -88,12 +88,20 @@ def add_result_observer(result_observer: List[FormatResult],
                 main.set_result_observers(res_obs.value)
 
 
+def set_json_to_multiple_metrics(main: Main) -> None:
+    """
+    Set the JSON output to multiple metrics.
+    """
+    main.set_result_observers(FormatResult.JSON.value)
+    main.set_thresholds = True
+
+
 @app.command()
 def CddE(
         repo_git: str = typer.Argument(
             ..., help="Link to the repository to evaluate"),
-        main_branch: str = typer.Option(
-            "master", help="Main branch of the repository"),
+        main_branch: str = typer.Option("master",
+                                        help="Main branch of the repository"),
         pr_number: int = typer.Argument(..., help="Pull request number"),
         yamls: List[str] = typer.Argument(
             ..., help="Select the file with the queries"),
@@ -101,12 +109,17 @@ def CddE(
                                   help="Select language of the repository"),
         store: List[Store] = typer.Option([Store.NEO4J],
                                           help="Select graph database"),
+        set_thresholds: bool = typer.Option(
+            False,
+            "--set-thresholds",
+            help="Set thresholds for the evaluation"),
         visual: bool = typer.
     Option(
         False,
         "--visual",
         "--v",
-        help="Visualize the class and relations of the repository on the console"),
+        help=
+        "Visualize the class and relations of the repository on the console"),
         format_result: List[FormatResult] = typer.Option(
             [FormatResult.JSON.value],
             help="Select the format of the result")):
@@ -119,4 +132,9 @@ def CddE(
     add_visual_mode(visual, main)
     add_result_observer(format_result, main)
 
-    main.runCddE(repo_git, main_branch, pr_number)
+    if set_thresholds:
+        set_json_to_multiple_metrics(main)
+        main.runSetThresholds(repo_git, main_branch)
+
+    else:
+        main.runCddE(repo_git, main_branch, pr_number)
