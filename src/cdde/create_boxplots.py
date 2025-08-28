@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import os
 import json
 from typing import Generator
+import numpy as np
 
 
 class BoxPlotCreator:
@@ -46,3 +47,13 @@ class BoxPlotCreator:
         plt.tight_layout()
         plt.savefig("boxplot.png", dpi=300, bbox_inches="tight")
         plt.close()
+
+    def get_percentiles_90(self) -> dict[str, float]:
+        """
+        Get the 90th percentile of each metric.
+        """
+        results = list(self.get_results_of_each_metric())
+        percentiles = {}
+        for metric, values in results:
+            percentiles[metric] = float(np.percentile(values, 90))
+        return percentiles
