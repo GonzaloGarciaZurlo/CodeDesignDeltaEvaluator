@@ -8,6 +8,10 @@ class ResultObserver(ABC):
     """
     Abstract class that represents an observer.
     """
+
+    def __init__(self):
+        self.set_thresholds = False
+
     @abstractmethod
     def open_observer(self) -> None:
         """
@@ -21,7 +25,8 @@ class ResultObserver(ABC):
         """
 
     @abstractmethod
-    def on_result_metric_found(self, result: int, kind: str, class_name: str) -> None:
+    def on_result_metric_found(self, result: int, kind: str,
+                               class_name: str) -> None:
         """
         Event triggered when a metric is found.
         """
@@ -30,4 +35,10 @@ class ResultObserver(ABC):
     def on_result_data_found(self, result: str, kind: str) -> None:
         """
         Event triggered when a structure data is found.
+        """
+
+    @abstractmethod
+    def delete_file(self) -> None:
+        """
+        Delete the result observer file.
         """
