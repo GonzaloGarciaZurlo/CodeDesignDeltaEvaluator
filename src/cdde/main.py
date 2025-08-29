@@ -9,6 +9,7 @@ from .puml_observer import Observer, Modes
 from .metric_result_observer import ResultObserver
 from .metrics_calculator import MetricsCalculator, MetricsRepository
 from .factory_expr_evaluator import FactoryExprEvaluator
+from .create_boxplots import BoxPlotCreator
 
 FILE_GRAMMAR = "src/addons/grammars/parsimonious_"
 
@@ -198,3 +199,6 @@ class Main:
             git_traverse.delete_dir(after)
 
         git_traverse.delete_dir(git_traverse.repo_dir)
+
+        box_plot_creator = BoxPlotCreator("results.json")
+        box_plot_creator.create_boxplots()
