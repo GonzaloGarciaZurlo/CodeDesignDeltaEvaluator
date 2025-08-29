@@ -7,6 +7,7 @@ from src.cdde.addons_api import CddeAPI
 from typing import Optional
 import pysqlite3 as sqlite3
 from enum import StrEnum
+import os
 
 
 class TableName(StrEnum):
@@ -30,14 +31,28 @@ class AggregatedMetrics(ExprEvaluator):
              arguments: dict[str, str],    # type: ignore
              results: dict[str, str | float]) -> MetricType:   # type: ignore
         """
-        Evaluate an expression.
+        Evaluate an expression in sqlite.
         """
         self._api = results
+
         if not self._db:
             self._set_db()
 
+        results = self.execute_sqlite(expr)
+        return results
+
+    def execute_sqlite(self, expr: str) -> dict[MetricType]:
+        self._db_cursor.execute(expr)
+        result = self._db_cursor.fetchone()
+        if result:
+            return {k: v for k, v in zip(self._db_cursor.description, result)}
+        return {}
+
     def _set_db(self) -> None:
+        self.delete_db()
         self._db = sqlite3.connect("table.db")
+        self._db.enable_load_extension(True)
+        self._db.load_extension("src/addons/extension-functions.so")
         self._db_cursor = self._db.cursor()
         d1, d2 = self.split_dict(self._api, "___SEP___nodes", include=False)
 
@@ -46,7 +61,8 @@ class AggregatedMetrics(ExprEvaluator):
         self._populate_tables(metrics_classes_names,
                               classes, TableName.CLASSES)
 
-        metrics_packages_names, packages = self._get_metrics_names_and_types(d2)
+        metrics_packages_names, packages = self._get_metrics_names_and_types(
+            d2)
         self._create_db(metrics_packages_names, TableName.PACKAGES)
         self._populate_tables(metrics_packages_names,
                               packages, TableName.PACKAGES)
@@ -60,9 +76,8 @@ class AggregatedMetrics(ExprEvaluator):
                     return dict(items[:i+1]), dict(items[i+1:])
                 else:
                     return dict(items[:i]), dict(items[i:])
-        
-        return data, {}
 
+        return data, {}
 
     def _get_metrics_names_and_types(self, api: dict[str, str | float]) -> tuple[list[str], list[str]]:
         """
@@ -109,6 +124,13 @@ class AggregatedMetrics(ExprEvaluator):
             """
             self._db_cursor.execute(sqlQuery)
             self._db.commit()
+
+    def delete_db(self) -> None:
+        """
+        Delete the database.
+        """
+        if os.path.exists("table.db"):
+            os.remove("table.db")
 
 
 def init_module(api: CddeAPI) -> None:
