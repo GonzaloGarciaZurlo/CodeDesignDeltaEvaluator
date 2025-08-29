@@ -128,7 +128,7 @@ class Neo4j(Observer):
         """
         Set the package name to the classes.
         """
-        package_name = package_name
+        package_name = self.mode.value + package_name
         with self.driver.session() as session:
             for class_name in classes:
                 class_name = self.mode.value + class_name
