@@ -56,4 +56,4 @@ class BoxPlotCreator:
         percentiles = {}
         for metric, values in results:
             percentiles[metric] = float(np.percentile(values, 90))
-        return percentiles
+        return metric, percentiles

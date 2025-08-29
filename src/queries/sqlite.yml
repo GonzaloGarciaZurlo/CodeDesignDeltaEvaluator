@@ -2,198 +2,216 @@ metrics-generator: aggregated-metrics
 # Aggregated metrics are calculated based on the metrics that are already calculated.
 snapshot-metrics:
   global:
-    - metric: before_packages_avg
-      query: |
+  - metric: delta_packages_avg
+    query: |
+      WITH before AS (
         SELECT 
-          AVG(nodes)        AS avg_nodes,
-          AVG(classes)      AS avg_classes,
-          AVG(abstracts)    AS avg_abstracts,
-          AVG(interfaces)   AS avg_interfaces,
-          AVG(efferent)     AS avg_efferent,
-          AVG(afferent)     AS avg_afferent,
-          AVG(instability)  AS avg_instability,
-          AVG(package_abstractness) AS avg_package_abstractness,
-          AVG(package_distance_from_main_sequence) AS avg_d_f_main_size
+          AVG(nodes)        AS nodes,
+          AVG(classes)      AS classes,
+          AVG(abstracts)    AS abstracts,
+          AVG(interfaces)   AS interfaces,
+          AVG(efferent)     AS efferent,
+          AVG(afferent)     AS afferent,
+          AVG(instability)  AS instability,
+          AVG(package_abstractness) AS package_abstractness,
+          AVG(package_distance_from_main_sequence) AS d_f_main_size
         FROM packages
-        WHERE time = 'before';
-    - metric: before_packages_max
-      query: |
+        WHERE time = 'before'
+      ),
+      after AS (
         SELECT 
-          MAX(nodes)      AS max_nodes,
-          MAX(classes)    AS max_classes,
-          MAX(abstracts)  AS max_abstracts,
-          MAX(interfaces) AS max_interfaces,
-          MAX(efferent)   AS max_efferent,
-          MAX(afferent)   AS max_afferent,
-          MAX(instability) AS max_instability,
-          MAX(package_abstractness) AS max_package_abstractness,
-          MAX(package_distance_from_main_sequence) AS max_d_f_main_size
+          AVG(nodes)        AS nodes,
+          AVG(classes)      AS classes,
+          AVG(abstracts)    AS abstracts,
+          AVG(interfaces)   AS interfaces,
+          AVG(efferent)     AS efferent,
+          AVG(afferent)     AS afferent,
+          AVG(instability)  AS instability,
+          AVG(package_abstractness) AS package_abstractness,
+          AVG(package_distance_from_main_sequence) AS d_f_main_size
         FROM packages
-        WHERE time = 'before';
-    - metric: before_packages_min
-      query: |
+        WHERE time = 'after'
+      )
+      SELECT
+        after.nodes - before.nodes AS _nodes,
+        after.classes - before.classes AS _classes,
+        after.abstracts - before.abstracts AS _abstracts,
+        after.interfaces - before.interfaces AS _interfaces,
+        after.efferent - before.efferent AS _efferent,
+        after.afferent - before.afferent AS _afferent,
+        after.instability - before.instability AS _instability,
+        after.package_abstractness - before.package_abstractness AS _package_abstractness,
+        after.d_f_main_size - before.d_f_main_size AS _d_f_main_size
+      FROM before, after;
+  - metric: delta_packages_max
+    query: |
+      WITH before AS (
         SELECT 
-          MIN(nodes)      AS min_nodes,
-          MIN(classes)    AS min_classes,
-          MIN(abstracts)  AS min_abstracts,
-          MIN(interfaces) AS min_interfaces,
-          MIN(efferent)   AS min_efferent,
-          MIN(afferent)   AS min_afferent,
-          MIN(instability) AS min_instability,
-          MIN(package_abstractness) AS min_package_abstractness,
-          MIN(package_distance_from_main_sequence) AS min_d_f_main_size
+          MAX(nodes)        AS nodes,
+          MAX(classes)      AS classes,
+          MAX(abstracts)    AS abstracts,
+          MAX(interfaces)   AS interfaces,
+          MAX(efferent)     AS efferent,
+          MAX(afferent)     AS afferent,
+          MAX(instability)  AS instability,
+          MAX(package_abstractness) AS package_abstractness,
+          MAX(package_distance_from_main_sequence) AS d_f_main_size
         FROM packages
-        WHERE time = 'before';
-    - metric: before_packages_stdev
-      query: |
+        WHERE time = 'before'
+      ),
+      after AS (
         SELECT 
-          stdev(nodes)        AS stdev_nodes,
-          stdev(classes)      AS stdev_classes,
-          stdev(abstracts)    AS stdev_abstracts,
-          stdev(interfaces)   AS stdev_interfaces,
-          stdev(efferent)     AS stdev_efferent,
-          stdev(afferent)     AS stdev_afferent,
-          stdev(instability)  AS stdev_instability,
-          stdev(package_abstractness) AS stdev_package_abstractness,
-          stdev(package_distance_from_main_sequence) AS stdev_d_f_main_size
+          MAX(nodes)        AS nodes,
+          MAX(classes)      AS classes,
+          MAX(abstracts)    AS abstracts,
+          MAX(interfaces)   AS interfaces,
+          MAX(efferent)     AS efferent,
+          MAX(afferent)     AS afferent,
+          MAX(instability)  AS instability,
+          MAX(package_abstractness) AS package_abstractness,
+          MAX(package_distance_from_main_sequence) AS d_f_main_size
         FROM packages
-        WHERE time = 'before';
-    - metric: after_packages_avg
-      query: |
+        WHERE time = 'after'
+      )
+      SELECT
+        after.nodes - before.nodes AS _nodes,
+        after.classes - before.classes AS _classes,
+        after.abstracts - before.abstracts AS _abstracts,
+        after.interfaces - before.interfaces AS _interfaces,
+        after.efferent - before.efferent AS _efferent,
+        after.afferent - before.afferent AS _afferent,
+        after.instability - before.instability AS _instability,
+        after.package_abstractness - before.package_abstractness AS _package_abstractness,
+        after.d_f_main_size - before.d_f_main_size AS _d_f_main_size
+      FROM before, after;
+  - metric: delta_packages_stdev
+    query: |
+      WITH before AS (
         SELECT 
-          AVG(nodes)        AS avg_nodes,
-          AVG(classes)      AS avg_classes,
-          AVG(abstracts)    AS avg_abstracts,
-          AVG(interfaces)   AS avg_interfaces,
-          AVG(efferent)     AS avg_efferent,
-          AVG(afferent)     AS avg_afferent,
-          AVG(instability)  AS avg_instability,
-          AVG(package_abstractness) AS avg_package_abstractness,
-          AVG(package_distance_from_main_sequence) AS avg_d_f_main_size
+          stdev(nodes)        AS nodes,
+          stdev(classes)      AS classes,
+          stdev(abstracts)    AS abstracts,
+          stdev(interfaces)   AS interfaces,
+          stdev(efferent)     AS efferent,
+          stdev(afferent)     AS afferent,
+          stdev(instability)  AS instability,
+          stdev(package_abstractness) AS package_abstractness,
+          stdev(package_distance_from_main_sequence) AS d_f_main_size
         FROM packages
-        WHERE time = 'after';
-    - metric: after_packages_max
-      query: |
+        WHERE time = 'before'
+      ),
+      after AS (
         SELECT 
-          MAX(nodes)      AS max_nodes,
-          MAX(classes)    AS max_classes,
-          MAX(abstracts)  AS max_abstracts,
-          MAX(interfaces) AS max_interfaces,
-          MAX(efferent)   AS max_efferent,
-          MAX(afferent)   AS max_afferent,
-          MAX(instability) AS max_instability,
-          MAX(package_abstractness) AS max_package_abstractness,
-          MAX(package_distance_from_main_sequence) AS max_d_f_main_size
+          stdev(nodes)        AS nodes,
+          stdev(classes)      AS classes,
+          stdev(abstracts)    AS abstracts,
+          stdev(interfaces)   AS interfaces,
+          stdev(efferent)     AS efferent,
+          stdev(afferent)     AS afferent,
+          stdev(instability)  AS instability,
+          stdev(package_abstractness) AS package_abstractness,
+          stdev(package_distance_from_main_sequence) AS d_f_main_size
         FROM packages
-        WHERE time = 'after';
-    - metric: after_packages_min
-      query: |
+        WHERE time = 'after'
+      )
+      SELECT
+        after.nodes - before.nodes AS _nodes,
+        after.classes - before.classes AS _classes,
+        after.abstracts - before.abstracts AS _abstracts,
+        after.interfaces - before.interfaces AS _interfaces,
+        after.efferent - before.efferent AS _efferent,
+        after.afferent - before.afferent AS _afferent,
+        after.instability - before.instability AS _instability,
+        after.package_abstractness - before.package_abstractness AS _package_abstractness,
+        after.d_f_main_size - before.d_f_main_size AS _d_f_main_size
+      FROM before, after;
+  - metric: delta_classes_avg
+    query: |
+      WITH before AS (
         SELECT 
-          MIN(nodes)      AS min_nodes,
-          MIN(classes)    AS min_classes,
-          MIN(abstracts)  AS min_abstracts,
-          MIN(interfaces) AS min_interfaces,
-          MIN(efferent)   AS min_efferent,
-          MIN(afferent)   AS min_afferent,
-          MIN(instability) AS min_instability,
-          MIN(package_abstractness) AS min_package_abstractness,
-          MIN(package_distance_from_main_sequence) AS min_d_f_main_size
-        FROM packages
-        WHERE time = 'after';
-    - metric: after_packages_stdev
-      query: |
+          AVG(abstracts_deps_count) AS abstracts_deps_count,
+          AVG(concrete_deps_count)  AS concrete_deps_count,
+          AVG(afferent_count)       AS afferent_count,
+          AVG(efferent_count)       AS efferent_count,
+          AVG(instability_class)    AS instability_class
+        FROM classes
+        WHERE time = 'before'
+      ),
+      after AS (
         SELECT 
-          stdev(nodes)        AS stdev_nodes,
-          stdev(classes)      AS stdev_classes,
-          stdev(abstracts)    AS stdev_abstracts,
-          stdev(interfaces)   AS stdev_interfaces,
-          stdev(efferent)     AS stdev_efferent,
-          stdev(afferent)     AS stdev_afferent,
-          stdev(instability)  AS stdev_instability,
-          stdev(package_abstractness) AS stdev_package_abstractness,
-          stdev(package_distance_from_main_sequence) AS stdev_d_f_main_size
-        FROM packages
-        WHERE time = 'after';
-    - metric: before_classes_min
-      query: |
-        SELECT
-          MIN(abstracts_deps_count) AS min_abstracts_deps_count,
-          MIN(concrete_deps_count)  AS min_concrete_deps_count,
-          MIN(afferent_count)       AS min_afferent_count,
-          MIN(efferent_count)       AS min_efferent_count,
-          MIN(instability_class)    AS min_instability_class
+          AVG(abstracts_deps_count) AS abstracts_deps_count,
+          AVG(concrete_deps_count)  AS concrete_deps_count,
+          AVG(afferent_count)       AS afferent_count,
+          AVG(efferent_count)       AS efferent_count,
+          AVG(instability_class)    AS instability_class
         FROM classes
-        WHERE time = 'before';
-    - metric: before_classes_max
-      query: |
-        SELECT
-          MAX(abstracts_deps_count) AS max_abstracts_deps_count,
-          MAX(concrete_deps_count)  AS max_concrete_deps_count,
-          MAX(afferent_count)       AS max_afferent_count,
-          MAX(efferent_count)       AS max_efferent_count,
-          MAX(instability_class)    AS max_instability_class
+        WHERE time = 'after'
+      )
+      SELECT
+        after.abstracts_deps_count - before.abstracts_deps_count AS _abstracts_deps_count,
+        after.concrete_deps_count  - before.concrete_deps_count  AS _concrete_deps_count,
+        after.afferent_count       - before.afferent_count       AS _afferent_count,
+        after.efferent_count       - before.efferent_count       AS _efferent_count,
+        after.instability_class    - before.instability_class    AS _instability_class
+      FROM before, after;
+  - metric: delta_classes_max
+    query: |
+      WITH before AS (
+        SELECT 
+          MAX(abstracts_deps_count) AS abstracts_deps_count,
+          MAX(concrete_deps_count)  AS concrete_deps_count,
+          MAX(afferent_count)       AS afferent_count,
+          MAX(efferent_count)       AS efferent_count,
+          MAX(instability_class)    AS instability_class
         FROM classes
-        WHERE time = 'before';
-    - metric: before_classes_avg
-      query: |
-        SELECT
-          AVG(abstracts_deps_count) AS avg_abstracts_deps_count,
-          AVG(concrete_deps_count)  AS avg_concrete_deps_count,
-          AVG(afferent_count)       AS avg_afferent_count,
-          AVG(efferent_count)       AS avg_efferent_count,
-          AVG(instability_class)    AS avg_instability_class
+        WHERE time = 'before'
+      ),
+      after AS (
+        SELECT 
+          MAX(abstracts_deps_count) AS abstracts_deps_count,
+          MAX(concrete_deps_count)  AS concrete_deps_count,
+          MAX(afferent_count)       AS afferent_count,
+          MAX(efferent_count)       AS efferent_count,
+          MAX(instability_class)    AS instability_class
         FROM classes
-        WHERE time = 'before';
-    - metric: before_classes_stdev
-      query: |
-        SELECT
-          stdev(abstracts_deps_count) AS stdev_abstracts_deps_count,
-          stdev(concrete_deps_count)  AS stdev_concrete_deps_count,
-          stdev(afferent_count)       AS stdev_afferent_count,
-          stdev(efferent_count)       AS stdev_efferent_count,
-          stdev(instability_class)    AS stdev_instability_class
+        WHERE time = 'after'
+      )
+      SELECT
+        after.abstracts_deps_count - before.abstracts_deps_count AS _abstracts_deps_count,
+        after.concrete_deps_count  - before.concrete_deps_count  AS _concrete_deps_count,
+        after.afferent_count       - before.afferent_count       AS _afferent_count,
+        after.efferent_count       - before.efferent_count       AS _efferent_count,
+        after.instability_class    - before.instability_class    AS _instability_class
+      FROM before, after;
+  - metric: delta_classes_stdev
+    query: |
+      WITH before AS (
+        SELECT 
+          STDEV(abstracts_deps_count) AS abstracts_deps_count,
+          STDEV(concrete_deps_count)  AS concrete_deps_count,
+          STDEV(afferent_count)       AS afferent_count,
+          STDEV(efferent_count)       AS efferent_count,
+          STDEV(instability_class)    AS instability_class
         FROM classes
-        WHERE time = 'before';
-    - metric: after_classes_min
-      query: |
-        SELECT
-          MIN(abstracts_deps_count) AS min_abstracts_deps_count,
-          MIN(concrete_deps_count)  AS min_concrete_deps_count,
-          MIN(afferent_count)       AS min_afferent_count,
-          MIN(efferent_count)       AS min_efferent_count,
-          MIN(instability_class)    AS min_instability_class
+        WHERE time = 'before'
+      ),
+      after AS (
+        SELECT 
+          STDEV(abstracts_deps_count) AS abstracts_deps_count,
+          STDEV(concrete_deps_count)  AS concrete_deps_count,
+          STDEV(afferent_count)       AS afferent_count,
+          STDEV(efferent_count)       AS efferent_count,
+          STDEV(instability_class)    AS instability_class
         FROM classes
-        WHERE time = 'after';
-    - metric: after_classes_max
-      query: |
-        SELECT
-          MAX(abstracts_deps_count) AS max_abstracts_deps_count,
-          MAX(concrete_deps_count)  AS max_concrete_deps_count,
-          MAX(afferent_count)       AS max_afferent_count,
-          MAX(efferent_count)       AS max_efferent_count,
-          MAX(instability_class)    AS max_instability_class
-        FROM classes
-        WHERE time = 'after';
-    - metric: after_classes_avg
-      query: |
-        SELECT
-          AVG(abstracts_deps_count) AS avg_abstracts_deps_count,
-          AVG(concrete_deps_count)  AS avg_concrete_deps_count,
-          AVG(afferent_count)       AS avg_afferent_count,
-          AVG(efferent_count)       AS avg_efferent_count,
-          AVG(instability_class)    AS avg_instability_class
-        FROM classes
-        WHERE time = 'after';
-    - metric: after_classes_stdev
-      query: |
-        SELECT
-          stdev(abstracts_deps_count) AS stdev_abstracts_deps_count,
-          stdev(concrete_deps_count)  AS stdev_concrete_deps_count,
-          stdev(afferent_count)       AS stdev_afferent_count,
-          stdev(efferent_count)       AS stdev_efferent_count,
-          stdev(instability_class)    AS stdev_instability_class
-        FROM classes
-        WHERE time = 'after';
+        WHERE time = 'after'
+      )
+      SELECT
+        after.abstracts_deps_count - before.abstracts_deps_count AS _abstracts_deps_count,
+        after.concrete_deps_count  - before.concrete_deps_count  AS _concrete_deps_count,
+        after.afferent_count       - before.afferent_count       AS _afferent_count,
+        after.efferent_count       - before.efferent_count       AS _efferent_count,
+        after.instability_class    - before.instability_class    AS _instability_class
+      FROM before, after;
   per-class:
   per-package:
 delta-metrics:
