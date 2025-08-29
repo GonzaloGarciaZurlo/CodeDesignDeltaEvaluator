@@ -1,32 +1,32 @@
 metrics-generator: cypher-metrics
 snapshot-metrics:
   global:
-    - metric: before_classes
+    - metric: _before_classes
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'before'
         RETURN count(b) AS metric
-    - metric: before_concrete_classes
+    - metric: _before_concrete_classes
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'before' AND b.type = 'class'
         RETURN count(b) AS metric
-    - metric: before_abstracts_classes
+    - metric: _before_abstracts_classes
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'before' AND (b.type = 'abstract' OR b.type = 'interface')
         RETURN count(b) AS metric
-    - metric: after_classes
+    - metric: _after_classes
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'after'
         RETURN count(b) AS metric
-    - metric: after_abstracts_classes
+    - metric: _after_abstracts_classes
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'after' AND (b.type = 'abstract' OR b.type = 'interface')
         RETURN count(b) AS metric
-    - metric: after_concrete_abstracts
+    - metric: _after_concrete_abstracts
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'after' AND b.type = 'class'
@@ -171,16 +171,18 @@ snapshot-metrics:
       query: |
         MATCH (a:class)
         WHERE a.name STARTS WITH 'after'
-        WITH a, substring(a.name, 5) AS base_name
-        MATCH (b:class {name: 'before' + base_name})
-        WHERE a.package <> b.package
+        WITH a, substring(a.name, 5) AS base_name, substring(a.package, 6) AS pkg_after
+        WITH a, base_name, pkg_after, 'before' + base_name AS before_name
+        MATCH (b:class {name: before_name})
+        WITH a, b, pkg_after, substring(b.package, 7) AS pkg_before
+        WHERE pkg_after <> pkg_before
         RETURN count(a) AS metric
-    - metric: before_methods
+    - metric: _before_methods
       query: |
         MATCH (b:class)-[:HAS_METHOD]->(m:method)
         WHERE b.name STARTS WITH 'before'
         RETURN count(m) AS metric
-    - metric: after_methods
+    - metric: _after_methods
       query: |
         MATCH (b:class)-[:HAS_METHOD]->(m:method)
         WHERE b.name STARTS WITH 'after'
@@ -226,6 +228,14 @@ snapshot-metrics:
             AND (m1.visibility = 'private' OR m1.visibility = 'protected')
         }
         RETURN count(m) AS metric
+    - metric: hidden_factor_methods
+      query: |
+        MATCH (a:method)
+        WHERE a.visibility IN ['private','protected']
+        WITH count(a) AS hidden
+        MATCH (b:method)
+        WITH hidden, count(b) AS total
+        RETURN CASE WHEN total = 0 THEN 0.0 ELSE toFloat(hidden) / toFloat(total) END AS metric;
   per-class:
     - metric: abstracts_deps_count
       query: |
