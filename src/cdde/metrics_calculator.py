@@ -83,6 +83,7 @@ class MetricsCalculator:
         self.result_observer.open_observer()
         self._get_base_metrics(self.design_db)
         self._set_metrics(self.exp_eval)
+        self.result_observer.close_observer()
 
     def _get_base_metrics(self, design_db: DesignDB) -> None:
         """ Use this method to get the base queries of DesignDB."""

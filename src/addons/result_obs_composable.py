@@ -17,7 +17,8 @@ class ResultComposable(ResultObserver):
         self.observers = observers
 
     @override
-    def on_result_metric_found(self, result: int, kind: str, class_name) -> None:
+    def on_result_metric_found(self, result: int, kind: str,
+                               class_name) -> None:
         """
         Notifies the observers that a result was found.
         """
@@ -47,6 +48,14 @@ class ResultComposable(ResultObserver):
         """
         for observer in self.observers:
             observer.close_observer()
+
+    @override
+    def delete_file(self) -> None:
+        """
+        Delete the result observer file.
+        """
+        for observer in self.observers:
+            observer.delete_file()
 
 
 def init_module(api: CddeAPI) -> None:

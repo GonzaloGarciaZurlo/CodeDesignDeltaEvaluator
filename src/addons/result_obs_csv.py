@@ -58,7 +58,8 @@ class ResultCSV(ResultObserver):
         subprocess.run(f"echo '{class_name},{kind},{
                        result}' >> results.csv", shell=True, check=True)
 
-    def _delete_csv(self) -> None:
+    @override
+    def delete_file(self) -> None:
         """
         Delete the CSV file.
         """
