@@ -50,10 +50,31 @@ class BoxPlotCreator:
 
     def get_percentiles_90(self) -> dict[str, float]:
         """
-        Get the 90th percentile of each metric.
+        Calcula el percentil 90 para cada métrica global.
+        - Ignora None/NaN.
+        - Si no hay datos para una métrica, devuelve 0.0 (ajustá si preferís None).
         """
-        results = list(self.get_results_of_each_metric())
-        percentiles = {}
-        for metric, values in results:
-            percentiles[metric] = float(np.percentile(values, 90))
-        return metric, percentiles
+        percentiles: dict[str, float] = {}
+        for metric, values in self.get_results_of_each_metric():
+            if values:
+                p = float(np.percentile(values, 90))
+            else:
+                p = 0.0
+            percentiles[metric] = p
+        return percentiles
+
+    def store_percentiles_90(self, output_path: str = "thresholds.json") -> None:
+        """
+        Store the 90th percentiles in a json file.
+        """
+        percentiles = self.get_percentiles_90()
+        self._delete_existing_file(output_path)
+        with open(output_path, 'w', encoding="utf-8") as file:
+            json.dump(percentiles, file, indent=4)
+
+    def _delete_existing_file(self, file_path: str) -> None:
+        """
+        Delete the existing file if it exists.
+        """
+        if os.path.exists(file_path):
+            os.remove(file_path)

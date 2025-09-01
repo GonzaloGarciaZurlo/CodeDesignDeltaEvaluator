@@ -167,7 +167,7 @@ class MetricsCalculator:
                                                          argument) + key[0]
                     self.results.add_metric(metric_name, value)
 
-                    if not query['metric'].startswith('_'):
+                    if not query['metric'].startswith('_') and value != "null":
                         self.result_observer.on_result_metric_found(
                             value, type_metrics.value, metric_name)
                 continue
