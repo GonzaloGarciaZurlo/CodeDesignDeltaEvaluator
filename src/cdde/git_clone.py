@@ -124,7 +124,6 @@ class TraverseGitLog:
         self._clone_repo()
         self._set_git_log()
         if len(self.git_log) > 501:
-            print("asdasdasdasdaaaaaaaaaa")
             # set the maximum number of iterations
             iter_range = 500
         else:

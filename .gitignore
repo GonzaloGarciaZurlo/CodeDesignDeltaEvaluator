@@ -9,7 +9,6 @@ support_java.py
 parser_regex.py
 .csv
 
-*.json
 
 .vscode/
 
