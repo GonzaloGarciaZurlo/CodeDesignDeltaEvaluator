@@ -57,18 +57,33 @@ class BoxPlotCreator:
         percentiles: dict[str, float] = {}
         for metric, values in self.get_results_of_each_metric():
             if values:
-                p = float(np.percentile(values, 90))
+                p = self.conditional_percentile(values, 90)
             else:
                 p = 0.0
             percentiles[metric] = p
         return percentiles
+
+    def conditional_percentile(self, data: list[float], percentile: float) -> float:
+        """
+        Calculate the conditional percentile:
+        If the 90% or more of the values are 0, then calculate the percentile n of the remaining values.
+        """
+        filtered = [x for x in data if x is not None and not np.isnan(x)]
+        if not filtered:
+            return 0.0
+        if sum(1 for x in filtered if x == 0) / len(filtered) >= 0.9:
+            # If 90% or more are 0, calculate the percentile of the remaining values
+            remaining = [x for x in filtered if x != 0]
+            if not remaining:
+                return 0.0
+            return float(np.percentile(remaining, percentile))
+        return float(np.percentile(filtered, percentile))
 
     def store_percentiles_90(self, output_path: str = "thresholds.json") -> None:
         """
         Store the 90th percentiles in a json file.
         """
         percentiles = self.get_percentiles_90()
-        print(percentiles)
         self._delete_existing_file(output_path)
         with open(output_path, 'w', encoding="utf-8") as file:
             json.dump(percentiles, file, indent=4)
