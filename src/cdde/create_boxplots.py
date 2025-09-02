@@ -20,7 +20,7 @@ class BoxPlotCreator:
                 data = json.load(file)
         return data
 
-    def get_results_of_each_metric(self) -> Generator[str, list, None]:
+    def get_results_of_each_metric(self) -> Generator[str, list[float], None]:
         """
         Get the results of each metric from the json file.
         """
@@ -68,16 +68,13 @@ class BoxPlotCreator:
         Calculate the conditional percentile:
         If the 90% or more of the values are 0, then calculate the percentile n of the remaining values.
         """
-        filtered = [x for x in data if x is not None and not np.isnan(x)]
-        if not filtered:
-            return 0.0
-        if sum(1 for x in filtered if x == 0) / len(filtered) >= 0.9:
+        if sum(1 for x in data if x == 0) / len(data) >= 0.9:
             # If 90% or more are 0, calculate the percentile of the remaining values
-            remaining = [x for x in filtered if x != 0]
+            remaining = [x for x in data if x != 0]
             if not remaining:
                 return 0.0
             return float(np.percentile(remaining, percentile))
-        return float(np.percentile(filtered, percentile))
+        return float(np.percentile(data, percentile))
 
     def store_percentiles_90(self, output_path: str = "thresholds.json") -> None:
         """
@@ -96,5 +93,5 @@ class BoxPlotCreator:
             os.remove(file_path)
 
 
-boxplot_creator = BoxPlotCreator("results.json")
+boxplot_creator = BoxPlotCreator("multiples_results.json")
 boxplot_creator.store_percentiles_90()

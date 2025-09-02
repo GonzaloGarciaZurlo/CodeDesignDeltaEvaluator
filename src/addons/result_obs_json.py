@@ -79,12 +79,10 @@ class ResultJson(ResultObserver):
                        check=True)
 
     def _write_json(self, result: int | str, kind: str,
-                    class_name: str) -> None:
+                    class_name: str, file_path: str = 'results.json') -> None:
         """
         Write the result in the Json file.
         """
-        file_path = 'results.json'
-
         data = self._open_json(file_path)
 
         if kind not in data:
@@ -114,7 +112,7 @@ class ResultJson(ResultObserver):
         subprocess.run("rm -rf results.json", shell=True, check=True)
 
     def _write_multiples_json(self, result: int | str, kind: str,
-                              class_name: str) -> None:
+                              class_name: str, file_path: str = 'multiples_results.json') -> None:
         """
         Write the result in the Json file ot this form:
         {
@@ -124,10 +122,9 @@ class ResultJson(ResultObserver):
         }
         where result1 is the first execution of the tool, result2 is the second execution, and so on (only in global key).
         """
-        file_path = 'results.json'
         data = self._open_json(file_path)
         if kind != TypeMetrics.GLOBAL:
-            self._write_json(result, kind, class_name)
+            self._write_json(result, kind, class_name, file_path)
         else:
             if kind not in data:
                 data[kind] = {}
