@@ -21,15 +21,20 @@ class QueriesCypher(ExprEvaluator):
     def eval(self,
              expr: str,
              arguments: dict,  # type: ignore
-             results: dict) -> MetricType: # type: ignore
+             results: dict) -> MetricType:  # type: ignore
         """
         Run the list of queries.
         Set the result in the results dictionary.
         Send the result to the observer.
         """
         with self.driver.session() as session:
-            return session.execute_read(
-                lambda tx: tx.run(expr, **arguments).single()[0])   # type: ignore
+            record = session.execute_read(
+                lambda tx: tx.run(expr, **arguments).single()
+            )
+        if record is None:
+            return 0
+        value = record[0]
+        return 0 if value is None else value  # type: ignore
 
 
 def init_module(api: CddeAPI) -> None:

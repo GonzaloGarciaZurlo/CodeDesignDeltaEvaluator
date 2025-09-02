@@ -15,8 +15,6 @@ app = typer.Typer(name="cdde")
 # cdde https://github.com/spf13/cobra --main-branch main 2294 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 168 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 145 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
-# cdde https://github.com/AdkOP07/filesql 1 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --set-thresholds --main-branch main
-
 
 class Lang(StrEnum):
     """

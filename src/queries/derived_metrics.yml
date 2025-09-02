@@ -8,6 +8,8 @@ snapshot-metrics:
       query: _after_abstracts_classes / _after_classes
     - metric: delta_methods
       query: abs(_after_methods - _before_methods)
+    - metric: delta_hidden_factor_methods
+      query: abs(_after_hidden_factor_methods - _before_hidden_factor_methods)
   per-class:
   per-package:
       - metric: package_abstractness

@@ -68,6 +68,7 @@ class BoxPlotCreator:
         Store the 90th percentiles in a json file.
         """
         percentiles = self.get_percentiles_90()
+        print(percentiles)
         self._delete_existing_file(output_path)
         with open(output_path, 'w', encoding="utf-8") as file:
             json.dump(percentiles, file, indent=4)
@@ -78,3 +79,7 @@ class BoxPlotCreator:
         """
         if os.path.exists(file_path):
             os.remove(file_path)
+
+
+boxplot_creator = BoxPlotCreator("results.json")
+boxplot_creator.store_percentiles_90()
