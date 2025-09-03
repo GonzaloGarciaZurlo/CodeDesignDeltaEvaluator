@@ -8,6 +8,7 @@ import shutil
 from git import Repo
 from typing import Generator
 
+
 class GitClone:
     """
     Class that creates the before and after directories of a PR.
@@ -122,14 +123,17 @@ class TraverseGitLog:
         """
         self._clone_repo()
         self._set_git_log()
-
-        for n_commit in range(len(self.git_log) - 1):
+        if len(self.git_log) > 501:
+            # set the maximum number of iterations
+            iter_range = 500
+        else:
+            iter_range = len(self.git_log) - 1
+        for n_commit in range(iter_range):
             self._create_dirs()
             self._before_dir(n_commit)
             self._after_dir(n_commit + 1)
             self._return_paths()
             yield self.before_dir, self.after_dir
-        
 
     def _set_git_log(self) -> None:
         """
@@ -137,8 +141,8 @@ class TraverseGitLog:
         """
         self.git_log = [
             commit.hexsha for commit in self.repo.iter_commits(self.branch)
-        ]
-    
+        ][::-1]
+
     def _clone_repo(self) -> None:
         """
         Clones the repository into the repo directory,

@@ -167,9 +167,14 @@ class MetricsCalculator:
                                                          argument) + key[0]
                     self.results.add_metric(metric_name, value)
 
-                    if not query['metric'].startswith('_'):
-                        self.result_observer.on_result_metric_found(
-                            value, type_metrics.value, metric_name)
+                    if not query['metric'].startswith('_') and value != "null":
+                        if 'magnitude' in query:
+                            magnitude = query['magnitude']
+                            self.result_observer.on_result_metric_found(
+                                value, type_metrics.value, metric_name, magnitude)
+                        else:
+                            self.result_observer.on_result_metric_found(
+                                value, type_metrics.value, metric_name)
                 continue
 
             metric_name = self.__set_metric_name(query['metric'], type_metrics,
@@ -178,8 +183,13 @@ class MetricsCalculator:
 
             # Send the result to the observer
             if not query['metric'].startswith('_'):
-                self.result_observer.on_result_metric_found(
-                    result, type_metrics.value, metric_name)
+                if 'magnitude' in query:
+                    magnitude = query['magnitude']
+                    self.result_observer.on_result_metric_found(
+                        result, type_metrics.value, metric_name, magnitude)
+                else:
+                    self.result_observer.on_result_metric_found(
+                        result, type_metrics.value, metric_name)
 
     def __set_params(self, argument: str, type_metrics: TypeMetrics) -> dict:
         """

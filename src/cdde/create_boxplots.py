@@ -20,7 +20,7 @@ class BoxPlotCreator:
                 data = json.load(file)
         return data
 
-    def get_results_of_each_metric(self) -> Generator[str, list, None]:
+    def get_results_of_each_metric(self) -> Generator[str, list[float], None]:
         """
         Get the results of each metric from the json file.
         """
@@ -50,10 +50,48 @@ class BoxPlotCreator:
 
     def get_percentiles_90(self) -> dict[str, float]:
         """
-        Get the 90th percentile of each metric.
+        Calcula el percentil 90 para cada métrica global.
+        - Ignora None/NaN.
+        - Si no hay datos para una métrica, devuelve 0.0 (ajustá si preferís None).
         """
-        results = list(self.get_results_of_each_metric())
-        percentiles = {}
-        for metric, values in results:
-            percentiles[metric] = float(np.percentile(values, 90))
-        return metric, percentiles
+        percentiles: dict[str, float] = {}
+        for metric, values in self.get_results_of_each_metric():
+            if values:
+                p = self.conditional_percentile(values, 90)
+            else:
+                p = 0.0
+            percentiles[metric] = p
+        return percentiles
+
+    def conditional_percentile(self, data: list[float], percentile: float) -> float:
+        """
+        Calculate the conditional percentile:
+        If the 90% or more of the values are 0, then calculate the percentile n of the remaining values.
+        """
+        if sum(1 for x in data if x == 0) / len(data) >= 0.9:
+            # If 90% or more are 0, calculate the percentile of the remaining values
+            remaining = [x for x in data if x != 0]
+            if not remaining:
+                return 0.0
+            return float(np.percentile(remaining, percentile))
+        return float(np.percentile(data, percentile))
+
+    def store_percentiles_90(self, output_path: str = "thresholds.json") -> None:
+        """
+        Store the 90th percentiles in a json file.
+        """
+        percentiles = self.get_percentiles_90()
+        self._delete_existing_file(output_path)
+        with open(output_path, 'w', encoding="utf-8") as file:
+            json.dump(percentiles, file, indent=4)
+
+    def _delete_existing_file(self, file_path: str) -> None:
+        """
+        Delete the existing file if it exists.
+        """
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
+
+boxplot_creator = BoxPlotCreator("multiples_results.json")
+boxplot_creator.store_percentiles_90()

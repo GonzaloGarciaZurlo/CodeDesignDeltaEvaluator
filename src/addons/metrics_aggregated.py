@@ -42,11 +42,13 @@ class AggregatedMetrics(ExprEvaluator):
         return results
 
     def execute_sqlite(self, expr: str) -> dict[MetricType]:
-        self._db_cursor.execute(expr)
-        result = self._db_cursor.fetchone()
-        if result:
-            return {k: v for k, v in zip(self._db_cursor.description, result)}
-        return {}
+        try:
+            self._db_cursor.execute(expr)
+            result = self._db_cursor.fetchone()
+            if result:
+                return {k: v for k, v in zip(self._db_cursor.description, result)}
+        except:
+            return {}
 
     def _set_db(self) -> None:
         self.delete_db()
@@ -101,11 +103,13 @@ class AggregatedMetrics(ExprEvaluator):
         return self._api.get(metric, "NULL")
 
     def _create_db(self, metrics_names: list[str], table: TableName) -> None:
+        base_columns = ['"time" TEXT NOT NULL', '"name" TEXT NOT NULL']
+        metric_columns = [f'"{name}" REAL' for name in metrics_names]
+        all_columns = base_columns + metric_columns
+
         sqlQuery = f"""
         CREATE TABLE "{table}" (
-        "time" TEXT NOT NULL,
-        "name" TEXT NOT NULL,
-        {', '.join(f'"{name}" REAL' for name in metrics_names)}
+            {', '.join(all_columns)}
         );"""
         self._db_cursor.execute(sqlQuery)
         self._db.commit()

@@ -32,6 +32,7 @@ snapshot-metrics:
         WHERE b.name STARTS WITH 'after' AND b.type = 'class'
         RETURN count(b) AS metric
     - metric: deleted_classes
+      magnitude: 2
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'before'
@@ -41,6 +42,7 @@ snapshot-metrics:
         }
         RETURN count(b) AS metric
     - metric: added_classes
+      magnitude: 2
       query: |
         MATCH (a:class)
         WHERE a.name STARTS WITH 'after'
@@ -228,12 +230,22 @@ snapshot-metrics:
             AND (m1.visibility = 'private' OR m1.visibility = 'protected')
         }
         RETURN count(m) AS metric
-    - metric: hidden_factor_methods
+    - metric: _before_hidden_factor_methods
       query: |
         MATCH (a:method)
-        WHERE a.visibility IN ['private','protected']
+        WHERE a.visibility IN ['private','protected'] AND a.name STARTS WITH 'before'
         WITH count(a) AS hidden
         MATCH (b:method)
+        WHERE b.name STARTS WITH 'before'
+        WITH hidden, count(b) AS total
+        RETURN CASE WHEN total = 0 THEN 0.0 ELSE toFloat(hidden) / toFloat(total) END AS metric;
+    - metric: _after_hidden_factor_methods
+      query: |
+        MATCH (a:method)
+        WHERE a.visibility IN ['private','protected'] AND a.name STARTS WITH 'after'
+        WITH count(a) AS hidden
+        MATCH (b:method)
+        WHERE b.name STARTS WITH 'after'
         WITH hidden, count(b) AS total
         RETURN CASE WHEN total = 0 THEN 0.0 ELSE toFloat(hidden) / toFloat(total) END AS metric;
   per-class:

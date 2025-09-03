@@ -33,15 +33,15 @@ snapshot-metrics:
         WHERE time = 'after'
       )
       SELECT
-        after.nodes - before.nodes AS _nodes,
-        after.classes - before.classes AS _classes,
-        after.abstracts - before.abstracts AS _abstracts,
-        after.interfaces - before.interfaces AS _interfaces,
-        after.efferent - before.efferent AS _efferent,
-        after.afferent - before.afferent AS _afferent,
-        after.instability - before.instability AS _instability,
-        after.package_abstractness - before.package_abstractness AS _package_abstractness,
-        after.d_f_main_size - before.d_f_main_size AS _d_f_main_size
+        ABS(coalesce(after.nodes, 0) - coalesce(before.nodes, 0)) AS _nodes,
+        ABS(coalesce(after.classes, 0) - coalesce(before.classes, 0)) AS _classes,
+        ABS(coalesce(after.abstracts, 0) - coalesce(before.abstracts, 0)) AS _abstracts,
+        ABS(coalesce(after.interfaces, 0) - coalesce(before.interfaces, 0)) AS _interfaces,
+        ABS(coalesce(after.efferent, 0) - coalesce(before.efferent, 0)) AS _efferent,
+        ABS(coalesce(after.afferent, 0) - coalesce(before.afferent, 0)) AS _afferent,
+        ABS(coalesce(after.instability, 0) - coalesce(before.instability, 0)) AS _instability,
+        ABS(coalesce(after.package_abstractness, 0) - coalesce(before.package_abstractness, 0)) AS _package_abstractness,
+        ABS(coalesce(after.d_f_main_size, 0) - coalesce(before.d_f_main_size, 0)) AS _d_f_main_size
       FROM before, after;
   - metric: delta_packages_max
     query: |
@@ -74,15 +74,15 @@ snapshot-metrics:
         WHERE time = 'after'
       )
       SELECT
-        after.nodes - before.nodes AS _nodes,
-        after.classes - before.classes AS _classes,
-        after.abstracts - before.abstracts AS _abstracts,
-        after.interfaces - before.interfaces AS _interfaces,
-        after.efferent - before.efferent AS _efferent,
-        after.afferent - before.afferent AS _afferent,
-        after.instability - before.instability AS _instability,
-        after.package_abstractness - before.package_abstractness AS _package_abstractness,
-        after.d_f_main_size - before.d_f_main_size AS _d_f_main_size
+        ABS(coalesce(after.nodes, 0) - coalesce(before.nodes, 0)) AS _nodes,
+        ABS(coalesce(after.classes, 0) - coalesce(before.classes, 0)) AS _classes,
+        ABS(coalesce(after.abstracts, 0) - coalesce(before.abstracts, 0)) AS _abstracts,
+        ABS(coalesce(after.interfaces, 0) - coalesce(before.interfaces, 0)) AS _interfaces,
+        ABS(coalesce(after.efferent, 0) - coalesce(before.efferent, 0)) AS _efferent,
+        ABS(coalesce(after.afferent, 0) - coalesce(before.afferent, 0)) AS _afferent,
+        ABS(coalesce(after.instability, 0) - coalesce(before.instability, 0)) AS _instability,
+        ABS(coalesce(after.package_abstractness, 0) - coalesce(before.package_abstractness, 0)) AS _package_abstractness,
+        ABS(coalesce(after.d_f_main_size, 0) - coalesce(before.d_f_main_size, 0)) AS _d_f_main_size
       FROM before, after;
   - metric: delta_packages_stdev
     query: |
@@ -115,15 +115,15 @@ snapshot-metrics:
         WHERE time = 'after'
       )
       SELECT
-        after.nodes - before.nodes AS _nodes,
-        after.classes - before.classes AS _classes,
-        after.abstracts - before.abstracts AS _abstracts,
-        after.interfaces - before.interfaces AS _interfaces,
-        after.efferent - before.efferent AS _efferent,
-        after.afferent - before.afferent AS _afferent,
-        after.instability - before.instability AS _instability,
-        after.package_abstractness - before.package_abstractness AS _package_abstractness,
-        after.d_f_main_size - before.d_f_main_size AS _d_f_main_size
+        ABS(after.nodes - before.nodes) AS _nodes,
+        ABS(after.classes - before.classes) AS _classes,
+        ABS(after.abstracts - before.abstracts) AS _abstracts,
+        ABS(after.interfaces - before.interfaces) AS _interfaces,
+        ABS(after.efferent - before.efferent) AS _efferent,
+        ABS(after.afferent - before.afferent) AS _afferent,
+        ABS(after.instability - before.instability) AS _instability,
+        ABS(after.package_abstractness - before.package_abstractness) AS _package_abstractness,
+        ABS(after.d_f_main_size - before.d_f_main_size) AS _d_f_main_size
       FROM before, after;
   - metric: delta_classes_avg
     query: |
@@ -148,11 +148,11 @@ snapshot-metrics:
         WHERE time = 'after'
       )
       SELECT
-        after.abstracts_deps_count - before.abstracts_deps_count AS _abstracts_deps_count,
-        after.concrete_deps_count  - before.concrete_deps_count  AS _concrete_deps_count,
-        after.afferent_count       - before.afferent_count       AS _afferent_count,
-        after.efferent_count       - before.efferent_count       AS _efferent_count,
-        after.instability_class    - before.instability_class    AS _instability_class
+        ABS(coalesce(after.abstracts_deps_count, 0) - coalesce(before.abstracts_deps_count, 0)) AS _abstracts_deps_count,
+        ABS(coalesce(after.concrete_deps_count, 0) - coalesce(before.concrete_deps_count, 0)) AS _concrete_deps_count,
+        ABS(coalesce(after.afferent_count, 0) - coalesce(before.afferent_count, 0)) AS _afferent_count,
+        ABS(coalesce(after.efferent_count, 0) - coalesce(before.efferent_count, 0)) AS _efferent_count,
+        ABS(coalesce(after.instability_class, 0) - coalesce(before.instability_class, 0)) AS _instability_class
       FROM before, after;
   - metric: delta_classes_max
     query: |
@@ -177,11 +177,11 @@ snapshot-metrics:
         WHERE time = 'after'
       )
       SELECT
-        after.abstracts_deps_count - before.abstracts_deps_count AS _abstracts_deps_count,
-        after.concrete_deps_count  - before.concrete_deps_count  AS _concrete_deps_count,
-        after.afferent_count       - before.afferent_count       AS _afferent_count,
-        after.efferent_count       - before.efferent_count       AS _efferent_count,
-        after.instability_class    - before.instability_class    AS _instability_class
+        ABS(coalesce(after.abstracts_deps_count, 0) - coalesce(before.abstracts_deps_count, 0)) AS _abstracts_deps_count,
+        ABS(coalesce(after.concrete_deps_count, 0) - coalesce(before.concrete_deps_count, 0)) AS _concrete_deps_count,
+        ABS(coalesce(after.afferent_count, 0) - coalesce(before.afferent_count, 0)) AS _afferent_count,
+        ABS(coalesce(after.efferent_count, 0) - coalesce(before.efferent_count, 0)) AS _efferent_count,
+        ABS(coalesce(after.instability_class, 0) - coalesce(before.instability_class, 0)) AS _instability_class
       FROM before, after;
   - metric: delta_classes_stdev
     query: |
@@ -206,11 +206,11 @@ snapshot-metrics:
         WHERE time = 'after'
       )
       SELECT
-        after.abstracts_deps_count - before.abstracts_deps_count AS _abstracts_deps_count,
-        after.concrete_deps_count  - before.concrete_deps_count  AS _concrete_deps_count,
-        after.afferent_count       - before.afferent_count       AS _afferent_count,
-        after.efferent_count       - before.efferent_count       AS _efferent_count,
-        after.instability_class    - before.instability_class    AS _instability_class
+        ABS(after.abstracts_deps_count - before.abstracts_deps_count) AS _abstracts_deps_count,
+        ABS(after.concrete_deps_count  - before.concrete_deps_count)  AS _concrete_deps_count,
+        ABS(after.afferent_count       - before.afferent_count)       AS _afferent_count,
+        ABS(after.efferent_count       - before.efferent_count)       AS _efferent_count,
+        ABS(after.instability_class    - before.instability_class)    AS _instability_class
       FROM before, after;
   per-class:
   per-package:

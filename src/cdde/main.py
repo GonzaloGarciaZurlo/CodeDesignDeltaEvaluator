@@ -10,6 +10,7 @@ from .metric_result_observer import ResultObserver
 from .metrics_calculator import MetricsCalculator, MetricsRepository
 from .factory_expr_evaluator import FactoryExprEvaluator
 from .create_boxplots import BoxPlotCreator
+from .veredict import Veredict
 
 FILE_GRAMMAR = "src/addons/grammars/parsimonious_"
 
@@ -168,6 +169,9 @@ class Main:
         # Delete the temporary directories
         git_clone.delete_dir()
 
+        veredictor = Veredict()
+        veredictor.evaluate()
+
     def runSetThresholds(self, repo_git: str, main_branch: str):
         """
         Run the set thresholds process.
@@ -202,3 +206,4 @@ class Main:
 
         box_plot_creator = BoxPlotCreator("results.json")
         box_plot_creator.create_boxplots()
+        box_plot_creator.store_percentiles_90()
