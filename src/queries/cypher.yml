@@ -32,6 +32,7 @@ snapshot-metrics:
         WHERE b.name STARTS WITH 'after' AND b.type = 'class'
         RETURN count(b) AS metric
     - metric: deleted_classes
+      magnitude: 2
       query: |
         MATCH (b:class)
         WHERE b.name STARTS WITH 'before'
@@ -41,6 +42,7 @@ snapshot-metrics:
         }
         RETURN count(b) AS metric
     - metric: added_classes
+      magnitude: 2
       query: |
         MATCH (a:class)
         WHERE a.name STARTS WITH 'after'

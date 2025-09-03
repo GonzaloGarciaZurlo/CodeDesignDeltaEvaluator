@@ -50,7 +50,7 @@ class ResultJson(ResultObserver):
 
     @override
     def on_result_metric_found(self, result: int, kind: str,
-                               class_name) -> None:
+                               class_name: str, magnitude: int = 0) -> None:
         """
         Save the result found in the Json file.
         with the format: kind, result, without spaces.
@@ -58,7 +58,7 @@ class ResultJson(ResultObserver):
         if self.set_thresholds:
             self._write_multiples_json(result, kind, class_name)
         else:
-            self._write_json(result, kind, class_name)
+            self._write_json(result, kind, class_name, magnitude=magnitude)
 
     @override
     def on_result_data_found(self, result: str, kind: str) -> None:
@@ -79,7 +79,7 @@ class ResultJson(ResultObserver):
                        check=True)
 
     def _write_json(self, result: int | str, kind: str,
-                    class_name: str, file_path: str = 'results.json') -> None:
+                    class_name: str, file_path: str = 'results.json', magnitude: int = 0) -> None:
         """
         Write the result in the Json file.
         """
@@ -87,7 +87,7 @@ class ResultJson(ResultObserver):
 
         if kind not in data:
             data[kind] = {}
-        data[kind][class_name] = result
+        data[kind][class_name + '_' + str(magnitude)] = result
 
         with open(file_path, 'w', encoding="utf-8") as file:
             json.dump(data, file, indent=4)

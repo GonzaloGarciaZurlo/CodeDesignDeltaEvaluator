@@ -26,7 +26,7 @@ class ResultObserver(ABC):
 
     @abstractmethod
     def on_result_metric_found(self, result: int, kind: str,
-                               class_name: str) -> None:
+                               class_name: str, magnitude: int = 0) -> None:
         """
         Event triggered when a metric is found.
         """
