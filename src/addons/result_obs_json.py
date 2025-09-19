@@ -120,7 +120,8 @@ class ResultJson(ResultObserver):
                 "class_name": [result1, result2, ...]
             }
         }
-        where result1 is the first execution of the tool, result2 is the second execution, and so on (only in global key).
+        where result1 is the first execution of the tool,
+        result2 is the second execution, and so on (only in global key).
         """
         data = self._open_json(file_path)
         if kind != TypeMetrics.GLOBAL:

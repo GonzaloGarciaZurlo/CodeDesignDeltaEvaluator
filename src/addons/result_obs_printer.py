@@ -27,7 +27,8 @@ class ResultPrinter(ResultObserver):
         print("--------------------------------")
 
     @override
-    def on_result_metric_found(self, result: int, kind: str, class_name: str, magnitude: int = 0) -> None:
+    def on_result_metric_found(self, result: int, kind: str, class_name: str,
+                               magnitude: int = 0) -> None:
         """
         Print the result found.
         """
@@ -43,6 +44,7 @@ class ResultPrinter(ResultObserver):
     @override
     def delete_file(self) -> None:
         pass
+
 
 def init_module(api: CddeAPI) -> None:
     """

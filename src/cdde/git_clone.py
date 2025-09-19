@@ -5,8 +5,8 @@ which is used to create the before and after directories of a PR.
 import os
 import subprocess
 import shutil
-from git import Repo
 from typing import Generator
+from git import Repo
 
 
 class GitClone:
@@ -102,6 +102,9 @@ class GitClone:
 
 
 class TraverseGitLog:
+    """
+    Class that traverses the git log of a repository.
+    """
 
     def __init__(self, repo_url: str, main_branch: str = "master") -> None:
         """

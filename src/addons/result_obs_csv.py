@@ -29,7 +29,8 @@ class ResultCSV(ResultObserver):
         # self._delete_csv()
 
     @override
-    def on_result_metric_found(self, result: int, kind: str, class_name: str, magnitude: int = 0) -> None:
+    def on_result_metric_found(self, result: int, kind: str, class_name: str,
+                                magnitude: int = 0) -> None:
         """
         Save the result found in the CSV file.
         with the format: kind, result, without spaces.

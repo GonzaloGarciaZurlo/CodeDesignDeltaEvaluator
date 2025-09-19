@@ -133,7 +133,7 @@ def CddE(
 
     if set_thresholds:
         set_json_to_multiple_metrics(main)
-        main.runSetThresholds(repo_git, main_branch)
+        main.run_set_thresholds(repo_git, main_branch)
 
     else:
-        main.runCddE(repo_git, main_branch, pr_number)
+        main.run_cdde(repo_git, main_branch, pr_number)

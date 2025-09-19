@@ -3,7 +3,7 @@ Module parser with parsimonius implementation.
 In this module we define the parser with parsimonius to parse the plantuml file.
 Contains the grammar and the class that implements the parser.
 """
-from typing import Any  
+from typing import Any
 from parsimonious.grammar import Grammar # type: ignore[import-untyped]   # pylint: disable=import-error
 from parsimonious.nodes import NodeVisitor, Node # type: ignore[import-untyped]  # pylint: disable=import-error
 from src.cdde.addons_api import CddeAPI
@@ -146,7 +146,7 @@ class Parsimonius(NodeVisitor):
         """
         return node.text.strip()
 
-    def visit_attribute(self, _node: Node, visited_children: list) -> str:
+    def visit_attribute(self, _node: Node, _visited_children: list) -> str:
         """
         Ignore attributes.
         """

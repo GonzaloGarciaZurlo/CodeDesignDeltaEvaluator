@@ -1,8 +1,9 @@
 """
 This module handles the main execution flow of the application.
 """
-import yaml
 import sys
+import yaml
+
 from .addons_api import load_addons
 from .git_clone import GitClone, TraverseGitLog
 from .puml_observer import Observer, Modes
@@ -79,9 +80,9 @@ class Main:
         Parse the PlantUML file.
         """
         observer = self._set_composable_obs(self.observers)
-        filter = self.api.observers['filter'](observer)
-        filter.set_mode(mode)
-        parser = self.api.parsers['parsimonious'](filter, FILE_GRAMMAR +
+        _filter = self.api.observers['filter'](observer)
+        _filter.set_mode(mode)
+        parser = self.api.parsers['parsimonious'](_filter, FILE_GRAMMAR +
                                                   self.language + ".txt")
         parser.parse_uml(file)
 
@@ -141,7 +142,7 @@ class Main:
         with open(filepath, 'r', encoding="utf-8") as file:
             return yaml.load(file, Loader=yaml.SafeLoader)
 
-    def runCddE(self, repo_git: str, main_branch: str, pr_number: int) -> None:
+    def run_cdde(self, repo_git: str, main_branch: str, pr_number: int) -> None:
         """
         Run the main logic of the program.
         """
@@ -172,7 +173,7 @@ class Main:
         veredictor = Veredict()
         veredictor.evaluate()
 
-    def runSetThresholds(self, repo_git: str, main_branch: str):
+    def run_set_thresholds(self, repo_git: str, main_branch: str):
         """
         Run the set thresholds process.
         """

@@ -1,11 +1,15 @@
-import matplotlib.pyplot as plt
+"""Create boxplots from JSON data."""
 import os
 import json
 from typing import Generator
+import matplotlib.pyplot as plt
 import numpy as np
 
 
 class BoxPlotCreator:
+    """
+    Class to create boxplots from JSON data.
+    """
 
     def __init__(self, json_path: str):
         self.json_path = json_path
@@ -66,7 +70,8 @@ class BoxPlotCreator:
     def conditional_percentile(self, data: list[float], percentile: float) -> float:
         """
         Calculate the conditional percentile:
-        If the 90% or more of the values are 0, then calculate the percentile n of the remaining values.
+        If the 90% or more of the values are 0,
+        then calculate the percentile n of the remaining values.
         """
         if self._zero_percentage(data) >= 0.9:
             # If 90% or more are 0, calculate the percentile of the remaining values

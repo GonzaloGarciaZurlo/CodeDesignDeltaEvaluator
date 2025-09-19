@@ -12,8 +12,9 @@ class ResultComposable(ResultObserver):
     """
     Selected from 1 or more of the possible observers.
     """
-
+    @override
     def __init__(self, observers: List[ResultObserver]) -> None:
+        super().__init__()
         self.observers = observers
 
     @override
@@ -23,7 +24,8 @@ class ResultComposable(ResultObserver):
         Notifies the observers that a result was found.
         """
         for observer in self.observers:
-            observer.on_result_metric_found(result, kind, class_name, magnitude)
+            observer.on_result_metric_found(
+                result, kind, class_name, magnitude)
 
     @override
     def on_result_data_found(self, result: str, kind: str) -> None:

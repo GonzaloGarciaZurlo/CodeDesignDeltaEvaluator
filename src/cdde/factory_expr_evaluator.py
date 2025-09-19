@@ -1,5 +1,7 @@
+"""Factory class to create an expression evaluator."""
 from src.cdde.expr_evaluator import ExprEvaluator
 from src.cdde.addons_api import CddeAPI
+
 
 class FactoryExprEvaluator:
     """

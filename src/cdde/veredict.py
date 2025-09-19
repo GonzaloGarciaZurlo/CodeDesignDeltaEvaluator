@@ -1,7 +1,11 @@
+"""
+This module evaluates the results and creates a veredict."""
 import json
 
 
 class Veredict:
+    """
+    Class to evaluate the results and create a veredict."""
 
     def __init__(self):
         self.thresholds_path = "thresholds.json"
@@ -15,7 +19,8 @@ class Veredict:
         self._set_metrics_not_passed()
         for metric, magnitude, ratio in self.not_passed:
             print(
-                f"Metric '{metric}' with magnitude '{magnitude}' and ratio '{ratio}' did not pass the veredict.")
+                f"""Metric '{metric}' with magnitude '{magnitude}' and ratio
+                '{ratio}' did not pass the veredict.""")
 
         veredict = self.norm_p(self.not_passed, 2)
         print(f"Veredict (L2 norm): {veredict}")
