@@ -68,13 +68,19 @@ class BoxPlotCreator:
         Calculate the conditional percentile:
         If the 90% or more of the values are 0, then calculate the percentile n of the remaining values.
         """
-        if sum(1 for x in data if x == 0) / len(data) >= 0.9:
+        if self._zero_percentage(data) >= 0.9:
             # If 90% or more are 0, calculate the percentile of the remaining values
-            remaining = [x for x in data if x != 0]
+            remaining = self._filter_non_zero(data)
             if not remaining:
                 return 0.0
             return float(np.percentile(remaining, percentile))
         return float(np.percentile(data, percentile))
+
+    def _zero_percentage(self, data: list[float]) -> float:
+        return sum(1 for x in data if x == 0) / len(data)
+
+    def _filter_non_zero(self, data: list[float]) -> list[float]:
+        return [x for x in data if x != 0]
 
     def store_percentiles_90(self, output_path: str = "thresholds.json") -> None:
         """
