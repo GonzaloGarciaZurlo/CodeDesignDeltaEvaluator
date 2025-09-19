@@ -3,10 +3,9 @@ Module parser with parsimonius implementation.
 In this module we define the parser with parsimonius to parse the plantuml file.
 Contains the grammar and the class that implements the parser.
 """
-from typing import Any  # type: ignore[import-untyped]  # pylint: disable=import-error
-# type: ignore[import-untyped]   # pylint: disable=import-error
-from parsimonious.grammar import Grammar
-from parsimonious.nodes import NodeVisitor, Node
+from typing import Any  
+from parsimonious.grammar import Grammar # type: ignore[import-untyped]   # pylint: disable=import-error
+from parsimonious.nodes import NodeVisitor, Node # type: ignore[import-untyped]  # pylint: disable=import-error
 from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer, MethodKind
 from src.cdde.constants import convert_relation, convert_class_kind, Direction, convert_visibility

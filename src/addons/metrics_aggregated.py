@@ -5,7 +5,7 @@ from overrides import override
 from src.cdde.expr_evaluator import ExprEvaluator, MetricType
 from src.cdde.addons_api import CddeAPI
 from typing import Optional
-import pysqlite3 as sqlite3
+import pysqlite3 as sqlite3  # type: ignore[import-untyped]
 from enum import StrEnum
 import os
 
@@ -28,8 +28,8 @@ class AggregatedMetrics(ExprEvaluator):
     @override
     def eval(self,
              expr: str,
-             arguments: dict[str, str],    # type: ignore
-             results: dict[str, str | float]) -> MetricType:   # type: ignore
+             arguments: dict[str, str],
+             results: dict[str, str | float]) -> MetricType:
         """
         Evaluate an expression in sqlite.
         """
@@ -39,14 +39,15 @@ class AggregatedMetrics(ExprEvaluator):
             self._set_db()
 
         results = self.execute_sqlite(expr)
-        return results
+        return results  # type: ignore[return-value]
 
-    def execute_sqlite(self, expr: str) -> dict[MetricType]:
+    def execute_sqlite(self, expr: str) -> dict[MetricType]: # type: ignore[type-arg]
         try:
             self._db_cursor.execute(expr)
             result = self._db_cursor.fetchone()
             if result:
                 return {k: v for k, v in zip(self._db_cursor.description, result)}
+            return {}
         except:
             return {}
 
