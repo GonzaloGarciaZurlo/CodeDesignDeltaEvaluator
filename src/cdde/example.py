@@ -18,13 +18,13 @@ class Example(ABC):
 
 class AnotherExample(Example):
     @override
-    def method(self):
+    def methodd(self):
         pass
 
     @override
-    def another_method(self):
+    def another_methodd(self):
         pass
 
     @override
-    def yet_another_method(self):
+    def yet_another_methodd(self):
         pass
