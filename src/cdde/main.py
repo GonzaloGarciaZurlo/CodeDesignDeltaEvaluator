@@ -173,11 +173,11 @@ class Main:
         self.run_queries(self._set_result_obs(self.results_observers))
 
         # Delete the plantuml file
-        #self.delete_plantuml(archivo_plantuml_before)
-        #self.delete_plantuml(archivo_plantuml_after)
+        self.delete_plantuml(archivo_plantuml_before)
+        self.delete_plantuml(archivo_plantuml_after)
 
         # Delete the temporary directories
-        #git_clone.delete_dir()
+        git_clone.delete_dir()
 
         veredictor = Veredict()
         veredictor.set_global_threshold(self.mode)
