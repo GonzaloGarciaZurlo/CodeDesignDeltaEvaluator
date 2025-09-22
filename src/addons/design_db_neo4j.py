@@ -93,12 +93,12 @@ class DesignDBNeo4j(DesignDB):
         """
         with self.driver.session() as session:
             result = session.execute_write(
-                self._set_packages,  # type: ignore
+                self._set_packages_,  # type: ignore
                 class_name)
         if result and result not in self.packages:
             self.packages.append(result)
 
-    def _set_packages(self, tx: Transaction, class_name: str) -> None:
+    def _set_packages_(self, tx: Transaction, class_name: str) -> None:
         """
         Helper function to get all of the packages in the database.
         """

@@ -310,7 +310,7 @@ class MethodsFilter(Filter):
         Remove special characters from the methods name.
         """
         for i, method in enumerate(self.methods):
-            self.methods[i][1]= re.sub(r'[^A-Za-z0-9\s]', '', method[1])
+            self.methods[i][1] = re.sub(r'[^A-Za-z0-9_\s]', '', method[1])
 
     def send(self) -> None:
         """
