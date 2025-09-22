@@ -23,7 +23,7 @@ class DesignDBNeo4j(DesignDB):
         """
         with self.driver.session() as session:
             result = session.execute_read(
-                self._get_all_classes)  # type: ignore
+                self._get_all_classes_)  # type: ignore
         return result
 
     @override
@@ -33,7 +33,7 @@ class DesignDBNeo4j(DesignDB):
         """
         with self.driver.session() as session:
             return session.execute_read(
-                self._get_class_per_package,  # type: ignore
+                self._get_class_per_package_,  # type: ignore
                 package_name)
 
     @override
@@ -43,14 +43,14 @@ class DesignDBNeo4j(DesignDB):
         """
         with self.driver.session() as session:
             return session.execute_read(
-                self._get_all_relations,  # type: ignore
+                self._get_all_relations_,  # type: ignore
                 class_name)
 
     @override
     def get_methods_per_class(self, class_name: str) -> list[str]:
         return []
 
-    def _get_class_per_package(self, tx: Transaction,
+    def _get_class_per_package_(self, tx: Transaction,
                                package_name: str) -> list:
         """
         Helper function to get all classes in a package.
@@ -61,7 +61,7 @@ class DesignDBNeo4j(DesignDB):
         result = tx.run(query, package_name=package_name)
         return [record["name"] for record in result]
 
-    def _get_all_classes(self, tx: Transaction) -> list:
+    def _get_all_classes_(self, tx: Transaction) -> list:
         """
         Helper function to get all classes in the database.
         """
@@ -71,7 +71,7 @@ class DesignDBNeo4j(DesignDB):
         result = tx.run(query)
         return [record["name"] for record in result]
 
-    def _get_all_relations(self, tx: Transaction,
+    def _get_all_relations_(self, tx: Transaction,
                            class_name: str) -> list[tuple]:
         """
         Helper function to get all relations of a class.
