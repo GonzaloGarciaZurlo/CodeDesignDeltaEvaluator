@@ -1,0 +1,29 @@
+name: CDDE Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  run-cdde:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Poetry
+        run: pip install poetry==1.8.4
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Run CDDE
+        run: |
+          REPO="https://github.com/${{ github.repository }}"
+          PR_NUMBER="${{ github.event.pull_request.number }}"
+          poetry run cdde run "$REPO" "$PR_NUMBER" src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --main-branch main --exclude Samples
