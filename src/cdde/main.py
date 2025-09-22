@@ -29,6 +29,7 @@ class Main:
         self.api = None
         self.set_thresholds = False
         self.result_observers_thresholds = None
+        self.mode = ""
 
     def set_api(self) -> None:
         """
@@ -129,6 +130,9 @@ class Main:
             lst.append(r_obs)
         return self.api.results_observers['res_composable'](lst)
 
+    def set_mode(self, mode: str) -> None:
+        self.mode = mode
+
     def clean_db(self) -> None:
         """
         Clean the database.
@@ -171,6 +175,7 @@ class Main:
         git_clone.delete_dir()
 
         veredictor = Veredict()
+        veredictor.set_global_threshold(self.mode)
         veredictor.evaluate()
 
     def run_set_thresholds(self):

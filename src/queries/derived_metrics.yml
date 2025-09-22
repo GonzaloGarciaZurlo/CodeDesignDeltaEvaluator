@@ -8,8 +8,10 @@ snapshot-metrics:
       query: _after_abstracts_classes / _after_classes
     - metric: delta_methods
       query: abs(_after_methods - _before_methods)
+      magnitude: 1
     - metric: delta_hidden_factor_methods
       query: abs(_after_hidden_factor_methods - _before_hidden_factor_methods)
+      magnitude: 3
   per-class:
   per-package:
       - metric: package_abstractness
@@ -20,14 +22,19 @@ delta-metrics:
   global:
     - metric: delta_classes
       query: abs(added_concrete_classes - deleted_concrete_classes)
+      magnitude: 3
     - metric: delta_relationships
       query: abs(added_relationships - deleted_relationships)
+      magnitude: 2
     - metric: delta_nodes
       query: abs(added_classes - deleted_classes)
+      magnitude: 2
     - metric: delta_abstracts
       query: abs(added_abstracts_classes - deleted_abstracts_classes)
+      magnitude: 1
     - metric: abstractness_delta
       query: abs(_all_abstractness_after - _all_abstractness_before)
+      magnitude: 4
   per-class:
   per-package:
 

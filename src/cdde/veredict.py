@@ -2,6 +2,10 @@
 This module evaluates the results and creates a veredict."""
 import json
 
+MODE_RESTRICTED = 25
+MODE_DEFAULT = 35
+MODE_UNRESTRICTED = 45
+
 
 class Veredict:
     """
@@ -14,6 +18,17 @@ class Veredict:
         self.thresholds = self.get_thresholds()
         self.results = self.get_global_results()
         self.not_passed: list[tuple[str, float, float]] = []
+
+    def set_global_threshold(self, mode: str) -> None:
+        """
+        Set the global threshold.
+        """
+        if mode == "restricted":
+            self.global_threshold = MODE_RESTRICTED
+        elif mode == "default":
+            self.global_threshold = MODE_DEFAULT
+        elif mode == "unrestricted":
+            self.global_threshold = MODE_UNRESTRICTED
 
     def evaluate(self) -> None:
         """
