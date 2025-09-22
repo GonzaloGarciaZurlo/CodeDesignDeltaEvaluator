@@ -1,16 +1,19 @@
 """
 This module contains functions for handling derived metrics.
 """
-from overrides import override
-from src.cdde.expr_evaluator import ExprEvaluator, MetricType
-from src.cdde.addons_api import CddeAPI
 from typing import Optional
-import pysqlite3 as sqlite3
 from enum import StrEnum
 import os
+import pysqlite3 as sqlite3  # type: ignore[import-untyped]
+from overrides import override
+
+from src.cdde.expr_evaluator import ExprEvaluator, MetricType
+from src.cdde.addons_api import CddeAPI
 
 
 class TableName(StrEnum):
+    """
+    Table names for the database."""
     CLASSES = "classes"
     PACKAGES = "packages"
 
@@ -28,8 +31,8 @@ class AggregatedMetrics(ExprEvaluator):
     @override
     def eval(self,
              expr: str,
-             arguments: dict[str, str],    # type: ignore
-             results: dict[str, str | float]) -> MetricType:   # type: ignore
+             arguments: dict[str, str],
+             results: dict[str, str | float]) -> MetricType:
         """
         Evaluate an expression in sqlite.
         """
@@ -39,20 +42,26 @@ class AggregatedMetrics(ExprEvaluator):
             self._set_db()
 
         results = self.execute_sqlite(expr)
-        return results
+        return results  # type: ignore[return-value]
 
+    # type: ignore[type-arg]
     def execute_sqlite(self, expr: str) -> dict[MetricType]:
+        """
+        Execute an expression in sqlite."""
         try:
             self._db_cursor.execute(expr)
             result = self._db_cursor.fetchone()
             if result:
-                return {k: v for k, v in zip(self._db_cursor.description, result)}
-        except:
+
+                return {k: v for k, v in zip( # pylint: disable=unnecessary-comprehension
+                    self._db_cursor.description, result)}
             return {}
+        except:
+            return 0
 
     def _set_db(self) -> None:
         self.delete_db()
-        self._db = sqlite3.connect("table.db")
+        self._db = sqlite3.connect("table.db")  # pylint: disable=no-member
         self._db.enable_load_extension(True)
         self._db.load_extension("src/addons/extension-functions.so")
         self._db_cursor = self._db.cursor()
@@ -70,18 +79,22 @@ class AggregatedMetrics(ExprEvaluator):
                               packages, TableName.PACKAGES)
 
     def split_dict(self, data: dict, cut_suffix: str, include=True):
+        """
+        Split a dictionary into two dictionaries at
+        the first occurrence of a key ending with cut_suffix.
+        """
         items = list(data.items())
 
-        for i, (k, v) in enumerate(items):
+        for i, (k, _v) in enumerate(items):
             if k.endswith(cut_suffix):
                 if include:
                     return dict(items[:i+1]), dict(items[i+1:])
-                else:
-                    return dict(items[:i]), dict(items[i:])
+                return dict(items[:i]), dict(items[i:])
 
         return data, {}
 
-    def _get_metrics_names_and_types(self, api: dict[str, str | float]) -> tuple[list[str], list[str]]:
+    def _get_metrics_names_and_types(self, api: dict[str, str | float]) -> tuple[
+            list[str], list[str]]:
         """
         Get the names of the metrics.
         """
@@ -98,7 +111,8 @@ class AggregatedMetrics(ExprEvaluator):
                     types.append(types_name)
         return names, types
 
-    def _get_metric_result(self, time: str, metric_name: str, type_name: str) -> Optional[int | float]:
+    def _get_metric_result(self, time: str, metric_name: str, type_name: str) -> Optional[
+            int | float]:
         metric = time + type_name + "___SEP___" + metric_name
         return self._api.get(metric, "NULL")
 
@@ -107,26 +121,30 @@ class AggregatedMetrics(ExprEvaluator):
         metric_columns = [f'"{name}" REAL' for name in metrics_names]
         all_columns = base_columns + metric_columns
 
-        sqlQuery = f"""
+        sql_query = f"""
         CREATE TABLE "{table}" (
             {', '.join(all_columns)}
         );"""
-        self._db_cursor.execute(sqlQuery)
+        self._db_cursor.execute(sql_query)
         self._db.commit()
 
-    def _populate_tables(self, metrics_names: list[str], types: list[str], table: TableName) -> None:
-        for type in types:
-            if 'before' in type:
+    def _populate_tables(self, metrics_names: list[str], types: list[str],
+                         table: TableName) -> None:
+        for _type in types:
+            if 'before' in _type:
                 time = 'before'
-                type = type.removeprefix('before')
+                _type = _type.removeprefix('before')
             else:
                 time = 'after'
-                type = type.removeprefix('after')
+                _type = _type.removeprefix('after')
 
-            sqlQuery = f"""
-            INSERT INTO {table} (time, name, {', '.join(metrics_names)}) VALUES ("{time}", "{type}", {', '.join(str(self._get_metric_result(time, name, type)) for name in metrics_names)})
+            sql_query = f"""
+            INSERT INTO {table} (time, name, {', '.join(metrics_names)})
+              VALUES ("{time}","{_type}",
+                {', '.join(str(self._get_metric_result(time, name, _type))
+                           for name in metrics_names)})
             """
-            self._db_cursor.execute(sqlQuery)
+            self._db_cursor.execute(sql_query)
             self._db.commit()
 
     def delete_db(self) -> None:

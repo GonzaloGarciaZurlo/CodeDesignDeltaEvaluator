@@ -318,6 +318,7 @@ class MethodsFilter(Filter):
         """
         for method in self.methods:
             class_name, method_name, kind = method
+            class_name = class_name.split('.')[-1] if '.' in class_name else class_name
             self.observer_to_send.on_method_found(class_name, method_name, kind)
 
 

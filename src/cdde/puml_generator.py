@@ -10,6 +10,9 @@ class PumlGenerator(ABC):
     Abstract class for PlantUML generators.
     """
 
+    def __init__(self, exclude: list):
+        self.exclude = exclude
+
     @abstractmethod
     def generate_plantuml(self, directory: str) -> str:
         """

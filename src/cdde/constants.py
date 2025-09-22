@@ -53,7 +53,10 @@ def convert_visibility(vis: str) -> MethodKind:
     vis_map = {
         '+': MethodKind.PUBLIC,
         '-': MethodKind.PRIVATE,
-        '#': MethodKind.PROTECTED
+        '#': MethodKind.PROTECTED,
+        '': MethodKind.PUBLIC,
+        '_': MethodKind.PRIVATE,
+        '__': MethodKind.PROTECTED
     }
     # Default to public if not found
     return vis_map.get(vis, MethodKind.PUBLIC)

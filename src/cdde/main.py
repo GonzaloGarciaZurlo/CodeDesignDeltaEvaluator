@@ -1,8 +1,9 @@
 """
 This module handles the main execution flow of the application.
 """
-import yaml
 import sys
+import yaml
+
 from .addons_api import load_addons
 from .git_clone import GitClone, TraverseGitLog
 from .puml_observer import Observer, Modes
@@ -28,6 +29,8 @@ class Main:
         self.api = None
         self.set_thresholds = False
         self.result_observers_thresholds = None
+        self.mode = ""
+        self.exclude = []
 
     def set_api(self) -> None:
         """
@@ -71,7 +74,7 @@ class Main:
         """
         Generate the PlantUML file.
         """
-        return self.api.generators[self.language]().generate_plantuml(
+        return self.api.generators[self.language](self.exclude).generate_plantuml(
             directory)
 
     def parse(self, file: str, mode: Modes) -> None:
@@ -79,11 +82,12 @@ class Main:
         Parse the PlantUML file.
         """
         observer = self._set_composable_obs(self.observers)
-        filter = self.api.observers['filter'](observer)
-        filter.set_mode(mode)
-        parser = self.api.parsers['parsimonious'](filter, FILE_GRAMMAR +
+        _filter = self.api.observers['filter'](observer)
+        _filter.set_mode(mode)
+        parser = self.api.parsers['parsimonious'](_filter, FILE_GRAMMAR +
                                                   self.language + ".txt")
         parser.parse_uml(file)
+        _filter = None
 
     def _set_composable_obs(self, observers: list) -> Observer:
         """
@@ -98,7 +102,7 @@ class Main:
         """
         Delete the PlantUML file.
         """
-        self.api.generators[self.language]().delete_plantuml(file)
+        self.api.generators[self.language](self.exclude).delete_plantuml(file)
 
     def run_queries(self, result_observer: ResultObserver) -> None:
         """
@@ -128,6 +132,12 @@ class Main:
             lst.append(r_obs)
         return self.api.results_observers['res_composable'](lst)
 
+    def set_mode(self, mode: str) -> None:
+        self.mode = mode
+
+    def set_exclude(self, exclude: list) -> None:
+        self.exclude = exclude
+
     def clean_db(self) -> None:
         """
         Clean the database.
@@ -141,7 +151,7 @@ class Main:
         with open(filepath, 'r', encoding="utf-8") as file:
             return yaml.load(file, Loader=yaml.SafeLoader)
 
-    def runCddE(self, repo_git: str, main_branch: str, pr_number: int) -> None:
+    def run_cdde(self, repo_git: str, main_branch: str, pr_number: int) -> None:
         """
         Run the main logic of the program.
         """
@@ -170,39 +180,52 @@ class Main:
         git_clone.delete_dir()
 
         veredictor = Veredict()
+        veredictor.set_global_threshold(self.mode)
         veredictor.evaluate()
 
-    def runSetThresholds(self, repo_git: str, main_branch: str):
+    def run_set_thresholds(self):
         """
         Run the set thresholds process.
         """
-        git_traverse = TraverseGitLog(repo_git, main_branch)
-        directories = git_traverse.run()
-        result_observer = self._set_result_obs(self.results_observers)
-        for directory in directories:
-            before = directory[0]
-            after = directory[1]
-            # Generate the plantuml file
-            archivo_plantuml_before = self._generate_uml(before)
-            archivo_plantuml_after = self._generate_uml(after)
+        self.set_language("go")
+        self.set_observers("Neo4j")
+        self.set_result_observers("json")
+        self.set_expr_evaluator("src/queries/cypher.yml")
+        self.set_expr_evaluator("src/queries/derived_metrics.yml")
+        self.set_expr_evaluator("src/queries/sqlite.yml")
 
-            self.clean_db()
+        repos = [("https://github.com/spf13/cobra", "main"),
+                 ("https://github.com/stretchr/testify", "master"),
+                 ("https://github.com/fyne-io/fyne", "master")]
 
-            # Parse the plantuml file
-            self.parse(archivo_plantuml_before, Modes.BEFORE)
-            self.parse(archivo_plantuml_after, Modes.AFTER)
+        for repo, branch in repos:
+            git_traverse = TraverseGitLog(repo, branch)
+            directories = git_traverse.run()
+            result_observer = self._set_result_obs(self.results_observers)
+            for directory in directories:
+                before = directory[0]
+                after = directory[1]
+                # Generate the plantuml file
+                archivo_plantuml_before = self._generate_uml(before)
+                archivo_plantuml_after = self._generate_uml(after)
 
-            self.run_queries(result_observer)
+                self.clean_db()
 
-            # Delete the plantuml file
-            self.delete_plantuml(archivo_plantuml_before)
-            self.delete_plantuml(archivo_plantuml_after)
+                # Parse the plantuml file
+                self.parse(archivo_plantuml_before, Modes.BEFORE)
+                self.parse(archivo_plantuml_after, Modes.AFTER)
 
-            # Delete the temporary directories
-            git_traverse.delete_dir(before)
-            git_traverse.delete_dir(after)
+                self.run_queries(result_observer)
 
-        git_traverse.delete_dir(git_traverse.repo_dir)
+                # Delete the plantuml file
+                self.delete_plantuml(archivo_plantuml_before)
+                self.delete_plantuml(archivo_plantuml_after)
+
+                # Delete the temporary directories
+                git_traverse.delete_dir(before)
+                git_traverse.delete_dir(after)
+
+            git_traverse.delete_dir(git_traverse.repo_dir)
 
         box_plot_creator = BoxPlotCreator("results.json")
         box_plot_creator.create_boxplots()

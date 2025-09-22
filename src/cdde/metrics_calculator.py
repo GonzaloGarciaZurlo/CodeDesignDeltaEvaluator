@@ -89,34 +89,20 @@ class MetricsCalculator:
         """ Use this method to get the base queries of DesignDB."""
         # set classes
         self.__get_classes(design_db)
-        # set relationships
-        # self.__get_relationships(design_db)
         # set packages
         self.__get_packages(design_db)
 
     def __get_classes(self, design_db: DesignDB) -> None:
         """ Set the classes of the design_db."""
         self.classes = design_db.get_all_classes()
-        # self.result_observer.on_result_data_found(str(self.classes), "classes")
-        # self.result_observer.on_result_metric_found(len(self.classes),
-        #                                            "classes", "total")
 
-    def __get_relationships(self, design_db: DesignDB) -> None:
-        """ Set the relationships of the design_db."""
-        for class_name in self.classes:
-            result = design_db.get_all_relations(class_name)
-            for record in result:
-                self.result_observer.on_result_data_found(
-                    str(class_name) + ' --> ' + str(record[1]), str(record[0]))
 
     def __get_packages(self, design_db: DesignDB) -> None:
         """ Set the packages of the design_db."""
         for class_name in self.classes:
             design_db.set_packages(class_name)
-
         self.packages = design_db.get_all_packages()
-        # self.result_observer.on_result_data_found(str(self.packages),
-        #                                          "packages")
+
 
     def _set_metrics(self, evaluator: ExprEvaluator) -> None:
         """
@@ -135,15 +121,19 @@ class MetricsCalculator:
         list_of_queries = self.queries[time_metrics.value][type_metrics.value]
         if list_of_queries is None:
             return None
-        if type_metrics == TypeMetrics.GLOBAL:
-            self._run(list_of_queries, type_metrics, evaluator)
-        if type_metrics == TypeMetrics.PER_CLASS:
-            for class_name in self.classes:
-                self._run(list_of_queries, type_metrics, evaluator, class_name)
-        if type_metrics == TypeMetrics.PER_PACKAGE:
-            for package_name in self.packages:
-                self._run(list_of_queries, type_metrics, evaluator,
-                          package_name)
+
+        match type_metrics:
+            case TypeMetrics.GLOBAL:
+                self._run(list_of_queries, type_metrics, evaluator)
+            case TypeMetrics.PER_CLASS:
+                for class_name in self.classes:
+                    self._run(list_of_queries, type_metrics,
+                              evaluator, class_name)
+            case TypeMetrics.PER_PACKAGE:
+                for package_name in self.packages:
+                    self._run(list_of_queries, type_metrics,
+                              evaluator, package_name)
+        return None
 
     def _run(self,
              list_of_queries: list,
@@ -161,20 +151,14 @@ class MetricsCalculator:
             results_api = self.results.get_metrics_dict()
             result = evaluator.eval(query['query'], params, results_api)
 
-            if isinstance(result, dict):
+            if isinstance(result, dict):    # if the result is a dictionary (form SQL query)
                 for key, value in result.items():
                     metric_name = self.__set_metric_name(query['metric'], type_metrics,
                                                          argument) + key[0]
                     self.results.add_metric(metric_name, value)
-
-                    if not query['metric'].startswith('_') and value != "null":
-                        if 'magnitude' in query:
-                            magnitude = query['magnitude']
-                            self.result_observer.on_result_metric_found(
-                                value, type_metrics.value, metric_name, magnitude)
-                        else:
-                            self.result_observer.on_result_metric_found(
-                                value, type_metrics.value, metric_name)
+                # Send the result to the observer
+                self.__send_results(
+                    query, type_metrics, metric_name, value)
                 continue
 
             metric_name = self.__set_metric_name(query['metric'], type_metrics,
@@ -182,14 +166,18 @@ class MetricsCalculator:
             self.results.add_metric(metric_name, result)
 
             # Send the result to the observer
-            if not query['metric'].startswith('_'):
-                if 'magnitude' in query:
-                    magnitude = query['magnitude']
-                    self.result_observer.on_result_metric_found(
-                        result, type_metrics.value, metric_name, magnitude)
-                else:
-                    self.result_observer.on_result_metric_found(
-                        result, type_metrics.value, metric_name)
+            self.__send_results(query, type_metrics, metric_name, result)
+
+    def __send_results(self, query: dict, type_metrics: TypeMetrics,
+                       metric_name: str, value: str) -> None:
+        if not query['metric'].startswith('_') and value != "null":
+            if 'magnitude' in query:
+                magnitude = query['magnitude']
+                self.result_observer.on_result_metric_found(
+                    value, type_metrics.value, metric_name, magnitude)
+            else:
+                self.result_observer.on_result_metric_found(
+                    value, type_metrics.value, metric_name)
 
     def __set_params(self, argument: str, type_metrics: TypeMetrics) -> dict:
         """

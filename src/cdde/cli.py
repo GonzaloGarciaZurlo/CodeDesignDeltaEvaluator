@@ -1,6 +1,6 @@
 """
 This module is the CLI of the tool.
-It uses the Typer library to create the CLI. 
+It uses the Typer library to create the CLI.
 """
 from typing import List
 from enum import StrEnum
@@ -15,6 +15,16 @@ app = typer.Typer(name="cdde")
 # cdde https://github.com/spf13/cobra --main-branch main 2294 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 168 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 145 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
+
+
+class CddeModes(StrEnum):
+    """
+    StrEnum for the mode of the tool.
+    """
+    RESTRICTED = "restricted"
+    DEFAULT = "default"
+    UNRESTRICTED = "unrestricted"
+
 
 class Lang(StrEnum):
     """
@@ -95,7 +105,7 @@ def set_json_to_multiple_metrics(main: Main) -> None:
     main.set_thresholds = True
 
 
-@app.command()
+@app.command("run")
 def CddE(
         repo_git: str = typer.Argument(
             ..., help="Link to the repository to evaluate"),
@@ -108,20 +118,21 @@ def CddE(
                                   help="Select language of the repository"),
         store: List[Store] = typer.Option([Store.NEO4J],
                                           help="Select graph database"),
-        set_thresholds: bool = typer.Option(
-            False,
-            "--set-thresholds",
-            help="Set thresholds for the evaluation"),
         visual: bool = typer.
     Option(
         False,
         "--visual",
         "--v",
-        help=
-        "Visualize the class and relations of the repository on the console"),
+        help="Visualize the class and relations of the repository on the console"),
         format_result: List[FormatResult] = typer.Option(
             [FormatResult.JSON.value],
-            help="Select the format of the result")):
+            help="Select the format of the result"),
+        mode: CddeModes = typer.Option(
+            CddeModes.DEFAULT.value,
+            help="Select the restriction mode of the tool"),
+        exclude: List[str] = typer.Option(
+            [],
+            help="Exclude specific files or directories from the analysis")):
     """Run the tool CddE"""
     main = Main()
     main.set_api()
@@ -130,10 +141,16 @@ def CddE(
     add_observer(store, main)
     add_visual_mode(visual, main)
     add_result_observer(format_result, main)
+    main.set_mode(mode.value)
+    main.set_exclude(exclude)
 
-    if set_thresholds:
-        set_json_to_multiple_metrics(main)
-        main.runSetThresholds(repo_git, main_branch)
+    main.run_cdde(repo_git, main_branch, pr_number)
 
-    else:
-        main.runCddE(repo_git, main_branch, pr_number)
+
+@app.command("set-thresholds")
+def set_thresholds():
+    """Run CddE thresholds initialization"""
+    main = Main()
+    main.set_api()
+    set_json_to_multiple_metrics(main)
+    main.run_set_thresholds()

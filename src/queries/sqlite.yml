@@ -43,6 +43,7 @@ snapshot-metrics:
         ABS(coalesce(after.package_abstractness, 0) - coalesce(before.package_abstractness, 0)) AS _package_abstractness,
         ABS(coalesce(after.d_f_main_size, 0) - coalesce(before.d_f_main_size, 0)) AS _d_f_main_size
       FROM before, after;
+    magnitude: 2
   - metric: delta_packages_max
     query: |
       WITH before AS (
@@ -84,6 +85,7 @@ snapshot-metrics:
         ABS(coalesce(after.package_abstractness, 0) - coalesce(before.package_abstractness, 0)) AS _package_abstractness,
         ABS(coalesce(after.d_f_main_size, 0) - coalesce(before.d_f_main_size, 0)) AS _d_f_main_size
       FROM before, after;
+    magnitude: 2
   - metric: delta_packages_stdev
     query: |
       WITH before AS (
@@ -125,6 +127,7 @@ snapshot-metrics:
         ABS(after.package_abstractness - before.package_abstractness) AS _package_abstractness,
         ABS(after.d_f_main_size - before.d_f_main_size) AS _d_f_main_size
       FROM before, after;
+    magnitude: 2
   - metric: delta_classes_avg
     query: |
       WITH before AS (
@@ -154,6 +157,7 @@ snapshot-metrics:
         ABS(coalesce(after.efferent_count, 0) - coalesce(before.efferent_count, 0)) AS _efferent_count,
         ABS(coalesce(after.instability_class, 0) - coalesce(before.instability_class, 0)) AS _instability_class
       FROM before, after;
+    magnitude: 4
   - metric: delta_classes_max
     query: |
       WITH before AS (
@@ -183,6 +187,7 @@ snapshot-metrics:
         ABS(coalesce(after.efferent_count, 0) - coalesce(before.efferent_count, 0)) AS _efferent_count,
         ABS(coalesce(after.instability_class, 0) - coalesce(before.instability_class, 0)) AS _instability_class
       FROM before, after;
+    magnitude: 2
   - metric: delta_classes_stdev
     query: |
       WITH before AS (
@@ -212,6 +217,7 @@ snapshot-metrics:
         ABS(after.efferent_count       - before.efferent_count)       AS _efferent_count,
         ABS(after.instability_class    - before.instability_class)    AS _instability_class
       FROM before, after;
+    magnitude: 4
   per-class:
   per-package:
 delta-metrics:

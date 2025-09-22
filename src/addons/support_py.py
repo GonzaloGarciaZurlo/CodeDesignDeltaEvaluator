@@ -41,7 +41,8 @@ class PyPumlGenerator(PumlGenerator):
         Get the python files in the directory and return them as a string.
         """
         files = []
-        for root, _, files_in_dir in os.walk(directory):
+        for root, dirs, files_in_dir in os.walk(directory):
+            dirs[:] = [d for d in dirs if d not in self.exclude]
             files += self._search_py_files(files_in_dir, root)
         return files
 
@@ -61,7 +62,7 @@ class PyPumlGenerator(PumlGenerator):
         """
         files = self._py_files(directory)
         subprocess.run(['pyreverse', '-o', 'plantuml', '-p',
-                        'UML', '-d', directory] + files, check=True,
+                        'UML', '-d', directory, '-f', 'ALL'] + files, check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         if os.path.isfile(directory + 'packages_UML.plantuml'):

@@ -23,7 +23,9 @@ class Neo4j(Observer):
         Query to create a node with the class name.
         """
         name = self.mode.value + name
-        tx.run(f"CREATE (p:class {{name: $name, type: $type}})", name=name, type=kind.value)
+        tx.run(
+            f"CREATE (p:class {{name: $name, type: $type}})",  # pylint: disable=f-string-without-interpolation
+            name=name, type=kind.value)
 
     def _create_relation(self, tx: Transaction, class1: str, class2:
                          str, relation: Relationship) -> None:
@@ -63,8 +65,9 @@ class Neo4j(Observer):
         class_name = self.mode.value + class_name
         method_name = self.mode.value + method_name
         tx.run(
-            f"CREATE (p:method {{name: $method_name, visibility: $kind}})", method_name=method_name, kind=kind.value)
-        tx.run(#---> ver que pasa si hay 2 metodos con el mismo nombre y distinta clase
+            f"CREATE (p:method {{name: $method_name, visibility: $kind}})",  # pylint: disable=f-string-without-interpolation
+            method_name=method_name, kind=kind.value)
+        tx.run(
             f"""
             MATCH (a:class), (p:method)
             WHERE p.name = $method_name
