@@ -2,9 +2,9 @@
 This module evaluates the results and creates a veredict."""
 import json
 
-MODE_RESTRICTED = 25
-MODE_DEFAULT = 35
-MODE_UNRESTRICTED = 45
+MODE_RESTRICTED = 3
+MODE_DEFAULT = 6
+MODE_UNRESTRICTED = 20
 
 
 class Veredict:
@@ -30,12 +30,20 @@ class Veredict:
         elif mode == "unrestricted":
             self.global_threshold = MODE_UNRESTRICTED
 
-    def evaluate(self) -> None:
+    def evaluate(self, visual: bool) -> None:
         """
         Evaluate the results and create a veredict.
         """
         self._set_metrics_not_passed()
+        if visual:
+            self.print_veredict()
+        veredict = self.norm_p(self.not_passed, 2)
+        if veredict > self.global_threshold:
+            print("Recommendation: Review the change.\n")
+        else:
+            print("Change approved.\n")
 
+    def print_veredict(self) -> None:
         print("\nMetrics that exceeded their threshold:")
         print("#" * 76)
         header = f"# {'Metric':20} | {'Magnitude':10} | {'Threshold':10} | {'Result':10} | {'Ratio':10} #"  # pylint: disable=line-too-long
@@ -45,19 +53,16 @@ class Veredict:
         for metric, magnitude, ratio in self.not_passed:
             threshold = self.thresholds.get(metric, "N/A")
             result = self.results.get(metric + f"_{magnitude}", None)
-            metric_str = (metric[:17] + "...") if len(metric) > 20 else metric
+            metric_str = (
+                metric[:17] + "...") if len(metric) > 20 else metric
             line = f"# {metric_str:20} | {magnitude:<10.2f} | {threshold:<10.2f} | {result:<10.2f} | {ratio:<10.2f} #"  # pylint: disable=line-too-long
             print(line)
 
         print("#" * 76)
 
         veredict = self.norm_p(self.not_passed, 2)
-        print(f"\nL2 Norm = {veredict:.2f} (max: {self.global_threshold:.2f})")
-
-        if veredict > self.global_threshold:
-            print("Recommendation: Review the change.\n")
-        else:
-            print("Change approved.\n")
+        print(
+            f"\nL2 Norm = {veredict:.2f} (max: {self.global_threshold:.2f})")
 
     def _set_metrics_not_passed(self) -> None:
         """
