@@ -129,7 +129,10 @@ def CddE(
             help="Select the format of the result"),
         mode: CddeModes = typer.Option(
             CddeModes.DEFAULT.value,
-            help="Select the restriction mode of the tool")):
+            help="Select the restriction mode of the tool"),
+        exclude: List[str] = typer.Option(
+            [],
+            help="Exclude specific files or directories from the analysis")):
     """Run the tool CddE"""
     main = Main()
     main.set_api()
@@ -139,6 +142,7 @@ def CddE(
     add_visual_mode(visual, main)
     add_result_observer(format_result, main)
     main.set_mode(mode.value)
+    main.set_exclude(exclude)
 
     main.run_cdde(repo_git, main_branch, pr_number)
 

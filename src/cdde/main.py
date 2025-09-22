@@ -30,6 +30,7 @@ class Main:
         self.set_thresholds = False
         self.result_observers_thresholds = None
         self.mode = ""
+        self.exclude = []
 
     def set_api(self) -> None:
         """
@@ -73,7 +74,7 @@ class Main:
         """
         Generate the PlantUML file.
         """
-        return self.api.generators[self.language]().generate_plantuml(
+        return self.api.generators[self.language](self.exclude).generate_plantuml(
             directory)
 
     def parse(self, file: str, mode: Modes) -> None:
@@ -86,6 +87,7 @@ class Main:
         parser = self.api.parsers['parsimonious'](_filter, FILE_GRAMMAR +
                                                   self.language + ".txt")
         parser.parse_uml(file)
+        _filter = None
 
     def _set_composable_obs(self, observers: list) -> Observer:
         """
@@ -100,7 +102,7 @@ class Main:
         """
         Delete the PlantUML file.
         """
-        self.api.generators[self.language]().delete_plantuml(file)
+        self.api.generators[self.language](self.exclude).delete_plantuml(file)
 
     def run_queries(self, result_observer: ResultObserver) -> None:
         """
@@ -132,6 +134,9 @@ class Main:
 
     def set_mode(self, mode: str) -> None:
         self.mode = mode
+
+    def set_exclude(self, exclude: list) -> None:
+        self.exclude = exclude
 
     def clean_db(self) -> None:
         """
@@ -168,11 +173,11 @@ class Main:
         self.run_queries(self._set_result_obs(self.results_observers))
 
         # Delete the plantuml file
-        self.delete_plantuml(archivo_plantuml_before)
-        self.delete_plantuml(archivo_plantuml_after)
+        #self.delete_plantuml(archivo_plantuml_before)
+        #self.delete_plantuml(archivo_plantuml_after)
 
         # Delete the temporary directories
-        git_clone.delete_dir()
+        #git_clone.delete_dir()
 
         veredictor = Veredict()
         veredictor.set_global_threshold(self.mode)

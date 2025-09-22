@@ -38,4 +38,4 @@ other               = ~r".*\n?"
 
 ws                  = ~r"\s+"
 
-other2              = ~"[^\n]*"
+other2              = ~r"[^\n}]*"
