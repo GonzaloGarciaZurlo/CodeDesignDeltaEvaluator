@@ -124,18 +124,18 @@ class MetricsCalculator:
 
         match type_metrics:
             case TypeMetrics.GLOBAL:
-                self._run(list_of_queries, type_metrics, evaluator)
+                self._run_calc(list_of_queries, type_metrics, evaluator)
             case TypeMetrics.PER_CLASS:
                 for class_name in self.classes:
-                    self._run(list_of_queries, type_metrics,
+                    self._run_calc(list_of_queries, type_metrics,
                               evaluator, class_name)
             case TypeMetrics.PER_PACKAGE:
                 for package_name in self.packages:
-                    self._run(list_of_queries, type_metrics,
+                    self._run_calc(list_of_queries, type_metrics,
                               evaluator, package_name)
         return None
 
-    def _run(self,
+    def _run_calc(self,
              list_of_queries: list,
              type_metrics: TypeMetrics,
              evaluator: ExprEvaluator,
