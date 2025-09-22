@@ -1,17 +1,13 @@
-from abc import ABC, abstractmethod
 from typing import override
 
 
-class Example(ABC):
-    @abstractmethod
+class Example():
     def method(self):
         pass
 
-    @abstractmethod
     def another_method(self):
         pass
 
-    @abstractmethod
     def yet_another_method(self):
         pass
 
