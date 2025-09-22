@@ -120,7 +120,7 @@ class TraverseGitLog:
         self.before_dir = ""
         self.after_dir = ""
 
-    def run(self) -> Generator[str, str, None]:
+    def run_traverse(self) -> Generator[str, str, None]:
         """
         Runs the process of cloning all version of the repository.
         """

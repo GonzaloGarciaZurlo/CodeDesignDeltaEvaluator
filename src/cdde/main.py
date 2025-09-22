@@ -200,7 +200,7 @@ class Main:
 
         for repo, branch in repos:
             git_traverse = TraverseGitLog(repo, branch)
-            directories = git_traverse.run()
+            directories = git_traverse.run_traverse()
             result_observer = self._set_result_obs(self.results_observers)
             for directory in directories:
                 before = directory[0]
