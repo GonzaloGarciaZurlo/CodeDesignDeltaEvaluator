@@ -179,9 +179,13 @@ class Main:
         # Delete the temporary directories
         git_clone.delete_dir()
 
+        visual = False
+        if 'printer' in self.observers:
+            visual = True
+
         veredictor = Veredict()
         veredictor.set_global_threshold(self.mode)
-        veredictor.evaluate()
+        veredictor.evaluate(visual)
 
     def run_set_thresholds(self):
         """
