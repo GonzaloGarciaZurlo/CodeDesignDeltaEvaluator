@@ -7,6 +7,18 @@ on:
 jobs:
   run-cdde:
     runs-on: ubuntu-latest
+    services:
+      neo4j:
+        image: neo4j:5.22
+        ports:
+          - 7689:7687
+        env:
+          NEO4J_AUTH: "none"
+        options: >-
+          --health-cmd "cypher-shell -a bolt://localhost:7687 'RETURN 1'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - name: Checkout tool in main
         uses: actions/checkout@v4
