@@ -1,0 +1,41 @@
+start               = ( package_namespace / class_definition / relationship / other)*
+
+package_namespace   = package / namespace
+
+package             = ws? "package" ws? name ws? "{" ws? class_definition+ ws? "}"
+
+namespace           = ws? "namespace" ws? name ws? "{" ws? class_definition+ ws? "}"
+
+class_type          = "class" / "interface" / "struct" / "abstract class" / "abstract" 
+
+class_name          = ~r'"[^"]*"|\'[^\']*\'|[^\s]+'
+
+class_definition    = ws? class_type ws class_name ws? alias? ws? stereotype? ws? "{" ws? body* ws? "}"
+
+name                = ~r'"?[A-Za-z_][A-Za-z0-9_.\[\]\'"]*"?'
+
+alias               = "as" ws name
+
+body                = (method / attribute) ws?
+
+method              = visibility? ws? method_name ws? "(" other2
+
+method_name         = ~r"[A-Za-z_<>\[\]\*\./={}][A-Za-z0-9_<>\[\]\*\./={}]*"
+
+attribute           = visibility? attribute_name ws? ":"? ws? other2?
+
+attribute_name      = ~r'"?[A-Za-z_][A-Za-z0-9_.\[\]\'"]*"?'    
+
+visibility         = "__"/ "_"
+
+stereotype          = "<<" ws? "(" ws? name ws? "," ws? name ws? ")" ws? ">>"
+
+relationship_type   = '--|>' / '<|--' / '..|>' / '<|..' / '-->' / '<--' / '*--' / '--*' / 'o--' / '--o' / '--'
+
+relationship        = name ws* relationship_type ws* name ws?
+
+other               = ~r".*\n?"  
+
+ws                  = ~r"\s+"
+
+other2              = ~"[^\n]*"

@@ -61,7 +61,7 @@ class PyPumlGenerator(PumlGenerator):
         """
         files = self._py_files(directory)
         subprocess.run(['pyreverse', '-o', 'plantuml', '-p',
-                        'UML', '-d', directory] + files, check=True,
+                        'UML', '-d', directory, '-f', 'ALL'] + files, check=True,
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
         if os.path.isfile(directory + 'packages_UML.plantuml'):

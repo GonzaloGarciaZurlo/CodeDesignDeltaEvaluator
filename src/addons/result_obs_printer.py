@@ -41,9 +41,6 @@ class ResultPrinter(ResultObserver):
         """
         print(f"{kind}: {result}")
 
-    @override
-    def delete_file(self) -> None:
-        pass
 
 
 def init_module(api: CddeAPI) -> None:

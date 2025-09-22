@@ -4,8 +4,10 @@ In this module we define the parser with parsimonius to parse the plantuml file.
 Contains the grammar and the class that implements the parser.
 """
 from typing import Any
-from parsimonious.grammar import Grammar # type: ignore[import-untyped]   # pylint: disable=import-error
-from parsimonious.nodes import NodeVisitor, Node # type: ignore[import-untyped]  # pylint: disable=import-error
+# type: ignore[import-untyped]   # pylint: disable=import-error
+from parsimonious.grammar import Grammar
+# type: ignore[import-untyped]  # pylint: disable=import-error
+from parsimonious.nodes import NodeVisitor, Node
 from src.cdde.addons_api import CddeAPI
 from src.cdde.puml_observer import Observer, MethodKind
 from src.cdde.constants import convert_relation, convert_class_kind, Direction, convert_visibility
@@ -78,8 +80,15 @@ class Parsimonius(NodeVisitor):
         # Send methods to observer
         for method in visited_children[11]:
             if method != "":
-                kind = method[0]
-                method_name = method[1:]
+                if method[0:2] in ['__']:
+                    kind = method[0:2]
+                    method_name = method[2:]
+                elif method[0] in ['+', '-', '#', '_']:
+                    kind = method[0]
+                    method_name = method[1:]
+                else:
+                    kind = ''
+                    method_name = method
                 self.observer.on_method_found(
                     class_name, method_name, convert_visibility(kind))
 
@@ -132,19 +141,32 @@ class Parsimonius(NodeVisitor):
         """
         Extract method name.
         """
-        return str(visited_children[0])
+        result = visited_children[0]
+        if isinstance(result, list):
+            result = result[0]
+        return result
 
     def visit_method(self, _node: Node, visited_children: list) -> str:
         """
         return method name, without arguments and return type.
         """
-        return str(visited_children[0]) + str(visited_children[2])
+        visibilty = visited_children[0]
+        if isinstance(visibilty, list):
+            visibilty = visibilty[0]
+        method_name = visited_children[2]
+        if isinstance(method_name, list):
+            method_name = method_name[0]
 
-    def visit_visibility(self, node: Node, _visited_children: list) -> MethodKind:
+        return str(visibilty) + str(method_name)
+
+    def visit_visibility(self, _node: Node, visited_children: list) -> MethodKind:
         """
         Convert visibility symbols to names.
         """
-        return node.text.strip()
+        result = visited_children[0]
+        if isinstance(result, list):
+            result = result[0]
+        return result
 
     def visit_attribute(self, _node: Node, _visited_children: list) -> str:
         """

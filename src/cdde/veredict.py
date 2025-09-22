@@ -67,7 +67,10 @@ class Veredict:
         for metric, result in results.items():
             magnitude = metric[-1:]
             metric = metric[:-2]
-            threshold = self.thresholds[metric]
+            try:
+                threshold = self.thresholds[metric]
+            except:
+                continue
             if result > threshold:
                 if threshold == 0:
                     ratio = 1  # ver
