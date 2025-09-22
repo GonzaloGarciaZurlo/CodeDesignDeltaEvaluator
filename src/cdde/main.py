@@ -173,37 +173,49 @@ class Main:
         veredictor = Veredict()
         veredictor.evaluate()
 
-    def run_set_thresholds(self, repo_git: str, main_branch: str):
+    def run_set_thresholds(self):
         """
         Run the set thresholds process.
         """
-        git_traverse = TraverseGitLog(repo_git, main_branch)
-        directories = git_traverse.run()
-        result_observer = self._set_result_obs(self.results_observers)
-        for directory in directories:
-            before = directory[0]
-            after = directory[1]
-            # Generate the plantuml file
-            archivo_plantuml_before = self._generate_uml(before)
-            archivo_plantuml_after = self._generate_uml(after)
+        self.set_language("go")
+        self.set_observers("Neo4j")
+        self.set_result_observers("json")
+        self.set_expr_evaluator("src/queries/cypher.yml")
+        self.set_expr_evaluator("src/queries/derived_metrics.yml")
+        self.set_expr_evaluator("src/queries/sqlite.yml")
 
-            self.clean_db()
+        repos = [("https://github.com/spf13/cobra", "main"),
+                 ("https://github.com/stretchr/testify", "master"),
+                 ("https://github.com/fyne-io/fyne", "master")]
 
-            # Parse the plantuml file
-            self.parse(archivo_plantuml_before, Modes.BEFORE)
-            self.parse(archivo_plantuml_after, Modes.AFTER)
+        for repo, branch in repos:
+            git_traverse = TraverseGitLog(repo, branch)
+            directories = git_traverse.run()
+            result_observer = self._set_result_obs(self.results_observers)
+            for directory in directories:
+                before = directory[0]
+                after = directory[1]
+                # Generate the plantuml file
+                archivo_plantuml_before = self._generate_uml(before)
+                archivo_plantuml_after = self._generate_uml(after)
 
-            self.run_queries(result_observer)
+                self.clean_db()
 
-            # Delete the plantuml file
-            self.delete_plantuml(archivo_plantuml_before)
-            self.delete_plantuml(archivo_plantuml_after)
+                # Parse the plantuml file
+                self.parse(archivo_plantuml_before, Modes.BEFORE)
+                self.parse(archivo_plantuml_after, Modes.AFTER)
 
-            # Delete the temporary directories
-            git_traverse.delete_dir(before)
-            git_traverse.delete_dir(after)
+                self.run_queries(result_observer)
 
-        git_traverse.delete_dir(git_traverse.repo_dir)
+                # Delete the plantuml file
+                self.delete_plantuml(archivo_plantuml_before)
+                self.delete_plantuml(archivo_plantuml_after)
+
+                # Delete the temporary directories
+                git_traverse.delete_dir(before)
+                git_traverse.delete_dir(after)
+
+            git_traverse.delete_dir(git_traverse.repo_dir)
 
         box_plot_creator = BoxPlotCreator("results.json")
         box_plot_creator.create_boxplots()

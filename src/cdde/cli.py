@@ -16,6 +16,7 @@ app = typer.Typer(name="cdde")
 # cdde https://github.com/jfeliu007/goplantuml 168 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 # cdde https://github.com/jfeliu007/goplantuml 145 src/queries/cypher.yml src/queries/derived_metrics.yml --lang go --v
 
+
 class Lang(StrEnum):
     """
     StrEnum for the language.
@@ -95,7 +96,7 @@ def set_json_to_multiple_metrics(main: Main) -> None:
     main.set_thresholds = True
 
 
-@app.command()
+@app.command("run")
 def CddE(
         repo_git: str = typer.Argument(
             ..., help="Link to the repository to evaluate"),
@@ -108,17 +109,12 @@ def CddE(
                                   help="Select language of the repository"),
         store: List[Store] = typer.Option([Store.NEO4J],
                                           help="Select graph database"),
-        set_thresholds: bool = typer.Option(
-            False,
-            "--set-thresholds",
-            help="Set thresholds for the evaluation"),
         visual: bool = typer.
     Option(
         False,
         "--visual",
         "--v",
-        help=
-        "Visualize the class and relations of the repository on the console"),
+        help="Visualize the class and relations of the repository on the console"),
         format_result: List[FormatResult] = typer.Option(
             [FormatResult.JSON.value],
             help="Select the format of the result")):
@@ -131,9 +127,13 @@ def CddE(
     add_visual_mode(visual, main)
     add_result_observer(format_result, main)
 
-    if set_thresholds:
-        set_json_to_multiple_metrics(main)
-        main.run_set_thresholds(repo_git, main_branch)
+    main.run_cdde(repo_git, main_branch, pr_number)
 
-    else:
-        main.run_cdde(repo_git, main_branch, pr_number)
+
+@app.command("set-thresholds")
+def set_thresholds():
+    """Run CddE thresholds initialization"""
+    main = Main()
+    main.set_api()
+    set_json_to_multiple_metrics(main)
+    main.run_set_thresholds()

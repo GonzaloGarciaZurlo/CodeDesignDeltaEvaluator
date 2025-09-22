@@ -56,9 +56,8 @@ class AggregatedMetrics(ExprEvaluator):
                 return {k: v for k, v in zip( # pylint: disable=unnecessary-comprehension
                     self._db_cursor.description, result)}
             return {}
-        except KeyError as e:
-            print(f"SQLite error: {e}")
-            return {}
+        except:
+            return 0
 
     def _set_db(self) -> None:
         self.delete_db()
