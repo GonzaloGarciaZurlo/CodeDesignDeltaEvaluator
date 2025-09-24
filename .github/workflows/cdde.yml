@@ -34,7 +34,7 @@ jobs:
       - name: Wait for Neo4j
         run: |
           for i in {1..30}; do
-            if nc -z neo4j 7687; then
+            if nc -z localhost 7687; then
               echo "Neo4j is ready"
               break
             fi
@@ -46,4 +46,4 @@ jobs:
         run: |
           REPO="https://github.com/${{ github.repository }}"
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          poetry run cdde run "$REPO" "$PR_NUMBER" src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --main-branch main --exclude Samples --uri bolt://neo4j:7687
+          poetry run cdde run "$REPO" "$PR_NUMBER" src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --main-branch main --exclude Samples --uri bolt://localhost:7687
