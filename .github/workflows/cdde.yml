@@ -14,11 +14,6 @@ jobs:
           - 7687:7687
         env:
           NEO4J_AUTH: none
-        options: >-
-          --health-cmd "cypher-shell -a bolt://localhost:7687 'RETURN 1'"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 10
     steps:
       - name: Checkout tool in main
         uses: actions/checkout@v4
@@ -35,11 +30,18 @@ jobs:
 
       - name: Install dependencies
         run: poetry install
-        
+
+      - name: Install Neo4j CLI
+        run: |
+          wget -qO - https://debian.neo4j.com/neotechnology.gpg.key | sudo apt-key add -
+          echo 'deb https://debian.neo4j.com stable 5' | sudo tee /etc/apt/sources.list.d/neo4j.list
+          sudo apt-get update
+          sudo apt-get install -y cypher-shell
+
       - name: Wait for Neo4j
         run: |
           for i in {1..30}; do
-            if cypher-shell -a bolt://neo4j:7687 -u neo4j -p none 'RETURN 1' &>/dev/null; then
+            if cypher-shell -a bolt://neo4j:7687 'RETURN 1' &>/dev/null; then
               echo "Neo4j is ready"
               break
             fi

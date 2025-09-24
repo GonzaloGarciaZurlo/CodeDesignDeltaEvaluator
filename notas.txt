@@ -1,9 +1,0 @@
-- 1 gramatica por leng
-- Borrar bien el resutls.json
-
-- implementar memgraph
-
-- Estadistico:
-ver que PRs elegir (con muchos cambios o tambien con pocos)
-solo tomo PRs abiertas?
-sirven todas las metricas? o las filtro para resultados finales e intermedos?
