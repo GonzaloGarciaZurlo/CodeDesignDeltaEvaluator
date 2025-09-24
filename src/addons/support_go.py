@@ -5,10 +5,10 @@ import subprocess
 import os
 from overrides import override
 from src.cdde.addons_api import CddeAPI
-from src.cdde.puml_generator import PumlGenerator
+from src.cdde.puml_observer import Observer
 
 
-class GoPumlGenerator(PumlGenerator):
+class GoPumlGenerator(Observer):
     """
     PlantUML generator for Go files.
     """
