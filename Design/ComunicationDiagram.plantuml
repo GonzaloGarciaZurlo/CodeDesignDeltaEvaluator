@@ -22,7 +22,6 @@ package "MetricsDB" <<Database>> {
 [Metric Calculator] --> [RelationshipDB] : queries 7
 [Metric Calculator] -> [Result Observer] : 8
 [Result Observer] -> [MetricsDB] : 9
-[MetricsDB] <-- [Metrics Evaluator] : 10
-[Metrics Evaluator] --> [Veredict] : 11
+[MetricsDB] <-- [Veredict] : 10
 
 @enduml

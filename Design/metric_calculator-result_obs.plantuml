@@ -31,21 +31,23 @@ abstract class ResultObserver {
 }
 
 class DerivedMetrics
-class QueriesCypher
-class QueriesGremlin
+class CypherMetrics
+class SQLMetrics
 
 class Printer
 class Composable
 class CSV
+class Json
 
 
-ExpressionEvaluator <|-- QueriesCypher   
-ExpressionEvaluator <|-- QueriesGremlin
+ExpressionEvaluator <|-- CypherMetrics   
+ExpressionEvaluator <|-- SQLMetrics
 ExpressionEvaluator <|-- DerivedMetrics
 
 ResultObserver <|-- Printer
 ResultObserver <|-- Composable
 ResultObserver <|-- CSV
+ResultObserver <|-- Json
 
 ExpressionEvaluator <- MetricCalculator : (run())
 MetricCalculator -> ResultObserver : (on_result_found())
