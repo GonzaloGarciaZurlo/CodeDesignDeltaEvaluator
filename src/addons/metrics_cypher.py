@@ -13,9 +13,19 @@ class QueriesCypher(ExprEvaluator):
     """
 
     def __init__(self) -> None:
-        self.uri = "bolt://localhost:7689"
+        self.uri = self._get_uri()
         self.driver = GraphDatabase.driver(self.uri, auth=None)
         self.path = "src/queries/cypher.yml"
+
+    def _get_uri(self) -> str:
+        """
+        Get the URI of the Neo4j database in the uri.txt file.
+        """
+        try:
+            with open("uri.txt", 'r', encoding="utf-8") as file:
+                return file.read().strip()
+        except:
+            return "bolt://localhost:7689"
 
     @override
     def eval(self,

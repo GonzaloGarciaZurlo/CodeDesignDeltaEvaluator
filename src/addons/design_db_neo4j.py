@@ -11,10 +11,20 @@ class DesignDBNeo4j(DesignDB):
     """
 
     def __init__(self) -> None:
-        self.uri = "bolt://localhost:7689"
+        self.uri = self._get_uri()
         self.driver = GraphDatabase.driver(self.uri, auth=None)
         self.path: str = "src/queries/cypher.yml"
         self.packages: list[str] = []
+
+    def _get_uri(self) -> str:
+        """
+        Get the URI of the Neo4j database in the uri.txt file.
+        """
+        try:
+            with open("uri.txt", 'r', encoding="utf-8") as file:
+                return file.read().strip()
+        except:
+            return "bolt://localhost:7689"
 
     @override
     def get_all_classes(self) -> list[str]:
@@ -51,7 +61,7 @@ class DesignDBNeo4j(DesignDB):
         return []
 
     def _get_class_per_package_(self, tx: Transaction,
-                               package_name: str) -> list:
+                                package_name: str) -> list:
         """
         Helper function to get all classes in a package.
         """
@@ -72,7 +82,7 @@ class DesignDBNeo4j(DesignDB):
         return [record["name"] for record in result]
 
     def _get_all_relations_(self, tx: Transaction,
-                           class_name: str) -> list[tuple]:
+                            class_name: str) -> list[tuple]:
         """
         Helper function to get all relations of a class.
         """

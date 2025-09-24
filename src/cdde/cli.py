@@ -132,7 +132,8 @@ def CddE(
             help="Select the restriction mode of the tool"),
         exclude: List[str] = typer.Option(
             [],
-            help="Exclude specific files or directories from the analysis")):
+            help="Exclude specific files or directories from the analysis"),
+        uri: str = typer.Option("bolt://localhost:7689", help="URI of the Neo4j database")):
     """Run the tool CddE"""
     main = Main()
     main.set_api()
@@ -143,7 +144,7 @@ def CddE(
     add_result_observer(format_result, main)
     main.set_mode(mode.value)
     main.set_exclude(exclude)
-
+    main.set_uri(uri)
     main.run_cdde(repo_git, main_branch, pr_number)
 
 

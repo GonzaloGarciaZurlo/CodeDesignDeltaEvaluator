@@ -11,7 +11,7 @@ jobs:
       neo4j:
         image: neo4j:5.22
         ports:
-          - 7689:7687
+          - 7687:7687
         env:
           NEO4J_AUTH: "none"
         options: >-
@@ -40,4 +40,4 @@ jobs:
         run: |
           REPO="https://github.com/${{ github.repository }}"
           PR_NUMBER="${{ github.event.pull_request.number }}"
-          poetry run cdde run "$REPO" "$PR_NUMBER" src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --main-branch main --exclude Samples
+          poetry run cdde run "$REPO" "$PR_NUMBER" src/queries/cypher.yml src/queries/derived_metrics.yml src/queries/sqlite.yml --main-branch main --exclude Samples --uri bolt://neo4j:7687
