@@ -13,7 +13,6 @@ participant "Metric Calulator" as MetricCalculator
 participant "Metric API" as MetricAPI
 participant "Result Observer" as ResultObserver
 participant "MetricsDB" as metricsDB
-participant "Metrics Evaluator" as MetricsEvaluator
 participant "Veredict" as Veredict
 
 CLI -> main: config
@@ -65,9 +64,7 @@ end
 deactivate MetricCalculator
 
 
-
-MetricsEvaluator -> metricsDB: metrics
-MetricsEvaluator -> Veredict: veredict
+Veredict -> metricsDB: veredict
 
 @enduml
 

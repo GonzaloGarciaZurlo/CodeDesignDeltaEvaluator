@@ -138,6 +138,21 @@ class Main:
     def set_exclude(self, exclude: list) -> None:
         self.exclude = exclude
 
+    def set_uri(self, uri: str) -> None:
+        """
+        print the URI of the Neo4j database in uri.txt.
+        """
+        with open("uri.txt", "w", encoding="utf-8") as file:
+            file.write(uri)
+
+    def delete_uri(self) -> None:
+        """
+        Delete the uri.txt file.
+        """
+        import os
+        if os.path.exists("uri.txt"):
+            os.remove("uri.txt")
+
     def clean_db(self) -> None:
         """
         Clean the database.
@@ -178,6 +193,7 @@ class Main:
 
         # Delete the temporary directories
         git_clone.delete_dir()
+        self.delete_uri()
 
         visual = False
         if 'printer' in self.observers:
@@ -197,6 +213,7 @@ class Main:
         self.set_expr_evaluator("src/queries/cypher.yml")
         self.set_expr_evaluator("src/queries/derived_metrics.yml")
         self.set_expr_evaluator("src/queries/sqlite.yml")
+        self.set_uri("bolt://localhost:7689")
 
         repos = [("https://github.com/spf13/cobra", "main"),
                  ("https://github.com/stretchr/testify", "master"),
@@ -231,6 +248,7 @@ class Main:
 
             git_traverse.delete_dir(git_traverse.repo_dir)
 
+        self.delete_uri()
         box_plot_creator = BoxPlotCreator("results.json")
         box_plot_creator.create_boxplots()
         box_plot_creator.store_percentiles_90()

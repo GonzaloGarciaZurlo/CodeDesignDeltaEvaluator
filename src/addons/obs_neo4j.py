@@ -13,10 +13,20 @@ class Neo4j(Observer):
     """
 
     def __init__(self) -> None:
-        self.uri = "bolt://localhost:7689"
+        self.uri = self._get_uri()
         self.driver = GraphDatabase.driver(
             self.uri, auth=None)
         self.mode: Modes
+
+    def _get_uri(self) -> str:
+        """
+        Get the URI of the Neo4j database in the uri.txt file.
+        """
+        try:
+            with open("uri.txt", 'r', encoding="utf-8") as file:
+                return file.read().strip()
+        except:
+            return "bolt://localhost:7689"
 
     def _create_class(self, tx: Transaction, name: str, kind: ClassKind) -> None:
         """
