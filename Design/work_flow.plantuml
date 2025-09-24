@@ -1,0 +1,31 @@
+@startuml
+
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam backgroundColor #F9F9F9
+skinparam packageBackgroundColor #DDDDDD
+skinparam packageBorderColor #000000
+skinparam arrowColor #000000
+skinparam arrowThickness 2
+
+actor Programador   
+participant CI_Pipeline
+participant CodeDesignCheck
+actor CodeReviewers
+participant Merge
+
+
+Programador->CI_Pipeline
+CI_Pipeline->CodeDesignCheck
+alt Fuera de threshold
+    CodeDesignCheck->Programador: Diseño emerge\nFuera de threshold
+alt Programador está de acuerdo
+    Programador->CodeDesignCheck: "DiseñoOK"
+else Programador hace cambios
+    Programador->CodeDesignCheck: Cambios de codigo
+end
+else Threshold OK
+    CodeDesignCheck->CodeReviewers
+    CodeReviewers -> Merge
+end
+@enduml
