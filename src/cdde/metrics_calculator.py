@@ -96,13 +96,11 @@ class MetricsCalculator:
         """ Set the classes of the design_db."""
         self.classes = design_db.get_all_classes()
 
-
     def __get_packages(self, design_db: DesignDB) -> None:
         """ Set the packages of the design_db."""
         for class_name in self.classes:
             design_db.set_packages(class_name)
         self.packages = design_db.get_all_packages()
-
 
     def _set_metrics(self, evaluator: ExprEvaluator) -> None:
         """
@@ -128,18 +126,18 @@ class MetricsCalculator:
             case TypeMetrics.PER_CLASS:
                 for class_name in self.classes:
                     self._run_calc(list_of_queries, type_metrics,
-                              evaluator, class_name)
+                                   evaluator, class_name)
             case TypeMetrics.PER_PACKAGE:
                 for package_name in self.packages:
                     self._run_calc(list_of_queries, type_metrics,
-                              evaluator, package_name)
+                                   evaluator, package_name)
         return None
 
     def _run_calc(self,
-             list_of_queries: list,
-             type_metrics: TypeMetrics,
-             evaluator: ExprEvaluator,
-             argument: str = "") -> None:
+                  list_of_queries: list,
+                  type_metrics: TypeMetrics,
+                  evaluator: ExprEvaluator,
+                  argument: str = "") -> None:
         """
         Run the list of queries.
         Set the result in the results dictionary.
@@ -156,11 +154,10 @@ class MetricsCalculator:
                     metric_name = self.__set_metric_name(query['metric'], type_metrics,
                                                          argument) + key[0]
                     self.results.add_metric(metric_name, value)
-                # Send the result to the observer
-                self.__send_results(
-                    query, type_metrics, metric_name, value)
+                    # Send the result to the observer
+                    self.__send_results(
+                        query, type_metrics, metric_name, value)
                 continue
-
             metric_name = self.__set_metric_name(query['metric'], type_metrics,
                                                  argument)
             self.results.add_metric(metric_name, result)
