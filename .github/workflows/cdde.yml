@@ -13,7 +13,7 @@ jobs:
         ports:
           - 7687:7687
         env:
-          NEO4J_AUTH: "none"
+          NEO4J_AUTH: none
         options: >-
           --health-cmd "cypher-shell -a bolt://localhost:7687 'RETURN 1'"
           --health-interval 10s
@@ -35,6 +35,17 @@ jobs:
 
       - name: Install dependencies
         run: poetry install
+        
+      - name: Wait for Neo4j
+        run: |
+          for i in {1..30}; do
+            if cypher-shell -a bolt://neo4j:7687 -u neo4j -p none 'RETURN 1' &>/dev/null; then
+              echo "Neo4j is ready"
+              break
+            fi
+            echo "Waiting for Neo4j..."
+            sleep 2
+          done
 
       - name: Run CDDE
         run: |
